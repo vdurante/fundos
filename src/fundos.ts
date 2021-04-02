@@ -26,29 +26,31 @@ async function getCachedFile(url: string) {
 }
 
 async function getYearFromCsv(year: number) {
-  const fileUrl = `http://dados.cvm.gov.br/dados/FI/DOC/INF_DIARIO/DADOS/HIST/inf_diario_fi_${year}.zip`;
-
-  const file = await getCachedFile(fileUrl);
-
-  if (!file) {
-    return undefined;
+  let maxMonth = 12;
+  if (year === new Date().getFullYear()) {
+    maxMonth = new Date().getMonth();
   }
-
-  const zip = new AdmZip(file);
-  const zipEntries = zip.getEntries();
 
   const finalObject: any = {};
 
-  for (const entry of zipEntries) {
+  for (const month of [...Array(maxMonth + 1).keys()].slice(1)) {
+    console.log(month);
+    const fileUrl = `http://dados.cvm.gov.br/dados/FI/DOC/INF_DIARIO/DADOS/inf_diario_fi_${year}${month
+      .toString()
+      .padStart(2, '0')}.csv`;
+
+    const file = await getCachedFile(fileUrl);
+
+    if (!file) {
+      throw new Error('Mes nao encontrado');
+    }
+
     //const month = entry.name.replace(/\D+/g, '');
 
-    const result = Papa.parse<{[key: string]: string}>(
-      entry.getData().toString(),
-      {
-        header: true,
-        delimiter: ';',
-      }
-    );
+    const result = Papa.parse<{[key: string]: string}>(file.toString(), {
+      header: true,
+      delimiter: ';',
+    });
 
     const fundos = _(result.data)
       .filter(e => !!e['CNPJ_FUNDO'])
@@ -81,12 +83,13 @@ async function getYearFromCsv(year: number) {
     //     })
     //     .value()
     // )
-    //.value();
+    // .value();
     // .mapValues(a => {
     //   console.log(a);
     //   return a;
     // });
   }
+  return finalObject;
 }
 
 async function getYearFromZip(year: number) {
@@ -151,11 +154,14 @@ async function getYearFromZip(year: number) {
     //   return a;
     // });
   }
+
+  return finalObject;
 }
 
 export async function run() {
   const currentYear = new Date().getFullYear();
   for (let year = currentYear; year >= currentYear - 10; year--) {
+    console.log(year);
     const yearObj =
       (await getYearFromZip(year)) || (await getYearFromCsv(year));
     if (!yearObj) {

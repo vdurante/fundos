@@ -36,7 +36,7 @@ export interface CsvType {
 
 export async function getFile(url: string) {
   const file = await cacache.get.info('.cache', url);
-  if (!file || !process.env.CACHE_FILE) {
+  if (!file || !process.env.CACHE_FILE === false) {
     try {
       const result = await axios.get(url, {
         responseType: 'arraybuffer',

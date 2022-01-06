@@ -55,7 +55,61 @@ export async function getCadastros(): Promise<CsvType[]> {
 
     await cacache.put('.cache', 'cadastros', JSON.stringify(temp));
   }
-  return JSON.parse(
+  const cadastros = JSON.parse(
     await (await cacache.get('.cache', 'cadastros')).data.toString()
-  );
+  ) as CsvType[];
+
+  const replacers = [
+    {
+      from: [/\s+/g],
+      to: ' ',
+    },
+    {
+      from: [
+        /FUNDOS? (DE )?INVESTIMENTO/g,
+        /FUNDOS? INCENTIVADOS? (DE )?INVESTIMENTO/g,
+        /FUNDOS? (DE )?INVESTIMENTO INCENTIVADOS?/g,
+      ],
+      to: 'FI',
+    },
+    {
+      from: [/FI (EM\s+|DE\s+)?(COTAS|QUOTAS)(\s+DE)?/g, /FIC DE/g],
+      to: 'FIC',
+    },
+    {
+      from: [/FI (EM\s|DE\s)?A(ÇÕ|CO)ES/g],
+      to: 'FIA',
+    },
+    {
+      from: [/FI MULTIMERCADO/g, /MULTIMERCADO FI/g],
+      to: 'FIM',
+    },
+    {
+      from: [/FI (EM\s|DE\s)?RENDA FIXA/g],
+      to: 'FIRF',
+    },
+    {
+      from: [/DEB(E|Ê)NTURES INCENTIVADAS?/g],
+      to: 'DI',
+    },
+    {
+      from: [/INVEST(IMENTO)?S? (NO )?EXT(ERIOR)?/g],
+      to: 'IE',
+    },
+    {from: ['CRÉDITO PRIVADO', 'CREDITO PRIVADO'], to: 'CrePri'},
+    {from: ['LONGO PRAZO', 'LONGO PRA'], to: 'LPrz'},
+    {from: ['CURTO PRAZO'], to: 'CPrz'},
+    {from: ['RENDA FIXA'], to: 'RF'},
+  ];
+
+  cadastros.map(p => {
+    for (const replacer of replacers) {
+      for (const from of replacer['from']) {
+        //if (p['CNPJ_FUNDO'] === '19.821.469/0001-10') debugger;
+        p['DENOM_SOCIAL'] = p['DENOM_SOCIAL'].replace(from, replacer['to']);
+      }
+    }
+  });
+
+  return cadastros;
 }

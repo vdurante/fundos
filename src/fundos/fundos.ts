@@ -5,7 +5,13 @@ import * as parse from 'csv-parse/lib/index';
 import * as cacache from 'cacache';
 import * as Papa from 'papaparse';
 import * as _ from 'lodash';
-import {CNPJ_FUNDOS, isTracked} from '../tracker';
+import {
+  BTG_FUNDOS,
+  CNPJ_FUNDOS,
+  isTracked,
+  XP_FUNDOS,
+  CNPJ_MANUAL,
+} from '../tracker';
 import {GoogleSpreadsheet} from 'google-spreadsheet';
 import {getQuotas, getQuotasMonthly} from './crawler-quotas';
 import {CsvType, range} from '../shared';
@@ -55,6 +61,12 @@ async function writeToSheetNew(
   );
 
   data = _(data).uniqBy('CNPJ_FUNDO').sortBy('CNPJ_FUNDO').value();
+
+  data.map(p => {
+    if (Object.keys(CNPJ_MANUAL).includes(p['CNPJ_FUNDO'].toString())) {
+      p['DENOM_SOCIAL'] = CNPJ_MANUAL[p['CNPJ_FUNDO'].toString()];
+    }
+  });
 
   const sheet = doc.sheetsByTitle[sheetName];
 
@@ -114,54 +126,53 @@ async function writeVolatilidades(doc: GoogleSpreadsheet, quotas: CsvType[]) {
 }
 
 async function writeCadastros(doc: GoogleSpreadsheet, csv: CsvType[]) {
-  const replacers = [
-    {
-      from: [
-        /FUNDOS? (DE )?INVESTIMENTO/g,
-        /FUNDOS? INCENTIVADOS? (DE )?INVESTIMENTO/g,
-        /FUNDOS? (DE )?INVESTIMENTO INCENTIVADOS?/g,
-      ],
-      to: 'FI',
-    },
-    {
-      from: [/FI (EM\s|DE\s)?(COTAS|QUOTAS)(\sDE)?/g, /FIC DE/g],
-      to: 'FIC',
-    },
-    {
-      from: [/FI (EM\s|DE\s)?A(ÇÕ|CO)ES/g],
-      to: 'FIA',
-    },
-    {
-      from: [/FI MULTIMERCADO/g, /MULTIMERCADO FI/g],
-      to: 'FIM',
-    },
-    {
-      from: [/FI (EM\s|DE\s)?RENDA FIXA/g],
-      to: 'FIRF',
-    },
-    {
-      from: [/DEB(E|Ê)NTURES INCENTIVADAS?/g],
-      to: 'DI',
-    },
-    {
-      from: [/INVESTIMENTOS? (NO )?EXTERIOR/g],
-      to: 'IE',
-    },
-    {from: ['CRÉDITO PRIVADO', 'CREDITO PRIVADO'], to: 'CrePri'},
-    {from: ['LONGO PRAZO', 'LONGO PRA'], to: 'LPrz'},
-    {from: ['CURTO PRAZO'], to: 'CPrz'},
-    {from: ['RENDA FIXA'], to: 'RF'},
+  await writeToSheetNew(doc, 'Cadastro', ['CNPJ_FUNDO', 'DENOM_SOCIAL'], csv);
+}
+
+async function writeCorretoras(doc: GoogleSpreadsheet, cadastros: CsvType[]) {
+  let csv: CsvType[] = [];
+
+  const denomSocial = (cnpjFundo: string) =>
+    cadastros.find(p => p['CNPJ_FUNDO'] === cnpjFundo)?.DENOM_SOCIAL;
+  csv = [
+    ...csv,
+    ...XP_FUNDOS.map(cnpjFundo => {
+      return {
+        CORRETORA: 'XP',
+        CNPJ_FUNDO: cnpjFundo,
+        DENOM_SOCIAL: denomSocial(cnpjFundo),
+      } as CsvType;
+    }),
+  ];
+  csv = [
+    ...csv,
+    ...BTG_FUNDOS.map(cnpjFundo => {
+      return {
+        CORRETORA: 'BTG',
+        CNPJ_FUNDO: cnpjFundo,
+        DENOM_SOCIAL: denomSocial(cnpjFundo),
+      } as CsvType;
+    }),
   ];
 
-  csv.map(p => {
-    for (const replacer of replacers) {
-      for (const from of replacer['from']) {
-        //if (p['CNPJ_FUNDO'] === '19.821.469/0001-10') debugger;
-        p['DENOM_SOCIAL'] = p['DENOM_SOCIAL'].replace(from, replacer['to']);
-      }
-    }
+  const headers = ['CORRETORA', 'CNPJ_FUNDO', 'DENOM_SOCIAL'];
+  csv = _(csv).sortBy('CNPJ_FUNDO').value();
+
+  const sheet = doc.sheetsByTitle['Corretoras'];
+
+  await sheet.resize({
+    columnCount: headers.length,
+    rowCount: csv.length + 1,
   });
-  await writeToSheetNew(doc, 'Cadastro', ['CNPJ_FUNDO', 'DENOM_SOCIAL'], csv);
+
+  await sheet.clear();
+  await sheet.saveUpdatedCells();
+
+  await sheet.setHeaderRow(headers);
+  await sheet.saveUpdatedCells();
+
+  await sheet.addRows(csv);
+  await sheet.saveUpdatedCells();
 }
 
 async function getDoc() {
@@ -238,14 +249,21 @@ export async function run() {
 
   const doc = await getDoc();
 
-  //const rawQuotas = await getQuotas(currentYear, currentYear - 11);
+  //   const rawQuotas = await getQuotas(currentYear, currentYear - 11);
 
-  // await writeVolatilidades(doc, rawQuotas);
-  // await writeRentabilidades(doc, rawQuotas);
+  //   await writeVolatilidades(doc, rawQuotas);
+  //   console.log('writeVolatilidades done');
+
+  //   await writeRentabilidades(doc, rawQuotas);
+  //   console.log('writeRentabilidades done');
 
   const cadastros = await getCadastros();
 
   await writeCadastros(doc, cadastros);
+  console.log('writeCadastros done');
+
+  await writeCorretoras(doc, cadastros);
+  console.log('writeCorretoras done');
 
   return;
 

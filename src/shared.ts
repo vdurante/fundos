@@ -1,5 +1,6 @@
 import * as cacache from 'cacache';
 import axios from 'axios';
+
 export function range(startInclusive: number, stopExclusive: number, step = 1) {
   if (typeof stopExclusive === 'undefined') {
     // one param defined
@@ -36,14 +37,14 @@ export interface CsvType {
 
 export async function getFile(url: string) {
   const file = await cacache.get.info('.cache', url);
-  if (!file || !process.env.CACHE_FILE === false) {
+  if (!file || !!process.env.CACHE_FILE === false) {
     try {
       const result = await axios.get(url, {
         responseType: 'arraybuffer',
       });
 
       await cacache.put('.cache', url, result.data);
-    } catch (ex) {
+    } catch (ex: any) {
       if (ex.response.status === 404) {
         await cacache.put('.cache', url, '404');
         return undefined;

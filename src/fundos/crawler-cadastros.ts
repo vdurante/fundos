@@ -23,6 +23,7 @@ async function parseCsv(buffer: Buffer): Promise<CsvType[]> {
         data.push(results.data as any);
       }
     },
+    complete: () => {},
   });
 
   return data;
@@ -77,7 +78,7 @@ export async function getCadastros(): Promise<CsvType[]> {
       to: 'FIC',
     },
     {
-      from: [/FI (EM\s|DE\s)?A(ÇÕ|CO)ES/g],
+      from: [/FIS? (EM\s|DE\s)?A(ÇÕ|CO)ES/g],
       to: 'FIA',
     },
     {
@@ -96,6 +97,7 @@ export async function getCadastros(): Promise<CsvType[]> {
       from: [/INVEST(IMENTO)?S? (NO )?EXT(ERIOR)?/g],
       to: 'IE',
     },
+    {from: ['EM INFRAESTRUTURA', 'INFRAESTRUTURA'], to: 'INFRA'},
     {from: ['CRÉDITO PRIVADO', 'CREDITO PRIVADO'], to: 'CrePri'},
     {from: ['LONGO PRAZO', 'LONGO PRA'], to: 'LPrz'},
     {from: ['CURTO PRAZO'], to: 'CPrz'},

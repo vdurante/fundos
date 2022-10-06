@@ -244,18 +244,19 @@ async function writeRentabilidades(doc: GoogleSpreadsheet, quotas: CsvType[]) {
 }
 
 export async function run() {
-  const currentYear = new Date().getFullYear();
+  //const currentYear = new Date().getFullYear();
+  const currentYear = 2022;
   const currentMonth = new Date().getMonth();
 
   const doc = await getDoc();
 
-  //   const rawQuotas = await getQuotas(currentYear, currentYear - 11);
+  const rawQuotas = await getQuotas(currentYear, currentYear - 11);
 
-  //   await writeVolatilidades(doc, rawQuotas);
-  //   console.log('writeVolatilidades done');
+  await writeVolatilidades(doc, rawQuotas);
+  console.log('writeVolatilidades done');
 
-  //   await writeRentabilidades(doc, rawQuotas);
-  //   console.log('writeRentabilidades done');
+  await writeRentabilidades(doc, rawQuotas);
+  console.log('writeRentabilidades done');
 
   const cadastros = await getCadastros();
 

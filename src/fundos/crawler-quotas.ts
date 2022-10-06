@@ -1,5 +1,3 @@
-/* eslint-disable no-debugger */
-
 import * as AdmZip from 'adm-zip';
 import * as parse from 'csv-parse/lib/index';
 import * as cacache from 'cacache';
@@ -14,7 +12,8 @@ async function getYear(year: number): Promise<CsvType[]> {
   const cache = await cacache.get.info('.cache', year.toString());
 
   if (!cache || !!process.env.CACHE_YEAR === false) {
-    const temp = (await getYearFromZip(year)) || (await getYearFromCsv(year));
+    const temp =
+      (await getYearFromHistory(year)) || (await getYearFromMonthReports(year));
 
     if (!temp) {
       throw new Error('Falha ao buscar ano');
@@ -23,7 +22,7 @@ async function getYear(year: number): Promise<CsvType[]> {
     await cacache.put('.cache', year.toString(), JSON.stringify(temp));
   }
   return JSON.parse(
-    await (await cacache.get('.cache', year.toString())).data.toString()
+    (await cacache.get('.cache', year.toString())).data.toString()
   );
 }
 
@@ -40,6 +39,7 @@ async function parseCsv(buffer: Buffer): Promise<CsvType[]> {
         data.push(results.data as any);
       }
     },
+    complete: () => {},
   });
 
   return data;
@@ -63,6 +63,13 @@ async function parseCsv(buffer: Buffer): Promise<CsvType[]> {
   // }
 }
 
+/**
+ * Fetches a whole year split by month from http://dados.cvm.gov.br/dados/FI/DOC/INF_DIARIO/DADOS
+ * This method is deprecated since quotas are not available as CSV anymore, only zips
+ * @param year the year
+ * @returns all csvs of the year concatenated
+ */
+/** @deprecated */
 async function getYearFromCsv(year: number) {
   let maxMonth = 12;
   if (year === new Date().getFullYear()) {
@@ -128,7 +135,46 @@ async function getYearFromCsv(year: number) {
   //return finalObject;
 }
 
-async function getYearFromZip(year: number) {
+/**
+ * Fetches a whole year split by month from http://dados.cvm.gov.br/dados/FI/DOC/INF_DIARIO/DADOS
+ * @param year the year
+ * @returns all csvs of the year concatenated
+ */
+async function getYearFromMonthReports(year: number) {
+  let maxMonth = 12;
+  if (year === new Date().getFullYear()) {
+    maxMonth = new Date().getMonth();
+  }
+
+  let data: CsvType[] = [];
+
+  for (const month of range(1, maxMonth + 1, 1)) {
+    const monthString = month.toString().padStart(2, '0');
+    const fileUrl = `http://dados.cvm.gov.br/dados/FI/DOC/INF_DIARIO/DADOS/inf_diario_fi_${year}${monthString}.zip`;
+
+    const file = await getFile(fileUrl);
+
+    if (!file) {
+      throw new Error('Mes nao encontrado');
+    }
+
+    const zip = new AdmZip(file);
+    const zipEntries = zip.getEntries();
+
+    for (const entry of zipEntries) {
+      data = data.concat(await parseCsv(entry.getData()));
+    }
+  }
+
+  return data;
+}
+
+/**
+ * Fetches a whole year from yearly zip found in http://dados.cvm.gov.br/dados/FI/DOC/INF_DIARIO/DADOS/HIST
+ * @param year the year
+ * @returns all csvs of the year concatenated
+ */
+async function getYearFromHistory(year: number) {
   const fileUrl = `http://dados.cvm.gov.br/dados/FI/DOC/INF_DIARIO/DADOS/HIST/inf_diario_fi_${year}.zip`;
 
   const file = await getFile(fileUrl);

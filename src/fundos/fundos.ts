@@ -265,45 +265,4 @@ export async function run() {
 
   await writeCorretoras(doc, cadastros);
   console.log('writeCorretoras done');
-
-  return;
-
-  // // calcular rentabilidades
-  // const quotas: {[key: string]: string | number}[] = [];
-  // // Object.keys(fundos).map(cnpj => {
-  // //   quotas.push({
-  // //     ...fundos[cnpj],
-  // //     CNPJ: cnpj,
-  // //   });
-  // // });
-
-  // const rentabilidades = [];
-
-  // const monthIndexes: string[] = [];
-
-  // for (const year of range(currentYear, currentYear - 11, -1)) {
-  //   const maxMonth = year === currentYear ? currentMonth : 12;
-  //   for (const month of range(maxMonth, 0, -1)) {
-  //     monthIndexes.push(`${year}-${month.toString().padStart(2, '0')}`);
-  //   }
-  // }
-
-  // await writeToSheet(doc, 'Quotas', monthIndexes, quotas);
-  // return;
-
-  // const sheet = doc.sheetsByTitle['Rentabilidades'];
-
-  // await sheet.resize({
-  //   columnCount: monthIndexes.length + 1,
-  //   rowCount: Object.keys(rentabilidades).length + 1,
-  // });
-
-  // await sheet.clear();
-  // await sheet.saveUpdatedCells();
-
-  // await sheet.setHeaderRow(['CNPJ', ...monthIndexes]);
-  // await sheet.saveUpdatedCells();
-
-  // await sheet.addRows(rentabilidades);
-  // await sheet.saveUpdatedCells();
 }

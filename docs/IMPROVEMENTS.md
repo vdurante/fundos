@@ -559,8 +559,11 @@ funds, which is what you would expect when a reference range stops growing.
 
   40 of 1,080 funds have no volatility value; they are written blank, not zero.
 
-  **The `Volatilidade` sheet still exists and is now orphaned** — nothing writes or reads
-  it, and its contents are duplicated in `Cadastro!C`. Delete it when convenient.
+  **The `Volatilidade` sheet was deleted 2026-09-21** after an exhaustive reference scan
+  (`node scripts/find-sheet-references.js Volatilidade`) returned zero formula cells, zero
+  named ranges and zero conditional formats pointing at it. Post-delete error counts were
+  unchanged (`Merge` 236 = 59 rows x 4 columns, `Principal` 1475 = 59 x 25, `Finalistas` 6),
+  confirming no new `#REF!`. Final contents snapshotted to `docs/volatilidade-snapshot.json`.
 
   Remaining for a single fund table (step 2): fold in `Corretoras`. Different grain
   (1,306 rows, 1:many, 226 funds at 2 brokers) but it pivots cleanly to boolean columns —

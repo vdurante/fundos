@@ -6,11 +6,8 @@ import * as cacache from 'cacache';
 import * as Papa from 'papaparse';
 import * as _ from 'lodash';
 import {
-  BTG_FUNDOS,
   CNPJ_FUNDOS,
   isTracked,
-  MANUAL_FUNDOS,
-  XP_FUNDOS,
   CNPJ_MANUAL,
 } from '../tracker';
 import {
@@ -196,81 +193,7 @@ async function dropLegacyBenchmarksSheet(doc: GoogleSpreadsheet) {
   console.log(`dropped legacy sheet ${LEGACY_BENCHMARKS_SHEET}`);
 }
 
-async function writeFundos(
-  doc: GoogleSpreadsheet,
-  csv: CsvType[],
-  volatilidades: {CNPJ_FUNDO: string; VOLATILIDADE: number}[]
-) {
-  const byCnpj = _.keyBy(volatilidades, 'CNPJ_FUNDO');
-  const btg = new Set(BTG_FUNDOS);
-  const xp = new Set(XP_FUNDOS);
-  const manual = new Set(MANUAL_FUNDOS);
 
-  const rows = csv.map(p => {
-    const cnpj = p['CNPJ_FUNDO'].toString();
-    const volatilidade = byCnpj[cnpj]?.VOLATILIDADE;
-    return {
-      ...p,
-      VOLATILIDADE: volatilidade === undefined ? '' : volatilidade,
-      BTG: btg.has(cnpj),
-      XP: xp.has(cnpj),
-      MANUAL: manual.has(cnpj),
-    } as unknown as {[key: string]: string | number};
-  });
-
-  await writeToSheetNew(
-    doc,
-    'Fundos',
-    ['CNPJ_FUNDO', 'DENOM_SOCIAL', 'VOLATILIDADE', 'BTG', 'XP', 'MANUAL'],
-    rows
-  );
-}
-
-async function writeCorretoras(doc: GoogleSpreadsheet, cadastros: CsvType[]) {
-  let csv: CsvType[] = [];
-
-  const denomSocial = (cnpjFundo: string) =>
-    cadastros.find(p => p['CNPJ_FUNDO'] === cnpjFundo)?.DENOM_SOCIAL;
-  csv = [
-    ...csv,
-    ...XP_FUNDOS.map(cnpjFundo => {
-      return {
-        CORRETORA: 'XP',
-        CNPJ_FUNDO: cnpjFundo,
-        DENOM_SOCIAL: denomSocial(cnpjFundo),
-      } as CsvType;
-    }),
-  ];
-  csv = [
-    ...csv,
-    ...BTG_FUNDOS.map(cnpjFundo => {
-      return {
-        CORRETORA: 'BTG',
-        CNPJ_FUNDO: cnpjFundo,
-        DENOM_SOCIAL: denomSocial(cnpjFundo),
-      } as CsvType;
-    }),
-  ];
-
-  const headers = ['CORRETORA', 'CNPJ_FUNDO', 'DENOM_SOCIAL'];
-  csv = _(csv).sortBy('CNPJ_FUNDO').value();
-
-  const sheet = doc.sheetsByTitle['Corretoras'];
-
-  await sheet.resize({
-    columnCount: headers.length,
-    rowCount: csv.length + 1,
-  });
-
-  await sheet.clear();
-  await sheet.saveUpdatedCells();
-
-  await sheet.setHeaderRow(headers);
-  await sheet.saveUpdatedCells();
-
-  await sheet.addRows(csv);
-  await sheet.saveUpdatedCells();
-}
 
 async function getDoc() {
   const fs = require('fs');
@@ -373,10 +296,5 @@ export async function run() {
   console.log('writeRentabilidades done');
 
   const cadastros = await getCadastros();
-
-  await writeFundos(doc, cadastros, volatilidades);
-  console.log('writeFundos done');
-
-  await writeCorretoras(doc, cadastros);
-  console.log('writeCorretoras done');
+  console.log(`getCadastros done (${cadastros.length} rows)`);
 }

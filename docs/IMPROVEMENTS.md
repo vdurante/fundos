@@ -508,6 +508,39 @@ funds, which is what you would expect when a reference range stops growing.
 
 ## Destination — one table in `Principal` (agreed direction, not yet scheduled)
 
+### DONE 2026-09-21 — `Fundos` and `Missing` deleted; 6 sheets left
+
+```
+remaining sheets (6): Variáveis, Finalistas, Principal, Indices, Rentabilidade, Manual
+Principal: error cells 0 · Finalistas: error cells 0 · funds 1026
+```
+
+Snapshots: `docs/fundos-final-snapshot.json`, `docs/missing-final-snapshot.json`.
+
+**`Fundos` held one column that existed nowhere else: `MANUAL` (26 TRUE).** "Centralised in
+`Principal`" was not yet true — `Principal` had `BTG` and `XP` but no `MANUAL`. Ported to
+`Principal!AD` keyed by CNPJ before the delete: **24** landed (the other 2 were among the 54 DP=0
+funds already removed). `AD` was free because the collapse cleared the old `IDX` column.
+
+`Missing` was the only formula reference to `Fundos` (its two `FILTER`/`MATCH` drift checks), so
+the two had to go together — deleting `Fundos` alone would have left `Missing` broken.
+
+**Code removed in the same commit, because a deleted sheet named in live code is a latent crash**
+— the same defect hit `grids()` and `writeCorretoras()` earlier today:
+
+- `writeCorretoras()` deleted (45 lines). Its `Corretoras` sheet was ALREADY gone, so `run()`
+  would have thrown there before ever reaching `writeFundos`.
+- `writeFundos()` deleted, and both calls removed from `run()`.
+- `BTG_FUNDOS` / `XP_FUNDOS` / `MANUAL_FUNDOS` imports dropped from `fundos.ts` (still exported
+  from `tracker.ts` for the future Principal writer).
+
+`writeFundos`'s row-building logic is the spec for the eventual `writePrincipal`: join volatility
+by CNPJ, set `BTG`/`XP`/`MANUAL` from the tracker sets, override `DENOM_SOCIAL` from `CNPJ_MANUAL`,
+then write owned columns through `writeKeyed`. It is recorded here rather than left as dead code.
+
+The basic filter was widened to `A2:AD` so `MANUAL` is filterable alongside `BTG`/`XP` —
+**with `sortSpecs` omitted**, which is what stops `setBasicFilter` re-sorting the sheet.
+
 ### Filter rule for the Principal writer — exclude by TYPE, skip by DATA, never by CNPJ list
 
 Vitor asked for the no-value funds to be filtered in Node so they never land in `Principal`.

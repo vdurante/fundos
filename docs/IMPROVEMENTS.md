@@ -506,6 +506,34 @@ funds, which is what you would expect when a reference range stops growing.
 
 ## Destination — one table in `Principal` (agreed direction, not yet scheduled)
 
+### What the collapse subsumes — do NOT do these first
+
+Sequencing note added 2026-09-21. Several backlog items only exist to prop up `Merge`, and
+the collapse deletes them rather than completing them. Doing them first is wasted work:
+
+| Item | Why the collapse subsumes it |
+|---|---|
+| **33.** repair the 59 `#REF!` rows on `Merge` 1065–1123 | The 18 missing funds are missing *because* `Merge` has a gap. Writing `Principal` directly from data admits them with no repair. Interim value only. |
+| Guard `Merge!C`/`J` on `ISBLANK` | `Merge!J = ROUND(Fundos!C;2)` reads a blank as `0`, and `IFS` then bands it as lowest-risk. Measured, real — but it is a formula artifact. The Node writer computes Risco/Vol itself and writes a true blank. |
+| `Merge` block-probing tooling | `check-merge-blocks.js`, `probe-merge-blocks.js`, `compare-blocks.js` all describe a sheet that stops existing. |
+
+### What survives the collapse — safe to do now
+
+- The **keyed non-shrinking writer** (`src/fundos/sheet-writer.ts`). Unchanged by the collapse.
+- **`Rentabilidade`** on that writer. The sheet stays (122 month columns) and its data source is healthy.
+- **Cadastral source migration** (item 16) and **`CNPJ_FUNDOS` reconciliation**. Needed regardless of layout.
+- **`Principal`'s presentation state** — filter widened to `AC` and declared at grid height,
+  conditional-format debris cleaned. `Principal` is the surviving table.
+
+### The no-delete rule survives, for a different reason
+
+Today "blank, never delete" protects `Merge`'s row-pinned formulas (`=Rentabilidade!A{n}`,
+`=Fundos!B{n}`). After the collapse those pins are gone — but the rule still holds, because
+`Principal` carries **1,216 manual cells** (`Tipo`, `Resgate`, `M`, `Buy`) and **its row order
+is itself human data**. Deleting a row destroys human input, and row-indexed conditional
+formats and filter ranges shift under it. Same writer, same invariant, new justification.
+
+
 Kill `Merge` and `Fundos`, keep `Principal` as the single table. The chain today is
 strictly linear, with two mirror layers:
 

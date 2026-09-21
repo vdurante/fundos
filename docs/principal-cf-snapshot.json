@@ -1,0 +1,2198 @@
+[
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 2,
+    "endRowIndex": 3816,
+    "startColumnIndex": 2,
+    "endColumnIndex": 3
+   }
+  ],
+  "booleanRule": {
+   "condition": {
+    "type": "TEXT_EQ",
+    "values": [
+     {
+      "userEnteredValue": "00 ~ 05"
+     }
+    ]
+   },
+   "format": {
+    "backgroundColor": {
+     "green": 1
+    },
+    "backgroundColorStyle": {
+     "rgbColor": {
+      "green": 1
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 2,
+    "endRowIndex": 3816,
+    "startColumnIndex": 2,
+    "endColumnIndex": 3
+   }
+  ],
+  "booleanRule": {
+   "condition": {
+    "type": "TEXT_EQ",
+    "values": [
+     {
+      "userEnteredValue": "05 ~ 10"
+     }
+    ]
+   },
+   "format": {
+    "backgroundColor": {
+     "red": 1,
+     "green": 1
+    },
+    "backgroundColorStyle": {
+     "rgbColor": {
+      "red": 1,
+      "green": 1
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 2,
+    "endRowIndex": 3816,
+    "startColumnIndex": 2,
+    "endColumnIndex": 3
+   }
+  ],
+  "booleanRule": {
+   "condition": {
+    "type": "TEXT_EQ",
+    "values": [
+     {
+      "userEnteredValue": "10 ~ 25"
+     }
+    ]
+   },
+   "format": {
+    "backgroundColor": {
+     "red": 1,
+     "green": 0.6
+    },
+    "backgroundColorStyle": {
+     "rgbColor": {
+      "red": 1,
+      "green": 0.6
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 2,
+    "endRowIndex": 3816,
+    "startColumnIndex": 2,
+    "endColumnIndex": 3
+   }
+  ],
+  "booleanRule": {
+   "condition": {
+    "type": "TEXT_EQ",
+    "values": [
+     {
+      "userEnteredValue": "25~100"
+     }
+    ]
+   },
+   "format": {
+    "backgroundColor": {
+     "red": 1
+    },
+    "textFormat": {
+     "foregroundColor": {
+      "red": 1,
+      "green": 1,
+      "blue": 1
+     },
+     "foregroundColorStyle": {
+      "rgbColor": {
+       "red": 1,
+       "green": 1,
+       "blue": 1
+      }
+     }
+    },
+    "backgroundColorStyle": {
+     "rgbColor": {
+      "red": 1
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 2,
+    "endRowIndex": 3816,
+    "startColumnIndex": 7,
+    "endColumnIndex": 9
+   }
+  ],
+  "booleanRule": {
+   "condition": {
+    "type": "TEXT_EQ",
+    "values": [
+     {
+      "userEnteredValue": "TRUE"
+     }
+    ]
+   },
+   "format": {
+    "backgroundColor": {
+     "red": 0.7176471,
+     "green": 0.88235295,
+     "blue": 0.8039216
+    },
+    "backgroundColorStyle": {
+     "rgbColor": {
+      "red": 0.7176471,
+      "green": 0.88235295,
+      "blue": 0.8039216
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 2,
+    "endRowIndex": 3816,
+    "startColumnIndex": 7,
+    "endColumnIndex": 9
+   }
+  ],
+  "booleanRule": {
+   "condition": {
+    "type": "TEXT_EQ",
+    "values": [
+     {
+      "userEnteredValue": "FALSE"
+     }
+    ]
+   },
+   "format": {
+    "backgroundColor": {
+     "red": 0.95686275,
+     "green": 0.78039217,
+     "blue": 0.7647059
+    },
+    "backgroundColorStyle": {
+     "rgbColor": {
+      "red": 0.95686275,
+      "green": 0.78039217,
+      "blue": 0.7647059
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 2,
+    "endRowIndex": 3816,
+    "startColumnIndex": 9,
+    "endColumnIndex": 10
+   }
+  ],
+  "booleanRule": {
+   "condition": {
+    "type": "NUMBER_BETWEEN",
+    "values": [
+     {
+      "userEnteredValue": "0"
+     },
+     {
+      "userEnteredValue": "0,05"
+     }
+    ]
+   },
+   "format": {
+    "backgroundColor": {
+     "green": 1
+    },
+    "backgroundColorStyle": {
+     "rgbColor": {
+      "green": 1
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 2,
+    "endRowIndex": 3816,
+    "startColumnIndex": 9,
+    "endColumnIndex": 10
+   }
+  ],
+  "booleanRule": {
+   "condition": {
+    "type": "NUMBER_BETWEEN",
+    "values": [
+     {
+      "userEnteredValue": "0,05"
+     },
+     {
+      "userEnteredValue": "0,1"
+     }
+    ]
+   },
+   "format": {
+    "backgroundColor": {
+     "red": 1,
+     "green": 1
+    },
+    "backgroundColorStyle": {
+     "rgbColor": {
+      "red": 1,
+      "green": 1
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 2,
+    "endRowIndex": 3816,
+    "startColumnIndex": 9,
+    "endColumnIndex": 10
+   }
+  ],
+  "booleanRule": {
+   "condition": {
+    "type": "NUMBER_BETWEEN",
+    "values": [
+     {
+      "userEnteredValue": "0,1"
+     },
+     {
+      "userEnteredValue": "0,25"
+     }
+    ]
+   },
+   "format": {
+    "backgroundColor": {
+     "red": 1,
+     "green": 0.6
+    },
+    "backgroundColorStyle": {
+     "rgbColor": {
+      "red": 1,
+      "green": 0.6
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 2,
+    "endRowIndex": 3816,
+    "startColumnIndex": 9,
+    "endColumnIndex": 10
+   }
+  ],
+  "booleanRule": {
+   "condition": {
+    "type": "NUMBER_BETWEEN",
+    "values": [
+     {
+      "userEnteredValue": "0,25"
+     },
+     {
+      "userEnteredValue": "1"
+     }
+    ]
+   },
+   "format": {
+    "backgroundColor": {
+     "red": 1
+    },
+    "textFormat": {
+     "foregroundColor": {
+      "red": 1,
+      "green": 1,
+      "blue": 1
+     },
+     "foregroundColorStyle": {
+      "rgbColor": {
+       "red": 1,
+       "green": 1,
+       "blue": 1
+      }
+     }
+    },
+    "backgroundColorStyle": {
+     "rgbColor": {
+      "red": 1
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 1123,
+    "endRowIndex": 1137,
+    "startColumnIndex": 11,
+    "endColumnIndex": 12
+   }
+  ],
+  "gradientRule": {
+   "minpoint": {
+    "color": {
+     "red": 0.8784314,
+     "green": 0.4,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "-1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.8784314,
+      "green": 0.4,
+      "blue": 0.4
+     }
+    }
+   },
+   "midpoint": {
+    "color": {
+     "red": 1,
+     "green": 0.8392157,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "0",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 1,
+      "green": 0.8392157,
+      "blue": 0.4
+     }
+    }
+   },
+   "maxpoint": {
+    "color": {
+     "red": 0.5764706,
+     "green": 0.76862746,
+     "blue": 0.49019608
+    },
+    "type": "NUMBER",
+    "value": "1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.5764706,
+      "green": 0.76862746,
+      "blue": 0.49019608
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 1123,
+    "endRowIndex": 1137,
+    "startColumnIndex": 12,
+    "endColumnIndex": 13
+   }
+  ],
+  "gradientRule": {
+   "minpoint": {
+    "color": {
+     "red": 0.8784314,
+     "green": 0.4,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "-1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.8784314,
+      "green": 0.4,
+      "blue": 0.4
+     }
+    }
+   },
+   "midpoint": {
+    "color": {
+     "red": 1,
+     "green": 0.8392157,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "0",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 1,
+      "green": 0.8392157,
+      "blue": 0.4
+     }
+    }
+   },
+   "maxpoint": {
+    "color": {
+     "red": 0.5764706,
+     "green": 0.76862746,
+     "blue": 0.49019608
+    },
+    "type": "NUMBER",
+    "value": "1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.5764706,
+      "green": 0.76862746,
+      "blue": 0.49019608
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 1123,
+    "endRowIndex": 1137,
+    "startColumnIndex": 13,
+    "endColumnIndex": 14
+   }
+  ],
+  "gradientRule": {
+   "minpoint": {
+    "color": {
+     "red": 0.8784314,
+     "green": 0.4,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "-1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.8784314,
+      "green": 0.4,
+      "blue": 0.4
+     }
+    }
+   },
+   "midpoint": {
+    "color": {
+     "red": 1,
+     "green": 0.8392157,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "0",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 1,
+      "green": 0.8392157,
+      "blue": 0.4
+     }
+    }
+   },
+   "maxpoint": {
+    "color": {
+     "red": 0.5764706,
+     "green": 0.76862746,
+     "blue": 0.49019608
+    },
+    "type": "NUMBER",
+    "value": "1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.5764706,
+      "green": 0.76862746,
+      "blue": 0.49019608
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 1123,
+    "endRowIndex": 1137,
+    "startColumnIndex": 14,
+    "endColumnIndex": 15
+   }
+  ],
+  "gradientRule": {
+   "minpoint": {
+    "color": {
+     "red": 0.8784314,
+     "green": 0.4,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "-1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.8784314,
+      "green": 0.4,
+      "blue": 0.4
+     }
+    }
+   },
+   "midpoint": {
+    "color": {
+     "red": 1,
+     "green": 0.8392157,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "0",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 1,
+      "green": 0.8392157,
+      "blue": 0.4
+     }
+    }
+   },
+   "maxpoint": {
+    "color": {
+     "red": 0.5764706,
+     "green": 0.76862746,
+     "blue": 0.49019608
+    },
+    "type": "NUMBER",
+    "value": "1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.5764706,
+      "green": 0.76862746,
+      "blue": 0.49019608
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 1123,
+    "endRowIndex": 1137,
+    "startColumnIndex": 15,
+    "endColumnIndex": 16
+   }
+  ],
+  "gradientRule": {
+   "minpoint": {
+    "color": {
+     "red": 0.8784314,
+     "green": 0.4,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "-1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.8784314,
+      "green": 0.4,
+      "blue": 0.4
+     }
+    }
+   },
+   "midpoint": {
+    "color": {
+     "red": 1,
+     "green": 0.8392157,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "0",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 1,
+      "green": 0.8392157,
+      "blue": 0.4
+     }
+    }
+   },
+   "maxpoint": {
+    "color": {
+     "red": 0.5764706,
+     "green": 0.76862746,
+     "blue": 0.49019608
+    },
+    "type": "NUMBER",
+    "value": "1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.5764706,
+      "green": 0.76862746,
+      "blue": 0.49019608
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 1123,
+    "endRowIndex": 1137,
+    "startColumnIndex": 16,
+    "endColumnIndex": 17
+   }
+  ],
+  "gradientRule": {
+   "minpoint": {
+    "color": {
+     "red": 0.8784314,
+     "green": 0.4,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "-1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.8784314,
+      "green": 0.4,
+      "blue": 0.4
+     }
+    }
+   },
+   "midpoint": {
+    "color": {
+     "red": 1,
+     "green": 0.8392157,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "0",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 1,
+      "green": 0.8392157,
+      "blue": 0.4
+     }
+    }
+   },
+   "maxpoint": {
+    "color": {
+     "red": 0.5764706,
+     "green": 0.76862746,
+     "blue": 0.49019608
+    },
+    "type": "NUMBER",
+    "value": "1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.5764706,
+      "green": 0.76862746,
+      "blue": 0.49019608
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 1123,
+    "endRowIndex": 1137,
+    "startColumnIndex": 17,
+    "endColumnIndex": 18
+   }
+  ],
+  "gradientRule": {
+   "minpoint": {
+    "color": {
+     "red": 0.8784314,
+     "green": 0.4,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "-1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.8784314,
+      "green": 0.4,
+      "blue": 0.4
+     }
+    }
+   },
+   "midpoint": {
+    "color": {
+     "red": 1,
+     "green": 0.8392157,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "0",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 1,
+      "green": 0.8392157,
+      "blue": 0.4
+     }
+    }
+   },
+   "maxpoint": {
+    "color": {
+     "red": 0.5764706,
+     "green": 0.76862746,
+     "blue": 0.49019608
+    },
+    "type": "NUMBER",
+    "value": "1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.5764706,
+      "green": 0.76862746,
+      "blue": 0.49019608
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 1123,
+    "endRowIndex": 1137,
+    "startColumnIndex": 18,
+    "endColumnIndex": 19
+   }
+  ],
+  "gradientRule": {
+   "minpoint": {
+    "color": {
+     "red": 0.8784314,
+     "green": 0.4,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "-1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.8784314,
+      "green": 0.4,
+      "blue": 0.4
+     }
+    }
+   },
+   "midpoint": {
+    "color": {
+     "red": 1,
+     "green": 0.8392157,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "0",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 1,
+      "green": 0.8392157,
+      "blue": 0.4
+     }
+    }
+   },
+   "maxpoint": {
+    "color": {
+     "red": 0.5764706,
+     "green": 0.76862746,
+     "blue": 0.49019608
+    },
+    "type": "NUMBER",
+    "value": "1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.5764706,
+      "green": 0.76862746,
+      "blue": 0.49019608
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 1123,
+    "endRowIndex": 1137,
+    "startColumnIndex": 19,
+    "endColumnIndex": 20
+   }
+  ],
+  "gradientRule": {
+   "minpoint": {
+    "color": {
+     "red": 0.8784314,
+     "green": 0.4,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "-1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.8784314,
+      "green": 0.4,
+      "blue": 0.4
+     }
+    }
+   },
+   "midpoint": {
+    "color": {
+     "red": 1,
+     "green": 0.8392157,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "0",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 1,
+      "green": 0.8392157,
+      "blue": 0.4
+     }
+    }
+   },
+   "maxpoint": {
+    "color": {
+     "red": 0.5764706,
+     "green": 0.76862746,
+     "blue": 0.49019608
+    },
+    "type": "NUMBER",
+    "value": "1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.5764706,
+      "green": 0.76862746,
+      "blue": 0.49019608
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 1123,
+    "endRowIndex": 1137,
+    "startColumnIndex": 20,
+    "endColumnIndex": 21
+   }
+  ],
+  "gradientRule": {
+   "minpoint": {
+    "color": {
+     "red": 0.8784314,
+     "green": 0.4,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "-1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.8784314,
+      "green": 0.4,
+      "blue": 0.4
+     }
+    }
+   },
+   "midpoint": {
+    "color": {
+     "red": 1,
+     "green": 0.8392157,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "0",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 1,
+      "green": 0.8392157,
+      "blue": 0.4
+     }
+    }
+   },
+   "maxpoint": {
+    "color": {
+     "red": 0.5764706,
+     "green": 0.76862746,
+     "blue": 0.49019608
+    },
+    "type": "NUMBER",
+    "value": "1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.5764706,
+      "green": 0.76862746,
+      "blue": 0.49019608
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 1123,
+    "endRowIndex": 1137,
+    "startColumnIndex": 21,
+    "endColumnIndex": 22
+   }
+  ],
+  "gradientRule": {
+   "minpoint": {
+    "color": {
+     "red": 0.8784314,
+     "green": 0.4,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "-1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.8784314,
+      "green": 0.4,
+      "blue": 0.4
+     }
+    }
+   },
+   "midpoint": {
+    "color": {
+     "red": 1,
+     "green": 0.8392157,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "0",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 1,
+      "green": 0.8392157,
+      "blue": 0.4
+     }
+    }
+   },
+   "maxpoint": {
+    "color": {
+     "red": 0.5764706,
+     "green": 0.76862746,
+     "blue": 0.49019608
+    },
+    "type": "NUMBER",
+    "value": "1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.5764706,
+      "green": 0.76862746,
+      "blue": 0.49019608
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 1123,
+    "endRowIndex": 1137,
+    "startColumnIndex": 22,
+    "endColumnIndex": 29
+   }
+  ],
+  "gradientRule": {
+   "minpoint": {
+    "color": {
+     "red": 0.8784314,
+     "green": 0.4,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "-1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.8784314,
+      "green": 0.4,
+      "blue": 0.4
+     }
+    }
+   },
+   "midpoint": {
+    "color": {
+     "red": 1,
+     "green": 0.8392157,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "0",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 1,
+      "green": 0.8392157,
+      "blue": 0.4
+     }
+    }
+   },
+   "maxpoint": {
+    "color": {
+     "red": 0.5764706,
+     "green": 0.76862746,
+     "blue": 0.49019608
+    },
+    "type": "NUMBER",
+    "value": "1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.5764706,
+      "green": 0.76862746,
+      "blue": 0.49019608
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 2,
+    "endRowIndex": 1123,
+    "startColumnIndex": 11,
+    "endColumnIndex": 12
+   }
+  ],
+  "gradientRule": {
+   "minpoint": {
+    "color": {
+     "red": 0.8784314,
+     "green": 0.4,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "-1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.8784314,
+      "green": 0.4,
+      "blue": 0.4
+     }
+    }
+   },
+   "midpoint": {
+    "color": {
+     "red": 1,
+     "green": 0.8392157,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "0",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 1,
+      "green": 0.8392157,
+      "blue": 0.4
+     }
+    }
+   },
+   "maxpoint": {
+    "color": {
+     "red": 0.5764706,
+     "green": 0.76862746,
+     "blue": 0.49019608
+    },
+    "type": "NUMBER",
+    "value": "1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.5764706,
+      "green": 0.76862746,
+      "blue": 0.49019608
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 2,
+    "endRowIndex": 1123,
+    "startColumnIndex": 12,
+    "endColumnIndex": 13
+   }
+  ],
+  "gradientRule": {
+   "minpoint": {
+    "color": {
+     "red": 0.8784314,
+     "green": 0.4,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "-1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.8784314,
+      "green": 0.4,
+      "blue": 0.4
+     }
+    }
+   },
+   "midpoint": {
+    "color": {
+     "red": 1,
+     "green": 0.8392157,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "0",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 1,
+      "green": 0.8392157,
+      "blue": 0.4
+     }
+    }
+   },
+   "maxpoint": {
+    "color": {
+     "red": 0.5764706,
+     "green": 0.76862746,
+     "blue": 0.49019608
+    },
+    "type": "NUMBER",
+    "value": "1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.5764706,
+      "green": 0.76862746,
+      "blue": 0.49019608
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 2,
+    "endRowIndex": 1123,
+    "startColumnIndex": 13,
+    "endColumnIndex": 14
+   }
+  ],
+  "gradientRule": {
+   "minpoint": {
+    "color": {
+     "red": 0.8784314,
+     "green": 0.4,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "-1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.8784314,
+      "green": 0.4,
+      "blue": 0.4
+     }
+    }
+   },
+   "midpoint": {
+    "color": {
+     "red": 1,
+     "green": 0.8392157,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "0",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 1,
+      "green": 0.8392157,
+      "blue": 0.4
+     }
+    }
+   },
+   "maxpoint": {
+    "color": {
+     "red": 0.5764706,
+     "green": 0.76862746,
+     "blue": 0.49019608
+    },
+    "type": "NUMBER",
+    "value": "1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.5764706,
+      "green": 0.76862746,
+      "blue": 0.49019608
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 2,
+    "endRowIndex": 1123,
+    "startColumnIndex": 14,
+    "endColumnIndex": 15
+   }
+  ],
+  "gradientRule": {
+   "minpoint": {
+    "color": {
+     "red": 0.8784314,
+     "green": 0.4,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "-1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.8784314,
+      "green": 0.4,
+      "blue": 0.4
+     }
+    }
+   },
+   "midpoint": {
+    "color": {
+     "red": 1,
+     "green": 0.8392157,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "0",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 1,
+      "green": 0.8392157,
+      "blue": 0.4
+     }
+    }
+   },
+   "maxpoint": {
+    "color": {
+     "red": 0.5764706,
+     "green": 0.76862746,
+     "blue": 0.49019608
+    },
+    "type": "NUMBER",
+    "value": "1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.5764706,
+      "green": 0.76862746,
+      "blue": 0.49019608
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 2,
+    "endRowIndex": 1123,
+    "startColumnIndex": 15,
+    "endColumnIndex": 16
+   }
+  ],
+  "gradientRule": {
+   "minpoint": {
+    "color": {
+     "red": 0.8784314,
+     "green": 0.4,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "-1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.8784314,
+      "green": 0.4,
+      "blue": 0.4
+     }
+    }
+   },
+   "midpoint": {
+    "color": {
+     "red": 1,
+     "green": 0.8392157,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "0",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 1,
+      "green": 0.8392157,
+      "blue": 0.4
+     }
+    }
+   },
+   "maxpoint": {
+    "color": {
+     "red": 0.5764706,
+     "green": 0.76862746,
+     "blue": 0.49019608
+    },
+    "type": "NUMBER",
+    "value": "1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.5764706,
+      "green": 0.76862746,
+      "blue": 0.49019608
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 2,
+    "endRowIndex": 1123,
+    "startColumnIndex": 16,
+    "endColumnIndex": 17
+   }
+  ],
+  "gradientRule": {
+   "minpoint": {
+    "color": {
+     "red": 0.8784314,
+     "green": 0.4,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "-1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.8784314,
+      "green": 0.4,
+      "blue": 0.4
+     }
+    }
+   },
+   "midpoint": {
+    "color": {
+     "red": 1,
+     "green": 0.8392157,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "0",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 1,
+      "green": 0.8392157,
+      "blue": 0.4
+     }
+    }
+   },
+   "maxpoint": {
+    "color": {
+     "red": 0.5764706,
+     "green": 0.76862746,
+     "blue": 0.49019608
+    },
+    "type": "NUMBER",
+    "value": "1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.5764706,
+      "green": 0.76862746,
+      "blue": 0.49019608
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 2,
+    "endRowIndex": 1123,
+    "startColumnIndex": 17,
+    "endColumnIndex": 18
+   }
+  ],
+  "gradientRule": {
+   "minpoint": {
+    "color": {
+     "red": 0.8784314,
+     "green": 0.4,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "-1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.8784314,
+      "green": 0.4,
+      "blue": 0.4
+     }
+    }
+   },
+   "midpoint": {
+    "color": {
+     "red": 1,
+     "green": 0.8392157,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "0",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 1,
+      "green": 0.8392157,
+      "blue": 0.4
+     }
+    }
+   },
+   "maxpoint": {
+    "color": {
+     "red": 0.5764706,
+     "green": 0.76862746,
+     "blue": 0.49019608
+    },
+    "type": "NUMBER",
+    "value": "1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.5764706,
+      "green": 0.76862746,
+      "blue": 0.49019608
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 2,
+    "endRowIndex": 1123,
+    "startColumnIndex": 18,
+    "endColumnIndex": 19
+   }
+  ],
+  "gradientRule": {
+   "minpoint": {
+    "color": {
+     "red": 0.8784314,
+     "green": 0.4,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "-1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.8784314,
+      "green": 0.4,
+      "blue": 0.4
+     }
+    }
+   },
+   "midpoint": {
+    "color": {
+     "red": 1,
+     "green": 0.8392157,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "0",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 1,
+      "green": 0.8392157,
+      "blue": 0.4
+     }
+    }
+   },
+   "maxpoint": {
+    "color": {
+     "red": 0.5764706,
+     "green": 0.76862746,
+     "blue": 0.49019608
+    },
+    "type": "NUMBER",
+    "value": "1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.5764706,
+      "green": 0.76862746,
+      "blue": 0.49019608
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 2,
+    "endRowIndex": 1123,
+    "startColumnIndex": 19,
+    "endColumnIndex": 20
+   }
+  ],
+  "gradientRule": {
+   "minpoint": {
+    "color": {
+     "red": 0.8784314,
+     "green": 0.4,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "-1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.8784314,
+      "green": 0.4,
+      "blue": 0.4
+     }
+    }
+   },
+   "midpoint": {
+    "color": {
+     "red": 1,
+     "green": 0.8392157,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "0",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 1,
+      "green": 0.8392157,
+      "blue": 0.4
+     }
+    }
+   },
+   "maxpoint": {
+    "color": {
+     "red": 0.5764706,
+     "green": 0.76862746,
+     "blue": 0.49019608
+    },
+    "type": "NUMBER",
+    "value": "1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.5764706,
+      "green": 0.76862746,
+      "blue": 0.49019608
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 2,
+    "endRowIndex": 1123,
+    "startColumnIndex": 20,
+    "endColumnIndex": 21
+   }
+  ],
+  "gradientRule": {
+   "minpoint": {
+    "color": {
+     "red": 0.8784314,
+     "green": 0.4,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "-1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.8784314,
+      "green": 0.4,
+      "blue": 0.4
+     }
+    }
+   },
+   "midpoint": {
+    "color": {
+     "red": 1,
+     "green": 0.8392157,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "0",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 1,
+      "green": 0.8392157,
+      "blue": 0.4
+     }
+    }
+   },
+   "maxpoint": {
+    "color": {
+     "red": 0.5764706,
+     "green": 0.76862746,
+     "blue": 0.49019608
+    },
+    "type": "NUMBER",
+    "value": "1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.5764706,
+      "green": 0.76862746,
+      "blue": 0.49019608
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 2,
+    "endRowIndex": 1123,
+    "startColumnIndex": 21,
+    "endColumnIndex": 22
+   }
+  ],
+  "gradientRule": {
+   "minpoint": {
+    "color": {
+     "red": 0.8784314,
+     "green": 0.4,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "-1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.8784314,
+      "green": 0.4,
+      "blue": 0.4
+     }
+    }
+   },
+   "midpoint": {
+    "color": {
+     "red": 1,
+     "green": 0.8392157,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "0",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 1,
+      "green": 0.8392157,
+      "blue": 0.4
+     }
+    }
+   },
+   "maxpoint": {
+    "color": {
+     "red": 0.5764706,
+     "green": 0.76862746,
+     "blue": 0.49019608
+    },
+    "type": "NUMBER",
+    "value": "1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.5764706,
+      "green": 0.76862746,
+      "blue": 0.49019608
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 2,
+    "endRowIndex": 1123,
+    "startColumnIndex": 22,
+    "endColumnIndex": 23
+   }
+  ],
+  "gradientRule": {
+   "minpoint": {
+    "color": {
+     "red": 0.8784314,
+     "green": 0.4,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "-1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.8784314,
+      "green": 0.4,
+      "blue": 0.4
+     }
+    }
+   },
+   "midpoint": {
+    "color": {
+     "red": 1,
+     "green": 0.8392157,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "0",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 1,
+      "green": 0.8392157,
+      "blue": 0.4
+     }
+    }
+   },
+   "maxpoint": {
+    "color": {
+     "red": 0.5764706,
+     "green": 0.76862746,
+     "blue": 0.49019608
+    },
+    "type": "NUMBER",
+    "value": "1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.5764706,
+      "green": 0.76862746,
+      "blue": 0.49019608
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 2,
+    "endRowIndex": 1123,
+    "startColumnIndex": 23,
+    "endColumnIndex": 24
+   }
+  ],
+  "gradientRule": {
+   "minpoint": {
+    "color": {
+     "red": 0.8784314,
+     "green": 0.4,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "-1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.8784314,
+      "green": 0.4,
+      "blue": 0.4
+     }
+    }
+   },
+   "midpoint": {
+    "color": {
+     "red": 1,
+     "green": 0.8392157,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "0",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 1,
+      "green": 0.8392157,
+      "blue": 0.4
+     }
+    }
+   },
+   "maxpoint": {
+    "color": {
+     "red": 0.5764706,
+     "green": 0.76862746,
+     "blue": 0.49019608
+    },
+    "type": "NUMBER",
+    "value": "1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.5764706,
+      "green": 0.76862746,
+      "blue": 0.49019608
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 2,
+    "endRowIndex": 1123,
+    "startColumnIndex": 24,
+    "endColumnIndex": 25
+   }
+  ],
+  "gradientRule": {
+   "minpoint": {
+    "color": {
+     "red": 0.8784314,
+     "green": 0.4,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "-1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.8784314,
+      "green": 0.4,
+      "blue": 0.4
+     }
+    }
+   },
+   "midpoint": {
+    "color": {
+     "red": 1,
+     "green": 0.8392157,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "0",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 1,
+      "green": 0.8392157,
+      "blue": 0.4
+     }
+    }
+   },
+   "maxpoint": {
+    "color": {
+     "red": 0.5764706,
+     "green": 0.76862746,
+     "blue": 0.49019608
+    },
+    "type": "NUMBER",
+    "value": "1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.5764706,
+      "green": 0.76862746,
+      "blue": 0.49019608
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 2,
+    "endRowIndex": 1123,
+    "startColumnIndex": 25,
+    "endColumnIndex": 26
+   }
+  ],
+  "gradientRule": {
+   "minpoint": {
+    "color": {
+     "red": 0.8784314,
+     "green": 0.4,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "-1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.8784314,
+      "green": 0.4,
+      "blue": 0.4
+     }
+    }
+   },
+   "midpoint": {
+    "color": {
+     "red": 1,
+     "green": 0.8392157,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "0",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 1,
+      "green": 0.8392157,
+      "blue": 0.4
+     }
+    }
+   },
+   "maxpoint": {
+    "color": {
+     "red": 0.5764706,
+     "green": 0.76862746,
+     "blue": 0.49019608
+    },
+    "type": "NUMBER",
+    "value": "1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.5764706,
+      "green": 0.76862746,
+      "blue": 0.49019608
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 2,
+    "endRowIndex": 1123,
+    "startColumnIndex": 26,
+    "endColumnIndex": 27
+   }
+  ],
+  "gradientRule": {
+   "minpoint": {
+    "color": {
+     "red": 0.8784314,
+     "green": 0.4,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "-1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.8784314,
+      "green": 0.4,
+      "blue": 0.4
+     }
+    }
+   },
+   "midpoint": {
+    "color": {
+     "red": 1,
+     "green": 0.8392157,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "0",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 1,
+      "green": 0.8392157,
+      "blue": 0.4
+     }
+    }
+   },
+   "maxpoint": {
+    "color": {
+     "red": 0.5764706,
+     "green": 0.76862746,
+     "blue": 0.49019608
+    },
+    "type": "NUMBER",
+    "value": "1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.5764706,
+      "green": 0.76862746,
+      "blue": 0.49019608
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 2,
+    "endRowIndex": 1123,
+    "startColumnIndex": 27,
+    "endColumnIndex": 28
+   }
+  ],
+  "gradientRule": {
+   "minpoint": {
+    "color": {
+     "red": 0.8784314,
+     "green": 0.4,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "-1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.8784314,
+      "green": 0.4,
+      "blue": 0.4
+     }
+    }
+   },
+   "midpoint": {
+    "color": {
+     "red": 1,
+     "green": 0.8392157,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "0",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 1,
+      "green": 0.8392157,
+      "blue": 0.4
+     }
+    }
+   },
+   "maxpoint": {
+    "color": {
+     "red": 0.5764706,
+     "green": 0.76862746,
+     "blue": 0.49019608
+    },
+    "type": "NUMBER",
+    "value": "1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.5764706,
+      "green": 0.76862746,
+      "blue": 0.49019608
+     }
+    }
+   }
+  }
+ },
+ {
+  "ranges": [
+   {
+    "sheetId": 2025255252,
+    "startRowIndex": 2,
+    "endRowIndex": 1123,
+    "startColumnIndex": 28,
+    "endColumnIndex": 29
+   }
+  ],
+  "gradientRule": {
+   "minpoint": {
+    "color": {
+     "red": 0.8784314,
+     "green": 0.4,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "-1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.8784314,
+      "green": 0.4,
+      "blue": 0.4
+     }
+    }
+   },
+   "midpoint": {
+    "color": {
+     "red": 1,
+     "green": 0.8392157,
+     "blue": 0.4
+    },
+    "type": "NUMBER",
+    "value": "0",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 1,
+      "green": 0.8392157,
+      "blue": 0.4
+     }
+    }
+   },
+   "maxpoint": {
+    "color": {
+     "red": 0.5764706,
+     "green": 0.76862746,
+     "blue": 0.49019608
+    },
+    "type": "NUMBER",
+    "value": "1",
+    "colorStyle": {
+     "rgbColor": {
+      "red": 0.5764706,
+      "green": 0.76862746,
+      "blue": 0.49019608
+     }
+    }
+   }
+  }
+ }
+]

@@ -506,6 +506,45 @@ funds, which is what you would expect when a reference range stops growing.
 
 ## Destination — one table in `Principal` (agreed direction, not yet scheduled)
 
+### DONE 2026-09-21 — item 10, `Principal` conditional formats consolidated 40 -> 11
+
+All 30 gradient rules turned out to share ONE identical parameter set (NUMBER -1 / 0 / +1,
+red -> yellow -> green), so they collapsed into a single rule:
+
+```
+before: 10 boolean (grid height) + 18 gradients L3:L1123..AC3:AC1123 + 12 DEAD at L1124:AC1137
+after:  10 boolean (unchanged)   +  1 gradient  L3:AC3816
+verified: gradient params identical · old ranges uncovered 0 · boolean rules unchanged true
+```
+
+The 12 dead rules formatted rows 1124-1137, past the last data row (1123) — they coloured
+nothing. The 18 live ones were frozen at the old DATA height, so an appended fund at row 1124
+would have received no Nota colouring.
+
+Snapshot for rollback: `docs/principal-cf-snapshot.json` (all 40 original rules).
+
+**Corrects an earlier note in this file** which said the fix was to declare formats "open-ended".
+There is no open-ended range (see the tested behaviour above): the rule is **declare at GRID
+height**. `C3:C3816` survived every row-count change precisely because 3,816 IS the grid height.
+
+`Finalistas` deliberately left alone for now — 47 rules, ~18 of them dead (`L33:L33`..`W33:W33`,
+`L34:L35`..`P34:P35`, and `X33:AC969` starting at row 33 so it misses the data entirely).
+
+### DONE 2026-09-21 — `Principal` basic filter widened
+
+```
+before: A2:W1137   (endColumnIndex 23, endRowIndex 1137)
+after:  A2:AC3816  (endColumnIndex 29, endRowIndex 3816)
+criteria identical: true   sortSpecs identical: true
+```
+
+**HAZARD FOUND — `setBasicFilter` APPLIES its `sortSpecs`.** Passing the 9 existing sortSpecs
+back to preserve them physically re-sorted the sheet (`Nota` desc: 1029/1030 adjacent pairs in
+order, up from 500/1018). This contradicts an earlier claim in this file that no API mechanism
+re-sorts. Data integrity was unaffected — rows move whole, so annotations follow their CNPJ
+(verified: 0 of 1,080 CNPJs changed in `D:G`, 0 lost, 0 gained) — but ROW ORDER changed, and row
+order is human data. To widen a filter WITHOUT re-sorting, omit `sortSpecs` from the request.
+
 ### DONE 2026-09-21 — `Merge` deleted, `Principal` is the single table
 
 Executed in the order 1 -> 4 -> 2 -> 3 (step 4 had to precede step 2; see below).

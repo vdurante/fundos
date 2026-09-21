@@ -22,6 +22,7 @@ import {CsvType, range} from '../shared';
 import * as m from 'mathjs';
 import {isNumber} from 'lodash';
 import {getCadastros} from './crawler-cadastros';
+import {writeKeyed} from './sheet-writer';
 import {
   Benchmarks,
   CDI,
@@ -86,21 +87,8 @@ async function writeToSheetNew(
     }
   });
 
-  const sheet = doc.sheetsByTitle[sheetName];
-
-  await sheet.resize({
-    columnCount: headers.length,
-    rowCount: data.length + 1,
-  });
-
-  await sheet.clear();
-  await sheet.saveUpdatedCells();
-
-  await sheet.setHeaderRow(headers);
-  await sheet.saveUpdatedCells();
-
-  await sheet.addRows(data);
-  await sheet.saveUpdatedCells();
+  const summary = await writeKeyed(sheetName, headers, data);
+  console.log(`  ${sheetName}: ${JSON.stringify(summary)}`);
 }
 
 function computeVolatilidades(quotas: CsvType[]) {

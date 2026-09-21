@@ -24,7 +24,8 @@
     "gs:deploy": "node scripts/gs-deploy.js",
     "sortino": "node build/src/sortino.js",
     "sortino:dry": "node build/src/sortino.js --dry-run",
-    "indices": "node build/src/indices.js"
+    "indices": "node build/src/indices.js",
+    "test:writer": "node scripts/test-sheet-writer.js"
   },
   "devDependencies": {
     "@google/clasp": "^3.4.1",

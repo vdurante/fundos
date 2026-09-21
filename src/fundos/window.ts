@@ -1,1 +1,1 @@
-export const RENT_MONTHS = 120;
+export const HISTORY_MONTHS = 120;

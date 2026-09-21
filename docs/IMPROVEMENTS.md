@@ -1020,7 +1020,7 @@ make the collapsed table ~150 wide.
 - [x] **8. Two unguarded crashes in `sortino()`.** DONE — an unmerged row-1 label is skipped (`if (!merged.length) continue`), `isPeriodBlock()` rejects a non-period block, and `loadBenchmarkColumn` throws a named error listing the available columns.
   `merged[0]` is undefined if a row-1 label isn't merged (`SORTINO >>>` is merged on `Principal`/`Finalistas` as `I1:K1` — copy it into `Merge` row 1 and the loop dies). And `getRentabilidadesByName` does `.findNext().getRow()` with no null check, so a label with no matching `Indices` row throws. Fix: skip a column with no merged range, and report a missing index by name.
 
-- [x] **9. The 122-month window is hardcoded in two places.** DONE on the Node side — `RENT_MONTHS = 122` in `fundos.ts` now drives the header set (`rentMonthKeys()`), the download range (`rentYearRange()`) and the column count. `appsscript/Sortino.js` still carries its own `122` for `parseMonthCount('T')`; the two agree by construction but are not shared, because Apps Script cannot import. Original text:
+- [x] **9. The 122-month window is hardcoded in two places.** DONE on the Node side — `HISTORY_MONTHS = 122` in `fundos.ts` now drives the header set (`rentMonthKeys()`), the download range (`rentYearRange()`) and the column count. `appsscript/Sortino.js` still carries its own `122` for `parseMonthCount('T')`; the two agree by construction but are not shared, because Apps Script cannot import. Original text:
   `rentabilidades.map(p => p.slice(1, 123))` and `parseMonthCount('T') → 122`, whose comment says "10 anos - 1 mes" (which would be 119; 10 years is 120). Derive the width from `Rentabilidade`'s column count and fix the comment.
 ### The 122-month window, measured (item 9 context)
 
@@ -1090,6 +1090,16 @@ the verifier was stale, not the sheet. It now READS the period labels from `Prin
 derives the widest-period rule itself, so a future relabel cannot silently invalidate it. The
 Sortino math stays an independent implementation. Back to **15390/15390**.
 
+### DONE 2026-09-21 — `RENT_MONTHS` renamed `HISTORY_MONTHS`
+
+`RENT` was short for *rentabilidade*, but the name reads as "rental months" and Vitor had to ask what
+it meant — which is the only evidence a name needs. It answers "how far back do we keep returns", so
+`HISTORY_MONTHS` says it. Entries above use the new name throughout; the symbol was called
+`RENT_MONTHS` until this commit.
+
+The dead `export {HISTORY_MONTHS}` re-export in `fundos.ts` went with it — nothing imported the
+constant through that module, and leaving a public re-export implies a consumer that does not exist.
+
 ### DONE 2026-09-21 — one limit in the writer, `T` derived from the data
 
 Vitor's decomposition: the WRITER decides how much history to retain (10 years, everything, it does
@@ -1112,7 +1122,7 @@ there were four, and `appsscript/Sortino.js` was unfixable-by-import, which is w
 duplication permanent.
 
 Also deleted two dead Apps Script globals (`rentabilidades`, `cnpjs`), assigned in `init()` and read
-nowhere since the CNPJ-keying rewrite — they were the last `RENT_MONTHS` consumers there.
+nowhere since the CNPJ-keying rewrite — they were the last `HISTORY_MONTHS` consumers there.
 
 **Measured effect.** The live sheet still holds the March-2025 vintage: 134 month headers of which
 the oldest 12 (2014) are empty, so 122 populated. `T` therefore rose 120 -> 122 months:
@@ -1127,12 +1137,12 @@ independent recompute: 15390/15390             error cells 0
 
 **Consequence to keep in mind:** `T` now tracks the sheet rather than a constant, so it is 122 today
 and becomes 120 after the next `npm run rentabilidade` (window 120 + the stale-tail trim). If more
-history is wanted, raise `RENT_MONTHS` — that one number moves the download, the headers, the trim
+history is wanted, raise `HISTORY_MONTHS` — that one number moves the download, the headers, the trim
 and `T` together.
 
 ### DONE 2026-09-21 — the window is a hard cap, and the stale tail is now cleared
 
-`Rentabilidade` IS capped. `rentMonthKeys()` emits exactly `RENT_MONTHS` keys and
+`Rentabilidade` IS capped. `rentMonthKeys()` emits exactly `HISTORY_MONTHS` keys and
 `writeRentabilidades` writes `['CNPJ_FUNDO', ...rentMonthKeys()]` — **121 columns, 120 months**,
 newest first. There is no "keep whatever history exists" path; a fund with 200 months of quotas
 contributes only the newest 120, and the download range is derived from the same keys.
@@ -1149,8 +1159,8 @@ untouched:   columns 122-135 = 2015-02, 2015-01, 2014-12 ... 2014-01
 ```
 
 The sheet would then read `… 2016-10, 2016-09, 2015-02, 2015-01, …` — a break in the sequence, with
-two data vintages side by side. Harmless to Sortino, which slices the first `RENT_MONTHS` columns
-and never sees the tail, but dangerous the moment anyone raises `RENT_MONTHS` or reads the sheet by
+two data vintages side by side. Harmless to Sortino, which slices the first `HISTORY_MONTHS` columns
+and never sees the tail, but dangerous the moment anyone raises `HISTORY_MONTHS` or reads the sheet by
 header: those old columns would then be consumed as if current.
 
 `blankColumnsBeyond(sheetTitle, keepColumns)` in `sheet-writer.ts` clears values (headers included)
@@ -1189,11 +1199,11 @@ the 2014 columns present and empty. So `slice(1, 123)` was not an arbitrary 122 
 column that actually has data", correct on the day it was written and silently wrong every month
 since. The `10 anos - 1 mes` comment (119) matched neither.
 
-**Fix: one constant, one round number.** `src/fundos/window.ts` now holds `RENT_MONTHS = 120` and
-is the single definition. It was previously four independent literals — `RENT_MONTHS` in
+**Fix: one constant, one round number.** `src/fundos/window.ts` now holds `HISTORY_MONTHS = 120` and
+is the single definition. It was previously four independent literals — `HISTORY_MONTHS` in
 `fundos.ts`, `RENT_MONTH_COUNT` and the `T` cap in `sortino.ts`, `slice(1, 123)` twice plus the `T`
 cap in `appsscript/Sortino.js`, and a padding width in `verify-sortino.js`. `T` is now defined AS
-the window (`TOTAL_PERIOD_CAP_MONTHS = RENT_MONTHS`), which is the original intent — T is
+the window (`TOTAL_PERIOD_CAP_MONTHS = HISTORY_MONTHS`), which is the original intent — T is
 everything — expressed so it cannot drift from what the sheet actually holds.
 
 120 rather than 122 because 122 has no meaning beyond "a February run", and the pending
@@ -1249,13 +1259,13 @@ npm run rentabilidade        # download quotas for the derived window and write 
 npm run rentabilidade:dry    # download and report month coverage, write nothing
 ```
 
-**One constant replaces three disagreeing spans.** `RENT_MONTHS = 122` drives all of them:
+**One constant replaces three disagreeing spans.** `HISTORY_MONTHS = 122` drives all of them:
 
 | was | now |
 |---|---|
 | headers: a 12-year loop -> 134 columns | `rentMonthKeys()` -> exactly 122 months, 123 columns |
 | download: `range(cy, cy-11, -1)` -> **11 years** (stop is exclusive) | `rentYearRange()` -> every year the window touches |
-| read window: a separate literal `122` | the same `RENT_MONTHS` |
+| read window: a separate literal `122` | the same `HISTORY_MONTHS` |
 
 **That off-by-one is why the live sheet carries 12 empty columns.** Proven:
 

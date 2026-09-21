@@ -20,7 +20,7 @@ import * as m from 'mathjs';
 import {isNumber} from 'lodash';
 import {getCadastros} from './crawler-cadastros';
 import {writeKeyed, blankColumnsBeyond} from './sheet-writer';
-import {RENT_MONTHS} from './window';
+import {HISTORY_MONTHS} from './window';
 import {
   Benchmarks,
   CDI,
@@ -36,8 +36,6 @@ const LEGACY_BENCHMARKS_SHEET = 'Benchmarks';
 const BENCHMARK_COLUMNS = [CDI, IBOV, RISK_FREE_BOND, FIXED_SIX];
 const BENCHMARK_START_YEAR = 2011;
 
-export {RENT_MONTHS};
-
 export function rentMonthKeys(now = new Date()) {
   const keys: string[] = [];
   let year = now.getFullYear();
@@ -48,7 +46,7 @@ export function rentMonthKeys(now = new Date()) {
     month = 12;
   }
 
-  for (let i = 0; i < RENT_MONTHS; i++) {
+  for (let i = 0; i < HISTORY_MONTHS; i++) {
     keys.push(`${year}-${month.toString().padStart(2, '0')}`);
     month -= 1;
     if (month === 0) {
@@ -283,7 +281,7 @@ async function writeRentabilidades(doc: GoogleSpreadsheet, quotas: CsvType[]) {
   const stale = await blankColumnsBeyond('Rentabilidade', headers.length);
   if (stale.cleared > 0) {
     console.log(
-      `  Rentabilidade: cleared ${stale.cleared} month columns past the ${RENT_MONTHS}-month window ` +
+      `  Rentabilidade: cleared ${stale.cleared} month columns past the ${HISTORY_MONTHS}-month window ` +
         `(grid has ${stale.columnCount} columns)`
     );
   }
@@ -294,7 +292,7 @@ export async function runRentabilidades(dryRun = false) {
   const {endYear, startYear} = rentYearRange(monthKeys);
 
   console.log(
-    `window: ${RENT_MONTHS} months ${monthKeys[monthKeys.length - 1]} .. ${monthKeys[0]} ` +
+    `window: ${HISTORY_MONTHS} months ${monthKeys[monthKeys.length - 1]} .. ${monthKeys[0]} ` +
       `(download ${startYear}..${endYear})`
   );
 
@@ -306,7 +304,7 @@ export async function runRentabilidades(dryRun = false) {
       rawQuotas.map(q => String(q['DT_COMPTC'] ?? '').substring(0, 7)).filter(m => m !== '')
     );
     const covered = monthKeys.filter(k => months.has(k));
-    console.log(`months in the window with quota data: ${covered.length}/${RENT_MONTHS}`);
+    console.log(`months in the window with quota data: ${covered.length}/${HISTORY_MONTHS}`);
     const gaps = monthKeys.filter(k => !months.has(k));
     if (gaps.length) {
       console.log(`months with NO data: ${gaps.join(', ')}`);

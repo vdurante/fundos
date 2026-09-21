@@ -27,7 +27,8 @@
     "indices": "node build/src/indices.js",
     "test:writer": "node scripts/test-sheet-writer.js",
     "rentabilidade": "node build/src/rentabilidade.js",
-    "rentabilidade:dry": "node build/src/rentabilidade.js --dry-run"
+    "rentabilidade:dry": "node build/src/rentabilidade.js --dry-run",
+    "test:principal": "node scripts/test-principal-writer.js"
   },
   "devDependencies": {
     "@google/clasp": "^3.4.1",

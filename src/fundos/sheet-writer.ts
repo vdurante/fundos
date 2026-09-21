@@ -11,6 +11,11 @@ export type CellValue = string | number | boolean | undefined | null;
 
 export type ColumnMap = {[header: string]: string};
 
+export interface KeyedWriteOptions {
+  columns?: ColumnMap;
+  headerRowCount?: number;
+}
+
 export interface KeyedWriteSummary {
   sheet: string;
   matched: number;
@@ -191,10 +196,17 @@ export async function writeKeyed(
   sheetTitle: string,
   headers: string[],
   rows: {[header: string]: CellValue}[],
-  columns?: ColumnMap
+  options: KeyedWriteOptions = {}
 ): Promise<KeyedWriteSummary> {
   if (!headers.length) {
     throw new Error('writeKeyed needs at least one header');
+  }
+  const {columns} = options;
+  const headerRowCount = options.headerRowCount ?? HEADER_ROW_COUNT;
+  if (!Number.isInteger(headerRowCount) || headerRowCount < 1) {
+    throw new Error(
+      `writeKeyed: headerRowCount invalido: ${options.headerRowCount}`
+    );
   }
   const keyHeader = headers[0];
   const columnRuns = resolveColumnRuns(headers, columns);
@@ -226,8 +238,8 @@ export async function writeKeyed(
   const keyColumn = (existing.data.values ?? []).map(r => String(r[0] ?? ''));
 
   const rowByKey = new Map<string, number>();
-  let lastPopulatedRow = HEADER_ROW_COUNT - 1;
-  for (let i = HEADER_ROW_COUNT; i < keyColumn.length; i++) {
+  let lastPopulatedRow = headerRowCount - 1;
+  for (let i = headerRowCount; i < keyColumn.length; i++) {
     const key = keyColumn[i];
     if (!key) {
       continue;
@@ -291,8 +303,8 @@ export async function writeKeyed(
       updateCells: {
         range: {
           sheetId,
-          startRowIndex: 0,
-          endRowIndex: 1,
+          startRowIndex: headerRowCount - 1,
+          endRowIndex: headerRowCount,
           startColumnIndex: run.startColumnIndex,
           endColumnIndex: run.startColumnIndex + run.headers.length,
         },

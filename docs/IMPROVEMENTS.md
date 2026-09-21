@@ -1095,6 +1095,66 @@ the verifier was stale, not the sheet. It now READS the period labels from `Prin
 derives the widest-period rule itself, so a future relabel cannot silently invalidate it. The
 Sortino math stays an independent implementation. Back to **15390/15390**.
 
+### DONE 2026-09-21 — `writePrincipal` built against fixtures
+
+`src/fundos/principal.ts`, exercised by `npm run test:principal` on a throwaway sheet. **34 checks**,
+and nothing in it touches a data source, so it runs with the CVM crawlers still broken.
+
+The canonical model the download/map layer has to produce is four facts plus two for filtering:
+
+```ts
+interface CanonicalFund {
+  cnpj: string;
+  name: string;
+  type?: string;             // read for the FIP/FII exclusion, never written
+  volatility?: number;       // UNROUNDED
+  availability?: Platform[]; // 'BTG' | 'XP' | 'ONZE'
+  monthsOfHistory?: number;  // 0 or absent = unrankable
+}
+```
+
+`selectFunds` is a pure function returning `{kept, excludedByType, excludedNoHistory, duplicates}`,
+so the filter policy is testable with no sheet at all. `principalRow` projects one fund onto the six
+owned columns, and `writePrincipal` passes the map plus `headerRowCount: 2`.
+
+**A second `writeKeyed` assumption surfaced while building this, and it was the dangerous one.**
+`HEADER_ROW_COUNT = 1` was a module constant: headers go into row 1, data starts at row 2. On
+`Principal` row 1 is the merged BLOCK-LABEL row — `I1` holds `SORTINO >>>` — and data starts at
+**row 3**. Writing headers into row 1 would have overwritten `SORTINO >>>`, and `sortino()` discovers
+its blocks from exactly those merged row-1 labels, so the next `Atualizar cálculos` would have found
+a different set of blocks. The 4th argument is now an options object
+(`{columns?, headerRowCount?}`), defaulting to 1 so `Rentabilidade` and `Indices` are unaffected.
+
+**The fixtures use `Principal`'s real formulas**, copied verbatim rather than simplified, which also
+settled the locale question from the previous entry: the earlier `#ERROR!` was the **decimal point**,
+not the semicolon. This spreadsheet is pt-BR, so `0.05` is invalid and `0,05` with `;` separators is
+correct — `=IF(J3="";"";IFS(J3<=0,05; "00 ~ 05"; ...))` parses fine through `USER_ENTERED`.
+
+That let one check earn its place. `Risco` bands off `Vol`, so writing volatility unrounded is not
+cosmetic:
+
+```
+beta volatility 0.0549  ->  Risco "05 ~ 10"
+ROUND(0.0549;2) = 0.05  ->  Risco "00 ~ 05"   <- the old lossy band
+```
+
+What the suite establishes, on a sheet built to `Principal`'s exact geometry (block labels in row 1,
+headers in row 2, data from row 3, `Risco`/`DP` formulas in the gaps, four human columns in `D:G`):
+
+- column runs come back `['A:B', 'H:J', 'AD:AD']`
+- the block-label row is untouched and `A1` stays empty
+- `FIP`/`FII` excluded case-insensitively, `monthsOfHistory: 0` skipped, duplicate CNPJ dropped
+  first-wins
+- a fund with no volatility writes a blank, and `Risco` correctly returns blank rather than a band
+- on rewrite: writer columns update, `Risco` RECOMPUTES from the new value (`0.26 -> "25~100"`), both
+  gap formulas are still formulas, and all twelve human cells are byte-identical
+- a vanished fund keeps its CNPJ, loses only its six writer columns, and **keeps its annotations**
+- `dryRun` reports the selection and leaves the sheet untouched
+
+Still open for item 36: it writes nothing to the real `Principal` yet, because the funds have to come
+from somewhere (item 16), and it does not yet re-extend the conditional formats or the filter when it
+raises `rowCount`.
+
 ### DONE 2026-09-21 — `writeKeyed` learned a column map
 
 `writeKeyed` wrote ONE contiguous block from column A:
@@ -1565,7 +1625,13 @@ case needs a pick rule (prefer the live class) before the NAV fetch can be fully
 
 - [ ] **26. Move the service-account key out of `~/Downloads`.**
 
-- [ ] **36. Build `writePrincipal`.** The largest remaining piece, and until now tracked only in prose
+- [ ] **36. Wire `writePrincipal` to real data.** The writer itself is BUILT and fixture-tested
+  (`src/fundos/principal.ts`, `npm run test:principal`, 34 checks) — what remains is (a) a working
+  source for `CanonicalFund`, which is item 16, and (b) re-extending the 11 conditional formats and
+  the filter whenever a write raises `rowCount`, with `setBasicFilter` and NO `sortSpecs`. Original
+  text:
+
+- [ ] ~~**36. Build `writePrincipal`.**~~ The largest remaining piece, and until now tracked only in prose
   rather than as an item. `Principal`'s data columns are frozen literals from the collapse; nothing
   writes them, so there is no drift check and no way for a new fund to appear. Spec already recorded
   above: join volatility by CNPJ, set the broker flags from the tracker sets, override names from

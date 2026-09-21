@@ -1,15 +1,11 @@
 const TRACKER_NAME = 'Principal';
 const RENT_NAME = 'Rentabilidade';
 const BENCH_NAME = 'Indices';
-const RENT_MONTHS = 120;
-const TOTAL_PERIOD_CAP_MONTHS = RENT_MONTHS;
 
 let trackerSheet;
 let rentSheet;
 let benchSheet;
 
-let rentabilidades;
-let cnpjs;
 let rentMonths;
 let rentByCnpj;
 
@@ -77,24 +73,31 @@ function init() {
   const lastRow = rentSheet.getLastRow();
   const lastColumn = rentSheet.getLastColumn();
 
-  rentMonths = rentSheet
-    .getRange(1, 2, 1, lastColumn - 1)
-    .getValues()[0]
-    .map(monthKeyOf);
+  rentMonths = rentMonthColumns(rentSheet.getRange(1, 1, 1, lastColumn).getValues()[0]);
+  const monthCount = rentMonths.length;
 
   const raw = rentSheet.getRange(2, 1, lastRow - 1, lastColumn).getValues();
-
-  cnpjs = raw.map(p => p[0]).filter(p => !!p);
-  rentabilidades = raw.map(p => p.slice(1, RENT_MONTHS + 1));
 
   rentByCnpj = {};
 
   raw.forEach(row => {
     const cnpj = row[0] === null || row[0] === undefined ? '' : String(row[0]).trim();
     if (cnpj && !rentByCnpj[cnpj]) {
-      rentByCnpj[cnpj] = row.slice(1, RENT_MONTHS + 1);
+      rentByCnpj[cnpj] = row.slice(1, monthCount + 1);
     }
   });
+}
+
+function rentMonthColumns(headerRow) {
+  const keys = [];
+  for (let column = 1; column < headerRow.length; column++) {
+    const key = monthKeyOf(headerRow[column]);
+    if (!key) {
+      break;
+    }
+    keys.push(key);
+  }
+  return keys;
 }
 
 function monthKeyOf(value) {
@@ -169,7 +172,7 @@ function parseMonthCount(periodName) {
   }
 
   if (text.toUpperCase() === 'T') {
-    return TOTAL_PERIOD_CAP_MONTHS;
+    return Infinity;
   }
 
   return undefined;

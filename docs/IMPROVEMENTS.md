@@ -1090,6 +1090,46 @@ the verifier was stale, not the sheet. It now READS the period labels from `Prin
 derives the widest-period rule itself, so a future relabel cannot silently invalidate it. The
 Sortino math stays an independent implementation. Back to **15390/15390**.
 
+### DONE 2026-09-21 — one limit in the writer, `T` derived from the data
+
+Vitor's decomposition: the WRITER decides how much history to retain (10 years, everything, it does
+not matter), and `T` means *all data available for that fund* within whatever was retained. A fund
+with 3 years gets a 3-year Sortino; a fund with 20 years gets as much as the sheet holds. The point
+is that the limit is then set in exactly ONE place.
+
+`T` is no longer a number. `parseMonthCount('T')` returns **`Infinity`**, so:
+
+- `rents.slice(0, Infinity)` is the whole row — no cap of its own
+- `Math.max(...periods)` makes `T` the widest period, which is already the best-effort one, so
+  `calcSortino` truncates at the fund's first missing month
+- the read width comes from `rentMonthColumns(headerRow)`, which walks row 1 and stops at the first
+  cell that does not parse as a month — so a cleared or ragged tail is excluded automatically
+
+That removes the window constant from every consumer. It now exists in `src/fundos/window.ts` and is
+read only by the writer (`rentMonthKeys`, `rentYearRange`, the trim message). `sortino.ts`,
+`appsscript/Sortino.js` and `verify-sortino.js` carry **no** window literal at all — before this
+there were four, and `appsscript/Sortino.js` was unfixable-by-import, which is what made the
+duplication permanent.
+
+Also deleted two dead Apps Script globals (`rentabilidades`, `cnpjs`), assigned in `init()` and read
+nowhere since the CNPJ-keying rewrite — they were the last `RENT_MONTHS` consumers there.
+
+**Measured effect.** The live sheet still holds the March-2025 vintage: 134 month headers of which
+the oldest 12 (2014) are empty, so 122 populated. `T` therefore rose 120 -> 122 months:
+
+```
+T cells changed: 564  = 188 funds x 3 blocks   (those with >=120 months)
+DP: {1:59, 2:60, 3:98, 4:268, 5:541}           unchanged
+effective months per fund: median 62, max 122
+9.99 sentinel T cells: 5 -> 4                  (one fund gained a down month)
+independent recompute: 15390/15390             error cells 0
+```
+
+**Consequence to keep in mind:** `T` now tracks the sheet rather than a constant, so it is 122 today
+and becomes 120 after the next `npm run rentabilidade` (window 120 + the stale-tail trim). If more
+history is wanted, raise `RENT_MONTHS` — that one number moves the download, the headers, the trim
+and `T` together.
+
 ### DONE 2026-09-21 — the window is a hard cap, and the stale tail is now cleared
 
 `Rentabilidade` IS capped. `rentMonthKeys()` emits exactly `RENT_MONTHS` keys and

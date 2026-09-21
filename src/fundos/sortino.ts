@@ -1,6 +1,5 @@
 import {sheets_v4, google} from 'googleapis';
 import * as fs from 'fs';
-import {RENT_MONTHS} from './window';
 
 const CREDENTIALS_PATH = 'config/fundos-309615-2795009f4d3e.json';
 const DOC_ID = '1Ev0j3XqQJYWCSDftuud7IFAWya7gIiQGvp2ULfjWCi0';
@@ -10,8 +9,6 @@ const RENT_NAME = 'Rentabilidade';
 const BENCH_NAME = 'Indices';
 
 const FIRST_DATA_ROW = 3;
-const RENT_MONTH_COUNT = RENT_MONTHS;
-const TOTAL_PERIOD_CAP_MONTHS = RENT_MONTHS;
 const SENTINEL = 9.99;
 const SHEETS_EPOCH_UTC = Date.UTC(1899, 11, 30);
 const CNPJ_PATTERN = /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/;
@@ -48,6 +45,18 @@ export function monthKeyOf(value: Cell): string | null {
   return /^\d{4}-\d{2}/.test(text) ? text.slice(0, 7) : null;
 }
 
+export function rentMonthColumns(headerRow: Cell[]): string[] {
+  const keys: string[] = [];
+  for (let column = 1; column < headerRow.length; column++) {
+    const key = monthKeyOf(headerRow[column]);
+    if (!key) {
+      break;
+    }
+    keys.push(key);
+  }
+  return keys;
+}
+
 export function parseMonthCount(periodName: Cell): number | undefined {
   const text = periodName === null || periodName === undefined ? '' : String(periodName).trim();
 
@@ -62,7 +71,7 @@ export function parseMonthCount(periodName: Cell): number | undefined {
   }
 
   if (text.toUpperCase() === 'T') {
-    return TOTAL_PERIOD_CAP_MONTHS;
+    return Infinity;
   }
 
   return undefined;
@@ -208,7 +217,8 @@ export async function runSortino(dryRun = false) {
   );
 
   const {sheetId, blocks} = await readBlocks(api, header);
-  const rentMonths = rent[0].slice(1, RENT_MONTH_COUNT + 1).map(monthKeyOf);
+  const rentMonths = rentMonthColumns(rent[0]);
+  const monthCount = rentMonths.length;
 
   const rentByCnpj: {[cnpj: string]: Cell[]} = {};
   for (let row = 1; row < rent.length; row++) {
@@ -216,8 +226,8 @@ export async function runSortino(dryRun = false) {
     if (!cnpj) {
       continue;
     }
-    const months = rent[row].slice(1, RENT_MONTH_COUNT + 1);
-    while (months.length < RENT_MONTH_COUNT) {
+    const months = rent[row].slice(1, monthCount + 1);
+    while (months.length < monthCount) {
       months.push('');
     }
     rentByCnpj[cnpj] = months;

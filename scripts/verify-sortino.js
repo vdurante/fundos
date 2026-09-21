@@ -7,10 +7,9 @@ const KEY = path.join(PKG, 'config', 'fundos-309615-2795009f4d3e.json');
 const DOC_ID = '1Ev0j3XqQJYWCSDftuud7IFAWya7gIiQGvp2ULfjWCi0';
 
 const SHEETS_EPOCH_UTC = Date.UTC(1899, 11, 30);
-// Period definitions are READ FROM THE SHEET, so relabeling headers cannot make this
-// verifier silently stale. The Sortino math below stays an independent implementation.
-const TOTAL_FALLBACK_MONTHS = 120;
-const RENT_MONTHS = TOTAL_FALLBACK_MONTHS;
+// Period definitions and the month window are READ FROM THE SHEET, so relabeling headers or
+// resizing the window cannot make this verifier silently stale. The Sortino math below stays an
+// independent implementation.
 
 function parsePeriod(label) {
   const text = label === null || label === undefined ? '' : String(label).trim();
@@ -18,7 +17,7 @@ function parsePeriod(label) {
   if (years) return Number(years[1]) * 12;
   const months = text.match(/^(\d+)\s*[Mm]$/);
   if (months) return Number(months[1]);
-  if (text.toUpperCase() === 'T') return TOTAL_FALLBACK_MONTHS;
+  if (text.toUpperCase() === 'T') return Infinity;
   return undefined;
 }
 const BLOCKS = [
@@ -78,7 +77,12 @@ async function main() {
   });
   const [rent, indices, merge] = res.data.valueRanges.map(v => v.values || []);
 
-  const rentMonths = rent[0].slice(1).map(monthKeyOf);
+  const rentMonths = [];
+  for (const cell of rent[0].slice(1)) {
+    const key = monthKeyOf(cell);
+    if (!key) break;
+    rentMonths.push(key);
+  }
 
   const indexHeader = indices[0].map(h => String(h).trim());
   const byMonth = {};
@@ -101,7 +105,7 @@ async function main() {
     const row = rent[r];
     if (!row[0]) continue;
     const months = row.slice(1, 123).map(v => (v === undefined ? '' : v));
-    while (months.length < RENT_MONTHS) {
+    while (months.length < rentMonths.length) {
       months.push('');
     }
     rentByCnpj[row[0]] = months;

@@ -4,7 +4,7 @@ import * as fs from 'fs';
 const CREDENTIALS_PATH = 'config/fundos-309615-2795009f4d3e.json';
 const DOC_ID = '1Ev0j3XqQJYWCSDftuud7IFAWya7gIiQGvp2ULfjWCi0';
 
-const TRACKER_NAME = 'Merge';
+const TRACKER_NAME = 'Principal';
 const RENT_NAME = 'Rentabilidade';
 const BENCH_NAME = 'Indices';
 
@@ -138,7 +138,12 @@ async function readBlocks(
         periods,
       };
     })
-    .filter(block => !!block.label);
+    .filter(
+      block =>
+        !!block.label &&
+        block.periods.length > 0 &&
+        block.periods.every(period => period !== undefined)
+    );
 
   return {sheetId: tracker.properties!.sheetId!, blocks};
 }

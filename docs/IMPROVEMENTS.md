@@ -506,6 +506,45 @@ funds, which is what you would expect when a reference range stops growing.
 
 ## Destination — one table in `Principal` (agreed direction, not yet scheduled)
 
+### DONE 2026-09-21 — `Merge` deleted, `Principal` is the single table
+
+Executed in the order 1 -> 4 -> 2 -> 3 (step 4 had to precede step 2; see below).
+
+```
+formula cells referencing "Merge": 0
+Principal error cells:   0      (baseline 1475)
+Finalistas error cells:  0      rows returned 30
+manual/key cells changed vs baseline: 0
+sortino verify: 16200/16200 cells match  (1080 funds x 3 blocks x 5 periods; was 15930/1062)
+remaining sheets (8): Variáveis, Finalistas, Principal, Missing, Indices, Fundos, Rentabilidade, Manual
+```
+
+Snapshots kept: `docs/collapse-baseline.json` (Principal, pre-change) and
+`docs/merge-snapshot.json` (Merge values + formulas + gridProperties, pre-delete).
+
+**Ordering correction.** Nota first evaluated to `0` on 1,019 rows. Not a formula bug: `RANK`
+propagates an error present anywhere in its range, and the 41 keyless rows still held
+`=INDEX(Merge!M:M; $AD{r})` = `#N/A`. Confirmed by `COUNTA(M:M) - COUNT(M:M) = 1009 - 967 = 42`
+= 41 errors + 1 text header. **Clear the junk rows BEFORE installing population-wide formulas.**
+
+**Near-miss on human data.** The plan called for clearing all 41 keyless rows wholesale. A
+pre-flight check found **4 of them carry `Tipo = "IE"`** (rows 522, 552, 561, 571) with no CNPJ —
+orphaned annotations. Only the derived columns were cleared; `D:G` preserved on all 41. Those 4
+still need a decision about what they should attach to.
+
+**`Nota` moved, as predicted** (population 1,062 -> 1,080), by very little:
+`L` 1,018 changed, meanΔ -0.00052 · `R` 1,019 changed, meanΔ +0.00082 · `X` 1,018 changed, meanΔ -0.00057.
+
+**The 18 orphan funds are now live.** They previously showed `#N/A` in every derived column
+because `Merge` had no row for them. They DO have return history (`cnpjsWithoutHistory: 0`), so
+the collapse populated them — which is what closed item 33 without repairing anything.
+
+**Code changes:** `TRACKER_NAME` `'Merge'` -> `'Principal'` in BOTH `src/fundos/sortino.ts` and
+`appsscript/Sortino.js`; `scripts/verify-sortino.js` repointed. Block discovery gained a filter
+requiring every period header to parse (`block.periods.every(p => p !== undefined)`) because
+`Principal` merges `I:K` under the label `SORTINO >>>`, which the old `!!block.label` test let
+through and which would have crashed on `series['SORTINO >>>']`.
+
 ### Feasibility confirmed + execution order (2026-09-21)
 
 Two blocking unknowns were checked and both are clear:

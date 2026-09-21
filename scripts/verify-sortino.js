@@ -66,7 +66,7 @@ async function main() {
 
   const res = await api.spreadsheets.values.batchGet({
     spreadsheetId: DOC_ID,
-    ranges: ['Rentabilidade', 'Indices', 'Merge!A3:AC3000'],
+    ranges: ['Rentabilidade', 'Indices', 'Principal!A3:AC3000'],
     valueRenderOption: 'UNFORMATTED_VALUE',
   });
   const [rent, indices, merge] = res.data.valueRanges.map(v => v.values || []);

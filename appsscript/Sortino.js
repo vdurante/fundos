@@ -1,4 +1,4 @@
-const TRACKER_NAME = 'Merge';
+const TRACKER_NAME = 'Principal';
 const RENT_NAME = 'Rentabilidade';
 const BENCH_NAME = 'Indices';
 

@@ -17,6 +17,7 @@ const PERIODS = [
 const BLOCKS = [
   {series: 'CDI', firstCol: 'M'},
   {series: 'IBOV', firstCol: 'S'},
+  {series: 'Risk Free Bond', firstCol: 'Y'},
 ];
 const SAMPLE = process.argv[2] ? Number(process.argv[2]) : 25;
 
@@ -65,7 +66,7 @@ async function main() {
 
   const res = await api.spreadsheets.values.batchGet({
     spreadsheetId: DOC_ID,
-    ranges: ['Rentabilidade', 'Indices', 'Merge!A3:X3000'],
+    ranges: ['Rentabilidade', 'Indices', 'Merge!A3:AC3000'],
     valueRenderOption: 'UNFORMATTED_VALUE',
   });
   const [rent, indices, merge] = res.data.valueRanges.map(v => v.values || []);
@@ -151,7 +152,7 @@ async function main() {
 
   console.log(
     `\nindependent recompute: ${checked - mismatches}/${checked} cells match the sheet ` +
-      `(${mergeRows.length} funds x 2 blocks x 5 periods)`
+      `(${mergeRows.length} funds x ${BLOCKS.length} blocks x ${PERIODS.length} periods)`
   );
 
   console.log(`\nitem 2 — T cells that moved vs the pre-fix code (${tShifts.length}):`);

@@ -495,6 +495,29 @@ the first run.
 
 - [ ] **24. Two maintained-but-unread `Indices` series.** `6 % a.a.` and `Risk Free Bond` are both 189/189 filled and never read — `sortino()` only processes labels merged in `Merge` row 1. Either give them blocks or stop maintaining them. Same for the `Dif` row in `Manual`.
 
+- [x] **31. `T` now carries weight 1.** DONE 2026-09-21, at the user's instruction.
+  `Variáveis!B3` changed `0 → 1`. `Acumulado` is a running total (`=B3`, `=B4+C3`, …) so
+  one cell was enough: `C3:C7` went `0,1,2,3,4` → `1,2,3,4,5`.
+
+  Effect, measured with `node scripts/compare-nota-weights.js` (which reproduces the
+  sheet's `Nota` on 1019/1019 funds, so the comparison is trustworthy):
+
+  | | CDI | IBOV |
+  |---|---|---|
+  | funds now ranked | 1019 (+52) | 1019 (+52) |
+  | changed position | 961 of 967 | 959 of 967 |
+  | largest move | 300 places | 390 places |
+  | new entrants to top 10 | 6 | 4 |
+
+  The 52 newly-ranked funds are the `K=1` rows that previously divided by zero. The 102
+  `K=0` rows stay blank — they hold no period data at all.
+
+  **Ordering mattered here.** Item 28's 59 `#REF!` rows carried a value *only* in the `T`
+  column. Weighting `T` before clearing them would have pulled 59 junk values into
+  `COUNT(Q:Q)` and every fund's percentile. They were cleared first, so `T`'s weight now
+  ranks real funds only.
+
+
 - [ ] **25. Volatility hardcodes 2018.** `writeVolatilidades` filters `DT_COMPTC >= 2018` and recomputes `m.sqrt(252)` inline while the `SQRT_252` const sits unused. Make the start year a parameter.
 
 - [ ] **26. Move the service-account key out of `~/Downloads`.**

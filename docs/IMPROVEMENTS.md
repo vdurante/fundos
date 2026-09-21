@@ -508,6 +508,53 @@ funds, which is what you would expect when a reference range stops growing.
 
 ## Destination — one table in `Principal` (agreed direction, not yet scheduled)
 
+### Filter rule for the Principal writer — exclude by TYPE, skip by DATA, never by CNPJ list
+
+Vitor asked for the no-value funds to be filtered in Node so they never land in `Principal`.
+Measured first, and his two symptom lists need different treatment.
+
+**Symptom lists are not the predicate.** "No Risco" is the WRONG filter: of the 18 blank-Risco
+funds, **7 have real data and real scores** (DP=1, Nota up to 0.97076). Blank Risco means no
+*volatility*, not no *value* — dropping them loses ranked funds. The usable predicate is `DP = 0`
+(no computable Sortino period).
+
+**DP=0 splits by fund type, measured across all 1,080 funds then in the sheet:**
+
+```
+Tipo_Fundo   total   DP=0   with data   unrankable
+  FI          1012      5        1007        0.5%
+  FIDC          37     20          17       54.1%
+  FIP           20     20           0       100.0%
+  FII            8      8           0       100.0%
+  FMIA-CL        2      0           2         0.0%
+  FIAGRO         1      1           0       100.0%
+```
+
+So the rule is two-tier:
+
+1. **Structural exclusion by `Tipo_Fundo`** — `FIP` and `FII` are 100% unrankable (n=28); they do
+   not report a comparable monthly NAV series and never will. Exclude at the universe level.
+   **Do NOT exclude `FIDC` by type** — 17 of its 37 carry real data.
+2. **Dynamic skip on `DP = 0` at write time** for everything else. NOT a static CNPJ denylist:
+   of the 54 DP=0 funds, **24 were registered in 2024 and 9 in 2025** — they have no history
+   *yet*. A hardcoded list would permanently bury a fund that becomes rankable next quarter,
+   whereas a write-time skip lets it appear by itself once it has data.
+
+The 54 DP=0 rows were removed from `Principal` (list kept in `docs/removed-no-data-funds.json`);
+none carried manual annotations. 1,080 -> 1,026 funds. The 7 blank-Risco-but-ranked funds stay.
+
+### Grid trimmed to the data — formats no longer have headroom
+
+Vitor deleted `Principal`'s trailing empty rows, so `rowCount` went **3816 -> 1028** (1,026 funds
++ 2 header rows). Every conditional format and the basic filter re-pinned to 1028, which is still
+"grid height" — but grid height now equals DATA height, so the headroom that made
+`declare at grid height` self-maintaining is gone.
+
+**Consequence for the writer:** appending a fund past row 1028 puts it OUTSIDE every conditional
+format and outside the filter. So when the keyed writer raises `rowCount` it MUST also re-extend
+the 11 conditional-format ranges and the basic filter to the new height, in the same run. Use
+`setBasicFilter` WITHOUT `sortSpecs` for that (see the sorting hazard above) or it re-sorts.
+
 ### DONE 2026-09-21 — `Nota` guarded on zero data points, and `Format.js` made idempotent
 
 **`INDEX` with index 0 does not error — it returns the whole range.** The Nota divisor

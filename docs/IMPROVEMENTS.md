@@ -327,7 +327,7 @@ timezone seam, no click, and `calcSortino` becomes locally testable.
 ---
 
 ## P1 — bugs that change the numbers you rank on
-- [ ] **2. `calcSortino` keeps the blank cell it slices at.**
+- [x] **2. `calcSortino` keeps the blank cell it slices at.** DONE — `slice(0, emptyIndex)` plus an empty-length guard; 1,748 of 2,124 `T` cells changed.
   `expectedReturns.slice(0, emptyIndex+1)` retains the first empty month; `'' - rf` coerces to `-rf`, injecting a fake 0%-return month that hits the numerator *and* lands fully in the downside denominator. Affects the `T` column of every fund without ~10 years of history. Fix: `slice(0, emptyIndex)` on both arrays.
 
   **Measured 2026-09-21** with `node scripts/verify-sortino.js 99999`: **1,662 of the
@@ -354,7 +354,7 @@ recomputes Sortino independently from `Rentabilidade` + `Indices` and matches th
 on **10,620/10,620 cells** (1,062 funds × 2 blocks × 5 periods, agreement < 1e-9).
 Everything below is about the rows around that data, not the maths.
 
-- [ ] **28. 59 `#REF!` rows at the bottom of `Merge` (rows 1065-1123).**
+- [x] **28. 59 `#REF!` rows at the bottom of `Merge` (rows 1065-1123).** OBSOLETE — `Merge` deleted 2026-09-21.
   `Merge!A/B/C/J` are `#REF! (Reference does not exist.)` — formulas pointing at
   something deleted. `Merge!A` holds 1,121 non-empty cells of which only **1,062 are
   valid CNPJs**.
@@ -404,7 +404,7 @@ Everything below is about the rows around that data, not the maths.
   The pt-BR `;` argument separator round-trips correctly through
   `userEnteredValue.formulaValue`, so no locale translation is needed.
 
-- [ ] **30. `Merge` is missing 18 funds that `Rentabilidade` has.**
+- [x] **30. `Merge` is missing 18 funds that `Rentabilidade` has.** DONE by the collapse — all 18 now carry Sortino data in `Principal` (`cnpjsWithoutHistory: 0`), and 7 of them had their volatility restored too.
   1,062 valid CNPJs in `Merge` against 1,080 in `Rentabilidade`. Positional alignment is
   exact for rows 3-1064, so the 18 are simply never joined in — probably the same broken
   reference behind item 28.
@@ -492,13 +492,13 @@ past the new end, forever.
 i.e. 41 blanks. The 18 are all `57.x / 58.x / 59.x` CNPJs — the most recently registered
 funds, which is what you would expect when a reference range stops growing.
 
-- [ ] **33. Repair the 59 rows.** Restore the pattern on `Merge` rows 1065-1123:
+- [x] **33. Repair the 59 rows.** OBSOLETE — never done, and correctly so: the collapse admitted the 18 real funds without repairing a single cell. Original text: restore the pattern on `Merge` rows 1065-1123:
   `A{r} = =Rentabilidade!A{r-1}`, `B{r} = =Cadastro!B{r-1}`,
   `J{r} = =ROUND(Volatilidade!B{r-1};2)`. `C` heals itself once `J` works. This admits the
   18 funds and blanks the other 41. It also changes every ranking, because 18 funds enter
   `COUNT`/`RANK`.
 
-- [ ] **34. Stop the recurrence.** Repairing alone is not enough — the next shrinking run
+- [x] **34. Stop the recurrence.** DONE — `writeToSheetNew` no longer resizes or clears; `writeKeyed` matches by key, appends, blanks vacated cells and never lowers `rowCount`. Repairing alone is not enough — the next shrinking run
   re-breaks it. Either (a) never shrink: clear values instead of resizing `rowCount` down,
   or (b) make the join shrink-proof by replacing ~1,100 pinned references per column with
   one dynamic `ARRAYFORMULA`/`QUERY` over `Rentabilidade!A2:A`, which cannot be pin-broken.
@@ -1008,16 +1008,16 @@ make the collapsed table ~150 wide.
 ## P2 — robustness in the Apps Script
 
 
-- [ ] **5. `init()` sizes its read off the wrong sheet.**
+- [x] **5. `init()` sizes its read off the wrong sheet.** DONE — now `rentSheet.getLastRow()` / `getLastColumn()`.
   `rentSheet.getRange(2, 1, trackerSheet.getMaxRows(), trackerSheet.getMaxColumns())` asks 2,103 rows × 144 cols of an 1,081 × 135 sheet. It does not throw, but it hauls back ~1,000 padded blank rows every run. Fix: `rentSheet.getLastRow() - 1` and `rentSheet.getLastColumn()`.
 
-- [ ] **6. `cnpjs` is compacted while `rentabilidades` is not.**
+- [x] **6. `cnpjs` is compacted while `rentabilidades` is not.** DONE — superseded: `calculateBlock` keys rows by CNPJ through `rentByCnpj`, so the index-alignment guard no longer exists to disarm.
   `.filter(p => !!p)` makes the two arrays different lengths and permanently disarms the `if(!cnpj) break;` guard in `calculateBlock`. It happens to work because all blanks are trailing. Fix: drop the filter and let the guard do its job.
 
-- [ ] **7. Protect `Merge` from being sorted.**
+- [x] **7. Protect `Merge` from being sorted.** OBSOLETE — `Merge` deleted. The concern TRANSFERS to `Principal`, where row order is human data: `setBasicFilter` re-applies `sortSpecs`, so always omit them when widening a filter.
   Nothing enforces the row-order invariant. Add a protected range on `Merge`, or a bold note in row 1.
 
-- [ ] **8. Two unguarded crashes in `sortino()`.**
+- [x] **8. Two unguarded crashes in `sortino()`.** DONE — an unmerged row-1 label is skipped (`if (!merged.length) continue`), `isPeriodBlock()` rejects a non-period block, and `loadBenchmarkColumn` throws a named error listing the available columns.
   `merged[0]` is undefined if a row-1 label isn't merged (`SORTINO >>>` is merged on `Principal`/`Finalistas` as `I1:K1` — copy it into `Merge` row 1 and the loop dies). And `getRentabilidadesByName` does `.findNext().getRow()` with no null check, so a label with no matching `Indices` row throws. Fix: skip a column with no merged range, and report a missing index by name.
 
 - [ ] **9. The 122-month window is hardcoded in two places.**
@@ -1027,7 +1027,7 @@ make the collapsed table ~150 wide.
 
 ## P2 — Format.gs and Filters.gs
 
-- [ ] **10. `format()` accumulates conditional-format rules forever.**
+- [x] **10. `format()` accumulates conditional-format rules forever.** DONE — drops existing gradient rules instead of appending, emits ONE rule spanning `L:AC`, and sizes from `getMaxRows()`. `Principal` consolidated 40 -> 11 rules. `Finalistas` still carries 47 and is NOT yet cleaned.
   `getConditionalFormatRules()` → `push` → `set` adds 12 rules per sheet per run and never removes the old ones; `clearFormat()` doesn't touch them. Currently 22 rules on `Principal`, 40 on `Finalistas`, including two-cell fragments (`M34:M35`) left from older row counts. Fix: filter out rules whose range matches the target column before pushing. Also `var rules` shadows the parameter of the same name.
 
 - [ ] **11. `Filters.gs` resolves everything at module load.**
@@ -1207,9 +1207,6 @@ case needs a pick rule (prefer the live class) before the NAV fetch can be fully
   `#REF!` is produced — but it cannot protect against bad input. Do not run `writeFundos`
   until the cadastral source is migrated and `CNPJ_FUNDOS` is reconciled against the sheet.
   <!-- original note follows -->
-- [ ] **16. Migrate off the dead CVM cadastral file.**
-  `cad_fi.csv` is effectively dead (46,575 `CANCELADA`, 22 live). The live universe is `registro_fundo_classe.zip` (`registro_classe.csv`), keyed on `CNPJ_Classe` under RCVM 175. The daily NAV report is per *class*, so `crawler-quotas.ts`'s `isTracked(results.data['CNPJ_FUNDO'])` filter probably needs `CNPJ_FUNDO_CLASSE` for recent files. Own research is already written up in `docs/itau-pension-opendata.md`.
-
 - [ ] **17. The XP scrape can fail silently.**
   `xpData` starts as `[]` and `writeCnpjs`'s guard is `if (!fundos)`, which an empty array passes. A page change overwrites `xp.json` with `[]`, logs "xp populado", and drops ~700 funds. Fix: fail on `length === 0`.
 
@@ -1261,7 +1258,7 @@ case needs a pick rule (prefer the live class) before the NAV fetch can be fully
 - [ ] **26. Move the service-account key out of `~/Downloads`.**
   `/Users/vcd/Downloads/fundos/config/fundos-309615-2795009f4d3e.json` grants **edit** rights on the document. `fundos.ts` expects it at `config/fundos-309615-2795009f4d3e.json` relative to cwd, and `.gitignore` already names that exact filename — so *move* (not copy) it into the repo's `config/`. Broaden the ignore to `config/` so a rotated key with a new filename is still covered.
 
-- [ ] **27. Get the Apps Script into version control and deployable via `clasp`.**
+- [x] **27. Get the Apps Script into version control and deployable via `clasp`.** DONE — `appsscript/` is tracked and `npm run gs:deploy` pushes AND verifies (defends clasp#507 and the non-TTY manifest skip).
 
   The Apps Script API **does not work with service accounts**, so the key in
   `config/` cannot push code — `clasp` with browser OAuth is the only path. The

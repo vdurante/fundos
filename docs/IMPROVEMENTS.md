@@ -1040,7 +1040,7 @@ so the literal matches neither. Derive both from `Rentabilidade`'s column count.
 
 ## P2 — Format.gs and Filters.gs
 
-- [x] **10. `format()` accumulates conditional-format rules forever.** DONE — drops existing gradient rules instead of appending, emits ONE rule spanning `L:AC`, and sizes from `getMaxRows()`. `Principal` consolidated 40 -> 11 rules. `Finalistas` still carries 47 and is NOT yet cleaned.
+- [x] **10. `format()` accumulates conditional-format rules forever.** DONE — drops existing gradient rules instead of appending, emits ONE rule spanning `L:AC`, and sizes from `getMaxRows()`. `Principal` consolidated 40 -> 11 rules. **`Finalistas` then cleaned itself on the next click of `Formatar colunas`: 47 -> 12 rules** (11 boolean + 1 gradient `L3:AC969` at grid height), which is the idempotency proof — the old code would have pushed `Principal` to 29. Its basic filter was separately widened from `A2:W33` to `A2:AC969` (grid height), `sortSpecs` omitted.
   `getConditionalFormatRules()` → `push` → `set` adds 12 rules per sheet per run and never removes the old ones; `clearFormat()` doesn't touch them. Currently 22 rules on `Principal`, 40 on `Finalistas`, including two-cell fragments (`M34:M35`) left from older row counts. Fix: filter out rules whose range matches the target column before pushing. Also `var rules` shadows the parameter of the same name.
 
 - [x] **11. `Filters.gs` resolves everything at module load.** DONE — `sheet_()`, `header_()`, `get_column()` and `getFilter()` all resolve per call, so a recreated filter or a moved column is picked up instead of throwing on a captured stale object.

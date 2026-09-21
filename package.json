@@ -25,7 +25,9 @@
     "sortino": "node build/src/sortino.js",
     "sortino:dry": "node build/src/sortino.js --dry-run",
     "indices": "node build/src/indices.js",
-    "test:writer": "node scripts/test-sheet-writer.js"
+    "test:writer": "node scripts/test-sheet-writer.js",
+    "rentabilidade": "node build/src/rentabilidade.js",
+    "rentabilidade:dry": "node build/src/rentabilidade.js --dry-run"
   },
   "devDependencies": {
     "@google/clasp": "^3.4.1",

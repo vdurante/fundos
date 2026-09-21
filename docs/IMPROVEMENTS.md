@@ -504,6 +504,72 @@ funds, which is what you would expect when a reference range stops growing.
 
 ---
 
+## Destination — one table in `Principal` (agreed direction, not yet scheduled)
+
+Kill `Merge` and `Fundos`, keep `Principal` as the single table. The chain today is
+strictly linear, with two mirror layers:
+
+```
+Rentabilidade(1062) ┐
+Fundos(4366)        ├→ Merge ──28052──→ Principal ──2──→ Finalistas
+Variáveis(3363)     ┘
+```
+
+`Principal` holds **28,052 formula cells whose only job is to copy `Merge`**
+(1,121 rows x 25 columns). All three sheets are the same grain, one row per fund; they
+are split by **writer**, not by data — Node writes `Fundos`, formulas plus `sortino.ts`
+write `Merge`, the human writes `Principal`'s order and annotations.
+
+**`Merge` carries zero conditional formats and no filter** — pure plumbing, so removing
+it costs nothing in presentation. That is what makes the direction sound.
+
+### What a rerun must not disturb — measured 2026-09-21
+
+| Surface | State |
+|---|---|
+| `Principal` grid | 3,816 x 157, data to row 1,123, no frozen rows |
+| `Principal` conditional formats | **40 rules** |
+| `Principal` basic filter | range **`A2:W1137`**, live criteria on **5 columns** |
+| `Finalistas` conditional formats | **47 rules** |
+| `Finalistas` basic filter | range `A2:W33` |
+| Hand-entered on `Principal` | column A order (1,080 literals), `D` Tipo 53, `E` Resgate 53, `F` M **0**, `G` Buy 30 |
+
+1. **Row deletion breaks formatting; overwriting values does not.** Conditional-format
+   ranges and the basic-filter range are row-index bound — insert/delete shifts and
+   fragments them, writing over cells leaves them intact. So a keyed writer must
+   **blank vacated cells, never delete rows**, and never lower `rowCount` (item 34's
+   bug in another costume).
+
+2. **The filter is already stale twice over.** `A2:W1137` stops at **W**, so it does not
+   cover the bond block at `X:AC`; and it ends at row **1,137** while data ends at 1,123
+   — grow past 1,137 and new funds fall outside the filter silently. `Finalistas`'
+   `A2:W33` has the same column shortfall.
+
+3. **Formatting debris is already accumulating** (item 10, now quantified).
+   `Principal`'s 40 rules include fragments at `L1124:L1137` and `M1124:M1137`, aimed
+   past the data. `Finalistas`' 47 include `M34:M35`, `N34:N35`, `I3:I35` from when its
+   query returned 33-35 rows instead of today's 30. The effectively whole-column rules
+   (`C3:C3816`, `H3:I3816`, `J3:J3816`) have stayed correct; the narrow ones rot.
+
+### Invariants for the keyed writer
+
+- Key on the CNPJ in column A; write ONLY the columns that writer owns.
+- Append new funds below the last data row; never re-sort (row order is the human's).
+- Blank the owned columns of a row whose key disappeared; never delete the row.
+- Never lower `rowCount` or `columnCount`.
+- Declare conditional formats and the filter range **open-ended** (omit the end row) so
+  row-count changes need no maintenance, and widen both to `AC`.
+
+`sortino.ts` already implements exactly this — keyed by column A, writes only
+`M:Q`/`S:W`/`Y:AC`, touches no formula and no manual cell. Making `writeFundos` behave
+the same way is the prerequisite for collapsing anything, and it independently fixes
+item 34.
+
+`Rentabilidade` stays separate regardless: same grain, but its 122 month columns would
+make the collapsed table ~150 wide.
+
+---
+
 ## P2 — robustness in the Apps Script
 
 

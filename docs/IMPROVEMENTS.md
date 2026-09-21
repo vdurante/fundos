@@ -138,7 +138,27 @@ decide not to migrate**. As of 2026-09-20 22:47 the 28 months are blank again (t
 
 ---
 
-## P1 — `Indices`: stop growing right, stop filling by hand
+## P1 — `Indices`: DONE 2026-09-20 23:00
+
+Migrated and verified live. `Benchmarks` (tab 12) is the source; `Indices` is
+unused and safe to delete. The Apps Script is in git and deployable with
+`npm run gs:push` (script id `1H_v74o7Weu6N7aNp-PI0_enw_IpP08gTOWziUTJxLwQzaynBm_HTdafA`).
+
+**Post-recalc verification, `Merge` rows 3-5 against the pre-change baseline:**
+
+| Block | Cells moved | Expected | Meaning |
+|---|---|---|---|
+| CDI `M:Q` | **0 of 15** | 0 | the date-keyed reader aligns exactly as the positional one did |
+| IBOV `S:W` | **15 of 15** | 15 | real IBOV replaced 28 months of zero benchmark |
+
+`9.99` sentinels afterwards: IBOV block 55/4,345 cells (1.3%), CDI block 42/4,345
+(1.0%) — comparable, as two real benchmarks should be. Before, IBOV 12m/24m were
+full of them because "never underperformed" is trivial against zero. Fund
+`00.817.677/0001-17` went `9.99 / 9.99` → `+0.6095 / +0.0724`.
+
+IBOV Sortinos got **worse** nearly everywhere (row 3's 24m `+0.0635` → `-0.2586`),
+which is the correction landing: funds that appeared to beat IBOV were beating 0%.
+
 
 **Status 2026-09-20 22:47: built, run, and verified against the live sheet.**
 `Benchmarks` exists — 189 rows, 2011-01 → 2026-09, zero gaps in any series. Decisions

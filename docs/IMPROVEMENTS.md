@@ -508,6 +508,44 @@ funds, which is what you would expect when a reference range stops growing.
 
 ## Destination — one table in `Principal` (agreed direction, not yet scheduled)
 
+### DONE 2026-09-21 — `Nota` guarded on zero data points, and `Format.js` made idempotent
+
+**`INDEX` with index 0 does not error — it returns the whole range.** The Nota divisor
+`INDEX('Variáveis'!$C$3:$C$7; $K{r}; 0)` with `K = 0` therefore yielded `{1;2;3;4;5}`, so
+`0 / {1;2;3;4;5}` produced an array whose first element is `0`. Result: of the 54 funds with no
+data points, 5 displayed `Nota = 0` and 44 displayed blank — same condition, two renderings.
+
+All 3,240 `L`/`R`/`X` formulas are now guarded. Per Vitor: **a fund with no data is a fund with a
+0 rating**, so the guard yields `0`, not `""`:
+
+```
+=IF($K{r}=0;0;IFERROR((…)/INDEX('Variáveis'!$C$3:$C$7;$K{r};0); ""))
+```
+
+```
+L (CDI): numeric 1080/1080  zeros 54  min non-zero 0.000975
+R (IBOV):numeric 1080/1080  zeros 54  min non-zero 0.007667
+X (Bond):numeric 1080/1080  zeros 54  min non-zero 0.000975
+sorted descending: 1079/1079 pairs · first Nota=0 at row 1029, all rows below are 0
+blank Nota cells: 0 · error cells: 0
+```
+
+An intermediate attempt used `""`. That is WORSE than it looks: a formula returning `""` is
+**text, not blank**, and Sheets sorts text BEFORE numbers in a descending sort, so all 54
+data-less funds clustered at the TOP of the sheet. `0` is a number and sorts last, which is both
+semantically right and the fix for the ordering.
+
+**`Format.js` was the debris generator.** It did `rules.push(rule); setConditionalFormatRules(rules)`
+for each of 18 columns on each of 2 sheets, **every run** — so each click of `Formatar colunas`
+added 36 conditional-format rules and would have taken `Principal` from 11 straight back to 29.
+Rewritten to: drop existing gradient rules rather than append, emit ONE rule spanning `L:AC`
+instead of 18 per-column rules, and size ranges from `getMaxRows()` (grid height) rather than
+`getLastRow()` (data height) so they cannot rot again.
+
+Note for a future sort: `sortRange` correctly rewrites relative formula references — verified
+0 of 1,080 rows pointing at the wrong row afterwards. A suspicious sort is more likely a data
+problem than a formula problem.
+
 ### DONE 2026-09-21 — `Atualizar cálculos` (Apps Script `sortino()`) fixed for `Principal`
 
 Reported broken by Vitor after the collapse. TWO bugs, the second far worse than the first, and

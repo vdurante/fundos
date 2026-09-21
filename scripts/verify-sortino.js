@@ -10,6 +10,7 @@ const SHEETS_EPOCH_UTC = Date.UTC(1899, 11, 30);
 // Period definitions are READ FROM THE SHEET, so relabeling headers cannot make this
 // verifier silently stale. The Sortino math below stays an independent implementation.
 const TOTAL_FALLBACK_MONTHS = 120;
+const RENT_MONTHS = TOTAL_FALLBACK_MONTHS;
 
 function parsePeriod(label) {
   const text = label === null || label === undefined ? '' : String(label).trim();
@@ -100,7 +101,7 @@ async function main() {
     const row = rent[r];
     if (!row[0]) continue;
     const months = row.slice(1, 123).map(v => (v === undefined ? '' : v));
-    while (months.length < 122) {
+    while (months.length < RENT_MONTHS) {
       months.push('');
     }
     rentByCnpj[row[0]] = months;

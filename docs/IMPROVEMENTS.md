@@ -1090,6 +1090,45 @@ the verifier was stale, not the sheet. It now READS the period labels from `Prin
 derives the widest-period rule itself, so a future relabel cannot silently invalidate it. The
 Sortino math stays an independent implementation. Back to **15390/15390**.
 
+### Where `122` came from (answered 2026-09-21)
+
+The number was a **snapshot of a moving quantity**, and the hypothesis that "T meant everything,
+and everything happened to be 122 months" is exactly right.
+
+The original, pulled from the live Apps Script into git only on 2026-09-20 (`606e19f`) — it predates
+this repo's history, having been written in the Sheet itself:
+
+```js
+if(periodName.toUpperCase() === 'T'){
+  return 122; // 10 anos - 1 mes;
+}
+```
+
+The populated width of `Rentabilidade` was never a constant. Headers spanned 12 years truncated at
+the current month (`132 + currentMonth` columns), while the download covered only 11 years because
+of `range`'s exclusive stop — so the oldest 12 columns were always empty:
+
+```
+populated months = (132 + currentMonth) − 12 = 120 + currentMonth
+```
+
+That equals **122 only in February**. The live sheet was last written 2025-02, and its populated
+region measures exactly `2015-01 .. 2025-02` = 10 full years + 2 months = **122**, with all 12 of
+the 2014 columns present and empty. So `slice(1, 123)` was not an arbitrary 122 — it was "every
+column that actually has data", correct on the day it was written and silently wrong every month
+since. The `10 anos - 1 mes` comment (119) matched neither.
+
+**Fix: one constant, one round number.** `src/fundos/window.ts` now holds `RENT_MONTHS = 120` and
+is the single definition. It was previously four independent literals — `RENT_MONTHS` in
+`fundos.ts`, `RENT_MONTH_COUNT` and the `T` cap in `sortino.ts`, `slice(1, 123)` twice plus the `T`
+cap in `appsscript/Sortino.js`, and a padding width in `verify-sortino.js`. `T` is now defined AS
+the window (`TOTAL_PERIOD_CAP_MONTHS = RENT_MONTHS`), which is the original intent — T is
+everything — expressed so it cannot drift from what the sheet actually holds.
+
+120 rather than 122 because 122 has no meaning beyond "a February run", and the pending
+`npm run rentabilidade` shifts the window forward 18 months regardless, so preserving the two
+oldest months buys nothing. Values unchanged: **15390/15390**.
+
 ### DONE 2026-09-21 — widest period relabelled back `10Y` -> `T`, capped at 120 months
 
 `10Y` was the wrong NAME for a column that was never a 10-year comparison. The widest period is

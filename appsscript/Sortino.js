@@ -1,7 +1,8 @@
 const TRACKER_NAME = 'Principal';
 const RENT_NAME = 'Rentabilidade';
 const BENCH_NAME = 'Indices';
-const TOTAL_PERIOD_CAP_MONTHS = 120;
+const RENT_MONTHS = 120;
+const TOTAL_PERIOD_CAP_MONTHS = RENT_MONTHS;
 
 let trackerSheet;
 let rentSheet;
@@ -84,14 +85,14 @@ function init() {
   const raw = rentSheet.getRange(2, 1, lastRow - 1, lastColumn).getValues();
 
   cnpjs = raw.map(p => p[0]).filter(p => !!p);
-  rentabilidades = raw.map(p => p.slice(1, 123));
+  rentabilidades = raw.map(p => p.slice(1, RENT_MONTHS + 1));
 
   rentByCnpj = {};
 
   raw.forEach(row => {
     const cnpj = row[0] === null || row[0] === undefined ? '' : String(row[0]).trim();
     if (cnpj && !rentByCnpj[cnpj]) {
-      rentByCnpj[cnpj] = row.slice(1, 123);
+      rentByCnpj[cnpj] = row.slice(1, RENT_MONTHS + 1);
     }
   });
 }

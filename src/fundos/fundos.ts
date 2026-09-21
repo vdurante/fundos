@@ -20,6 +20,7 @@ import * as m from 'mathjs';
 import {isNumber} from 'lodash';
 import {getCadastros} from './crawler-cadastros';
 import {writeKeyed} from './sheet-writer';
+import {RENT_MONTHS} from './window';
 import {
   Benchmarks,
   CDI,
@@ -35,7 +36,7 @@ const LEGACY_BENCHMARKS_SHEET = 'Benchmarks';
 const BENCHMARK_COLUMNS = [CDI, IBOV, RISK_FREE_BOND, FIXED_SIX];
 const BENCHMARK_START_YEAR = 2011;
 
-export const RENT_MONTHS = 122;
+export {RENT_MONTHS};
 
 export function rentMonthKeys(now = new Date()) {
   const keys: string[] = [];

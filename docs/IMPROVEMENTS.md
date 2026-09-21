@@ -328,7 +328,13 @@ timezone seam, no click, and `calcSortino` becomes locally testable.
 
 ## P1 — bugs that change the numbers you rank on
 - [ ] **2. `calcSortino` keeps the blank cell it slices at.**
-  `expectedReturns.slice(0, emptyIndex+1)` retains the first empty month; `'' - rf` coerces to `-rf`, injecting a fake 0%-return month that hits the numerator *and* lands fully in the downside denominator. Affects the `T` column of every fund without ~10 years of history, i.e. most of them. Fix: `slice(0, emptyIndex)` on both arrays.
+  `expectedReturns.slice(0, emptyIndex+1)` retains the first empty month; `'' - rf` coerces to `-rf`, injecting a fake 0%-return month that hits the numerator *and* lands fully in the downside denominator. Affects the `T` column of every fund without ~10 years of history. Fix: `slice(0, emptyIndex)` on both arrays.
+
+  **Measured 2026-09-21** with `node scripts/verify-sortino.js 99999`: **1,662 of the
+  2,124 T cells move** (1,062 funds × 2 blocks) — 78%. Deltas run both directions and
+  reach ~2.6pp of Sortino, e.g. `12.796.232/0001-87` CDI `0.04890035 → 0.07500190`,
+  IBOV `-0.08413948 → -0.09233546`. `Nota` weights T at 0 today, so this does not
+  currently move any ranking — it corrupts a column you read directly.
 
 - [x] **3. A blank in the `Indices` row is silently read as 0%.** Fixed by the
   `Indices` rewrite: `calculateBlock` resolves each month through a month→value map
@@ -338,6 +344,68 @@ timezone seam, no click, and `calcSortino` becomes locally testable.
 
 - [ ] **4. The `9.99` sentinel distorts `Nota`.**
   `denominador === 0` → `9.99`. `Nota` ranks by `RANK(...)/COUNT(...)`, so every sentinel fund ties at the top percentile. Under bug #3 this handed the top of the IBOV ranking to "never had a down month", which low-volatility funds satisfy trivially. Decide: return `''`, or keep a cap and have `Nota` exclude sentinels from the rank.
+
+---
+
+## P1 — `Merge` row integrity (found 2026-09-21 while verifying the recalc)
+
+The Apps Script arithmetic itself is now **fully verified**: `node scripts/verify-sortino.js 99999`
+recomputes Sortino independently from `Rentabilidade` + `Indices` and matches the sheet
+on **10,620/10,620 cells** (1,062 funds × 2 blocks × 5 periods, agreement < 1e-9).
+Everything below is about the rows around that data, not the maths.
+
+- [ ] **28. 59 `#REF!` rows at the bottom of `Merge` (rows 1065-1123).**
+  `Merge!A/B/C/J` are `#REF! (Reference does not exist.)` — formulas pointing at
+  something deleted. `Merge!A` holds 1,121 non-empty cells of which only **1,062 are
+  valid CNPJs**.
+
+  `sortino()` writes `values.length` rows from row 3, and `values.length` is
+  `Rentabilidade`'s fund count (**1,080**), so it writes rows 3-1082 regardless of what
+  `Merge!A` says. Consequence: rows 1065-1082 receive real funds' numbers under a
+  broken identity, and rows 1083-1123 hold **stale** numbers from an older, longer run
+  that nothing overwrites.
+
+  Impact today is contained but the mechanism is live: the garbage rows carry a numeric
+  value **only in the `T` column** (`Q`/`W`), because `M:P`/`S:V` are blank there. `Nota`
+  uses whole-column `RANK(Q3; Q:Q; 1)/COUNT(Q:Q)`, so `COUNT(Q:Q)` and `COUNT(W:W)` are
+  inflated by 5.3% — harmless *only* because `Variáveis!B3` (the T weight) is `0`, which
+  multiplies that whole term away. **Give T any non-zero weight and 59 junk rows start
+  shifting every fund's percentile.**
+
+  Fix: repair or delete rows 1065-1123, and have `calculateBlock` clear the region below
+  the rows it writes so a shrinking fund count cannot leave stale values behind.
+
+- [ ] **29. 95 real funds have no `Nota` at all — `#DIV/0!` in both blocks.**
+  `K3 = COUNTIF(M3:Q3;"<>"&"")` counts non-blank period cells and indexes the divisor:
+  `/INDEX('Variáveis'!$C$3:$C$7; $K3; 0)`. A fund with under 12 months of history has
+  `M:P` blank and only `T` filled, so `K3 = 1` → `INDEX(...;1)` → `Variáveis!C3` → **0**
+  → divide by zero. 154 error cells per block, of which **95 sit on valid CNPJ rows**
+  (the other 59 are the junk rows from item 28).
+
+  Fix: wrap in `IFERROR`, or give T a non-zero weight, or exclude sub-12-month funds from
+  the sheet instead of ranking them.
+
+- [ ] **30. `Merge` is missing 18 funds that `Rentabilidade` has.**
+  1,062 valid CNPJs in `Merge` against 1,080 in `Rentabilidade`. Positional alignment is
+  exact for rows 3-1064, so the 18 are simply never joined in — probably the same broken
+  reference behind item 28.
+
+### Verification tooling added
+
+| Script | What it proves |
+|---|---|
+| `scripts/verify-sortino.js [n]` | recomputes Sortino independently and diffs against `Merge`; also previews the item-2 fix |
+| `scripts/check-merge-blocks.js` | per-block coverage, `9.99` counts, and how much of each RANK/COUNT denominator is junk |
+| `scripts/check-row-alignment.js` | `Merge!A` vs `Rentabilidade!A` positional alignment and `#REF!` census |
+| `scripts/verify-indices.js` | `Indices` month sequence, gaps, empty cells, percent formatting |
+| `scripts/read-range.js <A1>` | ad-hoc range dump |
+| `scripts/gs-deploy.js` | pushes Apps Script and **verifies** it landed (see clasp#507 above) |
+
+Note when writing a checker: the Sheets API **omits trailing empty cells**, so a
+short-history fund's row comes back shorter rather than padded. Apps Script's
+`getValues()` pads with `''`. Pad to 122 months before comparing, or every
+short-history fund will look like a mismatch — this produced a false 7,196/10,620 on
+the first run.
 
 ---
 

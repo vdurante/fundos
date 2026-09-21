@@ -7,13 +7,19 @@ const KEY = path.join(PKG, 'config', 'fundos-309615-2795009f4d3e.json');
 const DOC_ID = '1Ev0j3XqQJYWCSDftuud7IFAWya7gIiQGvp2ULfjWCi0';
 
 const SHEETS_EPOCH_UTC = Date.UTC(1899, 11, 30);
-const PERIODS = [
-  {name: '12m', months: 12},
-  {name: '24m', months: 24},
-  {name: '36m', months: 36},
-  {name: '60m', months: 60},
-  {name: 'T', months: 122},
-];
+// Period definitions are READ FROM THE SHEET, so relabeling headers cannot make this
+// verifier silently stale. The Sortino math below stays an independent implementation.
+const TOTAL_FALLBACK_MONTHS = 122;
+
+function parsePeriod(label) {
+  const text = label === null || label === undefined ? '' : String(label).trim();
+  const years = text.match(/^(\d+)\s*[Yy]$/);
+  if (years) return Number(years[1]) * 12;
+  const months = text.match(/^(\d+)\s*[Mm]$/);
+  if (months) return Number(months[1]);
+  if (text.toUpperCase() === 'T') return TOTAL_FALLBACK_MONTHS;
+  return undefined;
+}
 const BLOCKS = [
   {series: 'CDI', firstCol: 'M'},
   {series: 'IBOV', firstCol: 'S'},
@@ -66,7 +72,7 @@ async function main() {
 
   const res = await api.spreadsheets.values.batchGet({
     spreadsheetId: DOC_ID,
-    ranges: ['Rentabilidade', 'Indices', 'Principal!A3:AC3000'],
+    ranges: ['Rentabilidade', 'Indices', 'Principal!A3:AC3000', 'Principal!A2:AC2'],
     valueRenderOption: 'UNFORMATTED_VALUE',
   });
   const [rent, indices, merge] = res.data.valueRanges.map(v => v.values || []);
@@ -100,6 +106,26 @@ async function main() {
     rentByCnpj[row[0]] = months;
   }
 
+  const headerRow = (res.data.valueRanges[3].values || [[]])[0] || [];
+
+  for (const block of BLOCKS) {
+    const base = block.firstCol.charCodeAt(0) - 'A'.charCodeAt(0);
+    block.periods = [];
+    for (let i = 0; i < 5; i++) {
+      const label = headerRow[base + i];
+      const months = parsePeriod(label);
+      if (months === undefined) {
+        throw new Error(
+          `Principal!${block.firstCol}2 block: header ${JSON.stringify(label)} is not a period`
+        );
+      }
+      block.periods.push({name: String(label).trim(), months});
+    }
+    console.log(
+      `  ${block.series.padEnd(16)} ${block.periods.map(p => `${p.name}=${p.months}`).join(' ')}`
+    );
+  }
+
   const mergeRows = merge.filter(r => r[0]).slice(0, SAMPLE);
   let checked = 0;
   let mismatches = 0;
@@ -114,12 +140,14 @@ async function main() {
 
     for (const block of BLOCKS) {
       const base = block.firstCol.charCodeAt(0) - 'A'.charCodeAt(0);
-      PERIODS.forEach((period, i) => {
+      const periods = block.periods;
+      const widest = Math.max(...periods.map(p => p.months));
+      periods.forEach((period, i) => {
         const sheetValue = row[base + i];
         const mine = calcSortino(
           rents.slice(0, period.months),
           series[block.series].slice(0, period.months),
-          period.months === 122,
+          period.months === widest,
           true
         );
 
@@ -152,7 +180,7 @@ async function main() {
 
   console.log(
     `\nindependent recompute: ${checked - mismatches}/${checked} cells match the sheet ` +
-      `(${mergeRows.length} funds x ${BLOCKS.length} blocks x ${PERIODS.length} periods)`
+      `(${mergeRows.length} funds x ${BLOCKS.length} blocks x ${BLOCKS[0].periods.length} periods)`
   );
 
   console.log(`\nitem 2 — T cells that moved vs the pre-fix code (${tShifts.length}):`);

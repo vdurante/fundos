@@ -49,12 +49,21 @@ export function monthKeyOf(value: Cell): string | null {
 
 export function parseMonthCount(periodName: Cell): number | undefined {
   const text = periodName === null || periodName === undefined ? '' : String(periodName).trim();
-  if (text.endsWith('m')) {
-    return Number(text.replace('m', ''));
+
+  const years = text.match(/^(\d+)\s*[Yy]$/);
+  if (years) {
+    return Number(years[1]) * 12;
   }
+
+  const months = text.match(/^(\d+)\s*[Mm]$/);
+  if (months) {
+    return Number(months[1]);
+  }
+
   if (text.toUpperCase() === 'T') {
     return TOTAL_PERIOD_MONTHS;
   }
+
   return undefined;
 }
 
@@ -225,6 +234,10 @@ export async function runSortino(dryRun = false) {
   let missing = 0;
 
   for (const block of blocks) {
+    const widestPeriod = Math.max(
+      ...block.periods.filter((p): p is number => p !== undefined)
+    );
+
     const values: (number | null)[][] = trackerCnpjs.map(cnpj => {
       const rents = CNPJ_PATTERN.test(cnpj) ? rentByCnpj[cnpj] : undefined;
       if (!rents) {
@@ -237,7 +250,7 @@ export async function runSortino(dryRun = false) {
         const value = calcSortino(
           rents.slice(0, months),
           series[block.label].slice(0, months),
-          months === TOTAL_PERIOD_MONTHS
+          months === widestPeriod
         );
         return value === '' ? null : value;
       });

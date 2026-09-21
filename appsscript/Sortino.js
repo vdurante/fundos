@@ -155,12 +155,21 @@ function benchmarkSeries(indexName) {
 
 function parseMonthCount(periodName) {
   const text = periodName === null || periodName === undefined ? '' : String(periodName).trim();
-  if (text.endsWith('m')) {
-    return +text.replace('m', '');
+
+  const years = text.match(/^(\d+)\s*[Yy]$/);
+  if (years) {
+    return +years[1] * 12;
   }
+
+  const months = text.match(/^(\d+)\s*[Mm]$/);
+  if (months) {
+    return +months[1];
+  }
+
   if (text.toUpperCase() === 'T') {
     return 122;
   }
+
   return undefined;
 }
 
@@ -224,6 +233,11 @@ function calculateBlock(indexName, startCol, endCol) {
     .getValues()
     .map(row => (row[0] === null || row[0] === undefined ? '' : String(row[0]).trim()));
 
+  const widestPeriod = Math.max.apply(
+    null,
+    periods.filter(p => p !== undefined)
+  );
+
   const values = keys.map(cnpj => {
     const rents = cnpj ? rentByCnpj[cnpj] : undefined;
 
@@ -234,7 +248,11 @@ function calculateBlock(indexName, startCol, endCol) {
     return periods.map(periodo =>
       periodo === undefined
         ? ''
-        : calcSortino(rents.slice(0, periodo), indices.slice(0, periodo), periodo === 122)
+        : calcSortino(
+            rents.slice(0, periodo),
+            indices.slice(0, periodo),
+            periodo === widestPeriod
+          )
     );
   });
 

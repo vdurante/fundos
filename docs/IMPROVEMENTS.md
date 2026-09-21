@@ -1055,6 +1055,41 @@ so the literal matches neither. Derive both from `Rentabilidade`'s column count.
 
 ---
 
+### DONE 2026-09-21 — periods relabelled `1Y 2Y 3Y 5Y 10Y`
+
+Headers are the only definition of a period, so this was a header edit plus one parser change.
+`parseMonthCount` now accepts `<n>Y` (years x 12) as well as `<n>m` and `T`, in BOTH
+`src/fundos/sortino.ts` and `appsscript/Sortino.js`.
+
+**The trap: `allowNonEmpty` was keyed on `months === 122`.** That flag is what makes the widest
+period BEST-EFFORT — it truncates at the first gap instead of returning blank, which is why a
+fund with 3 months of history still gets `DP = 1`. Relabelling `T` (122) to `10Y` (120) would have
+made the equality fail, turning `10Y` strict and collapsing `DP` for every fund without 120 full
+months. Replaced with the real intent: **the widest period in each block is best-effort**, computed
+per block as `Math.max(...periods)`. Same generalisation in both implementations.
+
+Measured after the change (1,026 funds):
+
+```
+period       same  changed   mean delta
+  1Y..5Y     1026        0   -          (relabelling is value-neutral, as expected)
+  CDI 10Y     838      188   +0.103876
+  IBOV 10Y    838      188   -0.000998
+  RFB 10Y     838      188   +0.122180
+DP before: {1:59, 2:60, 3:98, 4:268, 5:541}
+DP after:  {1:59, 2:60, 3:98, 4:268, 5:541}   <- identical, so the trap was avoided
+error cells: 0
+```
+
+The 188 changed funds are those with >=120 months, where dropping 122 -> 120 months moves the
+number. The identical `DP` distribution is the proof that best-effort still applies to the widest
+period.
+
+**`verify-sortino.js` had the same 122 hardcoded** and reported 14826/15390 after the relabel —
+the verifier was stale, not the sheet. It now READS the period labels from `Principal!A2:AC2` and
+derives the widest-period rule itself, so a future relabel cannot silently invalidate it. The
+Sortino math stays an independent implementation. Back to **15390/15390**.
+
 ### DONE 2026-09-21 — `Rentabilidade` extracted to its own entry point
 
 `writeRentabilidades()` was reachable only through `run()` — bundled with the blocked cadastral

@@ -1090,6 +1090,37 @@ the verifier was stale, not the sheet. It now READS the period labels from `Prin
 derives the widest-period rule itself, so a future relabel cannot silently invalidate it. The
 Sortino math stays an independent implementation. Back to **15390/15390**.
 
+### DONE 2026-09-21 — the window is a hard cap, and the stale tail is now cleared
+
+`Rentabilidade` IS capped. `rentMonthKeys()` emits exactly `RENT_MONTHS` keys and
+`writeRentabilidades` writes `['CNPJ_FUNDO', ...rentMonthKeys()]` — **121 columns, 120 months**,
+newest first. There is no "keep whatever history exists" path; a fund with 200 months of quotas
+contributes only the newest 120, and the download range is derived from the same keys.
+
+**The gap: `writeKeyed` never shrinks, by design.** `columnCountAfter = Math.max(columnCountBefore,
+headers.length)` and every `updateCells` range ends at `headers.length`, so columns past the window
+are neither written nor cleared. The live sheet is 135 columns wide from the March-2025 run, so the
+next `npm run rentabilidade` would have left a **14-column stale tail**:
+
+```
+window now:  120 months, 2026-08 .. 2016-09        (121 columns)
+live grid:   135 columns, headers 2025-02 .. 2014-01
+untouched:   columns 122-135 = 2015-02, 2015-01, 2014-12 ... 2014-01
+```
+
+The sheet would then read `… 2016-10, 2016-09, 2015-02, 2015-01, …` — a break in the sequence, with
+two data vintages side by side. Harmless to Sortino, which slices the first `RENT_MONTHS` columns
+and never sees the tail, but dangerous the moment anyone raises `RENT_MONTHS` or reads the sheet by
+header: those old columns would then be consumed as if current.
+
+`blankColumnsBeyond(sheetTitle, keepColumns)` in `sheet-writer.ts` clears values (headers included)
+in every column past the window, and `writeRentabilidades` calls it after the keyed write, reporting
+the count. It does NOT resize the grid — `writeKeyed`'s never-shrink contract exists to keep
+positional references valid, and leaving the columns present-but-empty avoids re-creating the
+grid-height-equals-data-height trap hit earlier today.
+
+Not yet executed: the trim only runs inside a `rentabilidade` run, which has not happened.
+
 ### Where `122` came from (answered 2026-09-21)
 
 The number was a **snapshot of a moving quantity**, and the hypothesis that "T meant everything,

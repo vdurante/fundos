@@ -19,7 +19,7 @@ import {CsvType, range} from '../shared';
 import * as m from 'mathjs';
 import {isNumber} from 'lodash';
 import {getCadastros} from './crawler-cadastros';
-import {writeKeyed} from './sheet-writer';
+import {writeKeyed, blankColumnsBeyond} from './sheet-writer';
 import {RENT_MONTHS} from './window';
 import {
   Benchmarks,
@@ -279,6 +279,14 @@ async function writeRentabilidades(doc: GoogleSpreadsheet, quotas: CsvType[]) {
   const headers = ['CNPJ_FUNDO', ...rentMonthKeys()];
 
   await writeToSheetNew(doc, 'Rentabilidade', headers, rentabilidades);
+
+  const stale = await blankColumnsBeyond('Rentabilidade', headers.length);
+  if (stale.cleared > 0) {
+    console.log(
+      `  Rentabilidade: cleared ${stale.cleared} month columns past the ${RENT_MONTHS}-month window ` +
+        `(grid has ${stale.columnCount} columns)`
+    );
+  }
 }
 
 export async function runRentabilidades(dryRun = false) {

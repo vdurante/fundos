@@ -53,6 +53,48 @@ function chunkRows<T>(rows: T[], columns: number): T[][] {
   return chunks;
 }
 
+export async function blankColumnsBeyond(
+  sheetTitle: string,
+  keepColumns: number
+): Promise<{cleared: number; columnCount: number}> {
+  const api = client();
+
+  const meta = await api.spreadsheets.get({
+    spreadsheetId: DOC_ID,
+    fields: 'sheets(properties(sheetId,title,gridProperties))',
+  });
+  const sheet = meta.data.sheets?.find(s => s.properties?.title === sheetTitle);
+  if (!sheet) {
+    throw new Error(`Aba ${sheetTitle} nao encontrada`);
+  }
+  const sheetId = sheet.properties!.sheetId!;
+  const columnCount = sheet.properties!.gridProperties!.columnCount!;
+
+  if (columnCount <= keepColumns) {
+    return {cleared: 0, columnCount};
+  }
+
+  await api.spreadsheets.batchUpdate({
+    spreadsheetId: DOC_ID,
+    requestBody: {
+      requests: [
+        {
+          updateCells: {
+            range: {
+              sheetId,
+              startColumnIndex: keepColumns,
+              endColumnIndex: columnCount,
+            },
+            fields: 'userEnteredValue',
+          },
+        },
+      ],
+    },
+  });
+
+  return {cleared: columnCount - keepColumns, columnCount};
+}
+
 /**
  * Writes rows into a sheet WITHOUT clearing or shrinking it.
  *

@@ -23,7 +23,7 @@ function format() {
 }
 
 function setFormatOnSheet(sheet, rules){  
-  for(let i = 12; i<=23;i++){
+  for(let i = 12; i<=29;i++){
     setFormatOnColumn(sheet, i, rules);
   }
 }
@@ -32,7 +32,7 @@ function setFormatOnColumn(sheet, column, rules){
   var range = sheet.getRange(3, column, sheet.getLastRow()-2, 1);
   range.clearFormat();
   range.setHorizontalAlignment("center");
-  if(column == 12 ||column == 18){
+  if(column == 12 ||column == 18 || column == 24){
     range.setFontWeight("bold");
   }
   var rule = SpreadsheetApp.newConditionalFormatRule()

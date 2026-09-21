@@ -1137,31 +1137,71 @@ earlier prediction of the 160-fund logged-in shelf.
 **OPIN carries no status field** (zero `status|situacao|aberto|fechado` keys), so operating status
 must come from CVM regardless.
 
-#### Icatu's OPIN publication does NOT cover Onze's shelf
+#### Icatu's OPIN DOES cover Onze's shelf — the sheet points at the wrong vehicles
 
-Cross-referenced Icatu's 415 published funds against the 24 `ONZE`-flagged funds in `Principal`:
+**This corrects an earlier conclusion in this file.** The first pass found 8 of the 24 `ONZE`-flagged
+funds in Icatu's published set and explained the 16 absences as OPIN being a *retail* catalogue versus
+Onze being *corporate*. That explanation was wrong. The real reason is master-versus-feeder, and it is
+a defect in the sheet rather than a gap in the source.
 
 ```
 ONZE-flagged in the sheet:            24
 present in Icatu's published set:      8
 absent:                               16
+  of which MASTER or FIFE in CVM:     10       <- 0 of the 8 present are
 ```
 
-The obvious explanation would be the fund-vs-class CNPJ mismatch, so it was tested and **ruled out**.
-All 16 absent funds are single-class (`CNPJ_Fundo == CNPJ_Classe`), all are
-`Em Funcionamento Normal`, and **not one has a sibling CNPJ anywhere in Icatu's set** — so no join
-would recover them. Several are unmistakably Icatu's own (`ICATU SEG FIC FI CORPORATE RENDA FIXA`,
-three `Icatu Vanguarda` funds), which rules out "wrong insurer" too.
+An insurer never lists a master: it is the wholesale vehicle, not the thing a customer buys. The
+sheet's own names say `FIC` while the CNPJ beside them is the master's, so name and key disagree on
+those rows. Measured pairs, sheet CNPJ -> CVM `Denominacao_Social`, against what Icatu publishes:
 
-The remaining explanation is coverage: OPIN `products-services` is the **retail** product catalogue,
-while Onze is a **corporate** pension provider (planos empresariais). Its plans' funds are simply not
-published there. The same asymmetry appeared on the Itau side, where the published 235 exceeded the
-160-fund retail shelf partly because of "other corporate plans' funds".
+```
+28036851000103  ABSOLUTE PREVIDENCIARIO MASTER FIF MM        <- sheet "Absolute Icatu I Prev FICFI MM"
+29242441000181  ABSOLUTE ICATU I PREV FIC DE FIF MM          <- what Icatu publishes (the feeder)
 
-**Consequence:** `MANUAL`/ONZE stays hand-maintained, and now for a documented reason rather than
-inertia. 24 funds on a corporate plan churns slowly, and the alternative is a logged-in browser
-extraction like the one already used for Itau previdência. CVM still supplies name and status for all
-24, so only the availability flag is manual.
+37368165000120  LEGACY CAPITAL PREVIDENCIARIO MASTER ...     sheet    |  37367841000141 feeder  Icatu
+40456260000190  VALORA MASTER FIFE PREVIDENCIARIO ...        sheet    |  41163524000180 feeder  Icatu
+47540020000119  ONZE ICATU PREV FIFE FI FINANCEIRO ...       sheet    |  47543315000149 feeder  Icatu
+```
+
+**The sibling-class test that "ruled this out" was the wrong test.** Master and feeder are two separate
+FUND registrations, not two classes of one fund, so `ID_Registro_Fundo` never overlaps — verified 0
+shared ids across all pairs. Looking for a sibling `CNPJ_Classe` under the same fund could therefore
+only ever return nothing, which made a real remap look impossible.
+
+The remaining 6 absences are not master/feeder:
+
+- `33499634000190` `ICATU SEG ... CORPORATE RF` — genuinely a corporate-only vehicle, so the original
+  coverage argument does hold for this one row.
+- 4 near-miss series (`KINEA PREV XTR` vs Icatu's `XTR II PLANOS ICATU`, `SPX LANCER PREVIDENCIARIO`
+  vs `SPX LANCER ICATU PREVIDENCIA FIF CIC`, JGP, `ICATU SEG BRASIL TOTAL`) — same manager, different
+  registered fund; needs a per-row decision, not a rule.
+- `35726581000128` — see the wrong-CNPJ rows below.
+
+**Two rows where the name and the CNPJ are different funds outright:**
+
+```
+35726581000128  sheet "QUANTAMENTAL GEMS FIA"
+                CVM   "ITAU SMALL CAP II FIF CIC EM ACOES"
+46762380000100  sheet "ICATU VANGUARDA ABSOLUTO TOTAL RETURN RF CP PREV"
+                CVM   "ICATU VANGUARDA ABSOLUTO INFLACAO FIF RF CRED PRIV PREV"
+```
+
+**The numbers you rank on are affected, not just the labels.** All 24 tracked CNPJs DO have quota rows
+in `inf_diario_fi_202608` (24/24), so returns compute fine — but for the 10 masters they are the
+*master's* NAV, which is gross of the feeder's administration fee. Those Sortinos are therefore
+optimistic relative to what an Onze investor actually receives. Tracked as item 37.
+
+**Consequence:** ONZE availability no longer has to be hand-maintained on principle — the feeder CNPJs
+are published, unauthenticated, at tier 1. What is needed is a one-time remap from master to feeder
+(item 37), after which the flag can be derived like any other.
+
+One count discrepancy left open: the first fetch extracted **415** distinct funds and the research
+agent's extraction **418**. The likely cause is that this file's field-mapping table above lists only
+`defferalPeriod.investmentFunds[]`, while the agent also walked
+`grantPeriodBenefit.investmentFunds[]`. Unconfirmed — the 3-fund gap has not been identified
+individually, so treat 418 as the fuller figure and add the grant-period path when building the
+crawler.
 
 Itau previdência funds and Icatu funds are **disjoint** (overlap 0) — a FIE belongs to one insurer —
 so the two hosts together publish 635 previdência funds, of which only 8 are currently tracked.
@@ -1795,6 +1835,29 @@ case needs a pick rule (prefer the live class) before the NAV fetch can be fully
   The writer prerequisite is DONE — `writeKeyed` takes a column map, so `{CNPJ:'A', DENOM_SOCIAL:'B',
   BTG:'H', XP:'I', Vol:'J', MANUAL:'AD'}` writes without touching `C`, `D:G` or the formula columns.
   Still blocked on item 16 (the dead cadastral source) for the DATA, not for the write mechanism.
+
+- [ ] **37. Remap the ONZE rows from master vehicles to their investable feeders.** Found 2026-09-21
+  while validating the Icatu OPIN source. **10 of the 24** `ONZE`-flagged rows carry a `MASTER`/`FIFE`
+  CNPJ while their name says `FIC` — the sheet keys the wholesale vehicle, not the fund an Onze
+  customer holds. Consequences, in order of importance:
+
+  1. **The returns are gross of the feeder's administration fee**, so those 10 Sortinos and their
+     contribution to `Nota` are optimistic. This is a numbers defect, not a labelling one.
+  2. The rows cannot be matched against any platform catalogue, because no insurer publishes a master.
+  3. `2` rows have a name and a CNPJ belonging to different funds outright: `35726581000128`
+     (sheet `QUANTAMENTAL GEMS FIA`, CVM `ITAU SMALL CAP II FIF CIC EM ACOES`) and `46762380000100`
+     (sheet `... ABSOLUTO TOTAL RETURN ...`, CVM `... ABSOLUTO INFLACAO ...`). One of the two fields is
+     wrong on each row and it is not yet established which.
+
+  The remap cannot be done by name equality — the feeder uses post-RCVM-175 naming (`FIC DE FIF`)
+  against the sheet's older `FICFI`. Two sound routes: match on the Icatu OPIN catalogue by
+  manager+platform tokens and confirm each pair by hand (24 rows, one-time), or derive it exactly from
+  CVM's CDA (composição de carteira) files, where a feeder's holdings name the master's CNPJ — that
+  gives a verifiable link instead of a guess. Prefer CDA if it is cheap to fetch.
+
+  Do NOT simply repoint the CNPJs: the feeder has its own quota series, so every affected fund's
+  returns, volatility, Sortino and `Nota` change. Treat it as a data migration with a before/after
+  measurement, like the `T` relabel.
 
 - [ ] **35. Revisit `HISTORY_MONTHS = 120`.** Deferred 2026-09-21 — keep 120 for now. It is the single
   knob for how much return history is kept, and `T` follows it automatically, so raising it is a

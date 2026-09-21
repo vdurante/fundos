@@ -409,6 +409,27 @@ Everything below is about the rows around that data, not the maths.
   exact for rows 3-1064, so the 18 are simply never joined in — probably the same broken
   reference behind item 28.
 
+  **One root cause, three visible symptoms (measured 2026-09-21).** The 59 `#REF!` rows
+  in `Merge` propagate outward:
+
+  | Where | Symptom |
+  |---|---|
+  | `Merge` rows 1065-1123 | `A/B/C/J` are `#REF!`; identity lost |
+  | `Principal` | **59 rows** whose `AD` pointer `=MATCH(A;Merge!A:A;0)` is `#N/A`, so every `INDEX` on that row yields `#N/A` |
+  | `Finalistas` | 3 of those 59 pass the `F='B' OR G='B'` filter and render as visibly broken rows — `#N/A` in `B`/`C`, blanks across all three Nota blocks |
+
+  The three that surface are `57.879.610/0001-24` (Principal row 524),
+  `58.198.613/0001-65` (528) and `58.561.455/0001-66` (532). Repairing the `Merge` rows
+  fixes all three layers at once; patching `Principal` or `Finalistas` only hides it.
+
+- [x] **32. `Finalistas` query range was frozen at row 974.** FIXED 2026-09-21.
+  `=QUERY(Principal!A2:AC974; …)` while `Principal` held data to row 1123. Changed to the
+  open-ended `Principal!A2:AC` so it cannot go stale again as funds are added.
+
+  Impact was **3 funds, not the ~149 rows excluded** — the `WHERE F = 'B' OR G = 'B'`
+  filter admits only 30 funds in total, 27 of which already sat inside the old window.
+  `Finalistas` went 27 → 30 data rows, well inside its 967-row capacity.
+
 ### Verification tooling added
 
 | Script | What it proves |

@@ -506,6 +506,41 @@ funds, which is what you would expect when a reference range stops growing.
 
 ## Destination — one table in `Principal` (agreed direction, not yet scheduled)
 
+### Feasibility confirmed + execution order (2026-09-21)
+
+Two blocking unknowns were checked and both are clear:
+
+- **`Merge` is referenced by `Principal` alone** — 28,052 formula cells, all in `Principal`;
+  0 named ranges, 0 conditional formats, nothing in `Finalistas` or `Missing`. Plus 3 header
+  cells `Principal!A1` / `R1` / `X1` = `=Merge!A1` / `R1` / `X1`. One sheet to change.
+- **`Principal` already carries the same merged block headers** as `Merge` (`L:Q`, `R:W`,
+  `X:AC`), which is how `sortino.ts` discovers blocks — so it repoints with almost no change.
+  Caveat: `Principal` ALSO merges `I:K`, which the scanner would misread as a fourth block.
+  Filter on merge width (6) or on the label cell reading `Nota`.
+
+**This does NOT depend on the crawler rework.** `B` / `H` / `I` / `J` currently hold computed
+`INDEX` results; those values can be read and written back as literals, freezing today's data.
+The reworked crawlers later update the same columns through `writeKeyed`.
+
+Order, each step independently verifiable:
+
+1. **Freeze the data columns.** Read current computed `B`, `H`, `I`, `J` and the three Sortino
+   blocks from `Principal`; write them back as literal values. Verify: re-read and compare to
+   `docs/collapse-baseline.json` — must be byte-identical.
+2. **Convert the 5 live-formula columns** to self-referencing formulas: `C` = `IFS` on its own
+   `J`, `K` = `COUNTIF(M{r}:Q{r})`, `L`/`R`/`X` = the existing Nota formula reading `Principal`'s
+   own `M:Q` / `S:W` / `Y:AC` + `Variáveis`. Verify: `C` and `K` must match exactly; **`Nota`
+   will move** because the ranking population changes from `Merge`'s 1,062 valid rows to
+   `Principal`'s 1,080 — measure and report the delta, do not mistake it for a regression.
+3. **Delevel the 3 header cells** `A1`/`R1`/`X1` to literals, and drop `AD` (`IDX`), which
+   nothing references once step 2 lands.
+4. **Clear the ~43 keyless formula rows** below the last CNPJ (`Principal` has formulas to row
+   1,123 but keys only to 1,080) — a large share of the 1,475 current errors.
+5. **Repoint `sortino.ts`** from `Merge` to `Principal` with the block filter from above.
+   Verify with `verify-sortino.js` against `Principal`.
+6. **Delete `Merge`**, only once `find-sheet-references.js Merge` reports 0.
+7. **Widen the basic filter** to `A2:AC` at grid height, carrying its 5 criteria and 9 sortSpecs.
+
 ### Corrected collapse design — formulas STAY on `Principal`
 
 Vitor, 2026-09-21: **`Nota` must remain a live formula.** The point of the sheet is to change

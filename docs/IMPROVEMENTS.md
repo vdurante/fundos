@@ -807,6 +807,38 @@ make the collapsed table ~150 wide.
 - [ ] **15. Reconcile `currentYear = 2022` with reality.**
   `fundos.ts` `run()` caps the quota download at 2022, yet `Rentabilidade` holds real returns through 2025-02. The committed code cannot have produced the live sheet — either the constant was edited locally and never committed, or a newer copy exists elsewhere. Running the repo as-is would blank the 2023-2025 columns. Settle this before the next run.
 
+### Universe refresh — measured, and the key is `CNPJ_Fundo` NOT `CNPJ_Classe`
+
+Measured 2026-09-21 by `scripts/probe-cvm-registry.js` against
+`registro_fundo_classe.zip`, compared with the 1,080 live `Principal!A` keys:
+
+```
+registro_fundo.csv    90,218 rows   CNPJ_Fundo   81,373 distinct   matches 1080/1080 (100.0%)
+registro_classe.csv   36,753 rows   CNPJ_Classe  36,740 distinct   matches  946/1080  (87.6%)
+```
+
+**An earlier note in this file said to key on `CNPJ_Classe` under RCVM 175. For identity that
+is wrong and destructive**: it matches only 946 of the 1,080 rows, so it would orphan **134
+funds' worth of hand-entered `Tipo` / `Resgate` / `M` / `Buy`**. `CNPJ_Fundo` matches 100%,
+so `Principal!A` needs no reindexing at all and every manual annotation stays attached.
+
+`CNPJ_Classe` is still needed, but only as the **NAV lookup**, never as the key.
+
+Resolved shape of the refresh:
+
+| Need | Source | Coverage |
+|---|---|---|
+| Identity / key | `registro_fundo.CNPJ_Fundo` | **1080/1080** |
+| Fund name | `registro_fundo.Denominacao_Social` | **1080/1080** (vs 112 all-`CANCELADA` from `cad_fi.csv`) |
+| Fund → class join | `ID_Registro_Fundo`, present in BOTH files | 921/1080 resolve to ≥1 class |
+| NAV / rentability | `INF_DIARIO` keyed on `CNPJ_Classe` | 921 funds, all with ≥1 live class |
+
+Health of the tracked set: **921 `Em Funcionamento Normal`, 159 `Cancelado`**. The 159 dead ones
+are exactly the 159 that resolve to zero classes, so "no class" is a reliable dead-fund signal.
+
+Class cardinality: **920 funds map 1:1 to a class, exactly 1 fund has 2 classes** — that single
+case needs a pick rule (prefer the live class) before the NAV fetch can be fully automatic.
+
 - [ ] **16. Migrate off the dead CVM cadastral file.** **BLOCKING `writeFundos`.**
   Measured 2026-09-21 via `node scripts/dry-run-fundos.js` (read-only), against a live
   snapshot of `Fundos` saved to `docs/fundos-snapshot.json` (1,080 rows):

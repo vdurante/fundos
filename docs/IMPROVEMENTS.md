@@ -259,8 +259,48 @@ migration cannot quietly alter any number for a reason other than the data.
 
 ---
 
-## P1 — bugs that change the numbers you rank on
+## Deploying the Apps Script — and the revert trap
 
+`npm run gs:push` **replaces the whole project** with the contents of `appsscript/`,
+and its success output is **not proof** the live code changed. On 2026-09-21 09:30 a
+push reported all 7 files pushed while the live `Sortino.js` was still the original
+pre-migration code, which then threw
+`TypeError: Cannot read properties of null (reading 'getRow')` — the old
+`getRentabilidadesByName` doing `createTextFinder(...).findNext().getRow()`, where
+`findNext()` returns `null` because the rewritten `Indices` has no series label down
+column A. The likeliest cause is a stale Apps Script editor tab saving its old
+buffer over the project; the live script timezone had been changed to
+`America/Sao_Paulo` in the same window (a better value than the repo's
+`America/New_York`, so it was adopted rather than overwritten).
+
+**Verify every push by reading the live project back.** Pull into a throwaway
+directory holding only a `.clasp.json` (`{"scriptId": "...", "rootDir": "src"}`) and
+diff each file against `appsscript/`. Close or reload the Apps Script editor tab
+around a push.
+
+The failed run threw inside the first block, before `calculateBlock` writes, so
+`Merge` was left intact rather than half-written.
+
+**Triggering a function from the CLI does not work for this script.**
+`clasp run sortino` reaches the Execution API but fails with
+`Exception: We're sorry, a server error occurred while reading from storage. Error
+code NOT_FOUND.` — identically in devMode and `--nondev`, and identically after
+creating a fresh version and a versioned deployment. That is the container-bound
+script limitation, not a setup gap. A recalculation therefore needs one of:
+
+1. a click on **CLIQUE AQUI → Atualizar cálculos**;
+2. a web-app deployment with a `doGet` trigger — which means a publicly reachable
+   URL that mutates the sheet, and Script Properties can't be seeded from the CLI,
+   so the shared-secret gate needs the editor UI once;
+3. moving the Sortino calculation into the Node job, which already authenticates
+   with the service account and already writes this workbook.
+
+Option 3 is the one that removes the whole failure class (no push/revert race, no
+timezone seam, no click, and `calcSortino` becomes locally testable).
+
+---
+
+## P1 — bugs that change the numbers you rank on
 - [ ] **2. `calcSortino` keeps the blank cell it slices at.**
   `expectedReturns.slice(0, emptyIndex+1)` retains the first empty month; `'' - rf` coerces to `-rf`, injecting a fake 0%-return month that hits the numerator *and* lands fully in the downside denominator. Affects the `T` column of every fund without ~10 years of history, i.e. most of them. Fix: `slice(0, emptyIndex)` on both arrays.
 

@@ -208,7 +208,7 @@ async function dropLegacyBenchmarksSheet(doc: GoogleSpreadsheet) {
   console.log(`dropped legacy sheet ${LEGACY_BENCHMARKS_SHEET}`);
 }
 
-async function writeCadastros(
+async function writeFundos(
   doc: GoogleSpreadsheet,
   csv: CsvType[],
   volatilidades: {CNPJ_FUNDO: string; VOLATILIDADE: number}[]
@@ -232,7 +232,7 @@ async function writeCadastros(
 
   await writeToSheetNew(
     doc,
-    'Cadastro',
+    'Fundos',
     ['CNPJ_FUNDO', 'DENOM_SOCIAL', 'VOLATILIDADE', 'BTG', 'XP', 'MANUAL'],
     rows
   );
@@ -386,8 +386,8 @@ export async function run() {
 
   const cadastros = await getCadastros();
 
-  await writeCadastros(doc, cadastros, volatilidades);
-  console.log('writeCadastros done');
+  await writeFundos(doc, cadastros, volatilidades);
+  console.log('writeFundos done');
 
   await writeCorretoras(doc, cadastros);
   console.log('writeCorretoras done');

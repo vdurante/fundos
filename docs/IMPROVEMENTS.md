@@ -567,8 +567,20 @@ funds, which is what you would expect when a reference range stops growing.
 
   Remaining for a single fund table (step 2): fold in `Corretoras`. **DONE 2026-09-21.**
 
-- [x] **36. `Corretoras` folded into `Cadastro` as broker columns.** DONE 2026-09-21.
-  `Cadastro` is now `CNPJ_FUNDO | DENOM_SOCIAL | VOLATILIDADE | BTG | XP | MANUAL` (1,080 rows).
+- [x] **36. `Corretoras` folded in, and the table renamed to `Fundos`.** DONE 2026-09-21.
+  The single fund table is `Fundos`: `CNPJ_FUNDO | DENOM_SOCIAL | VOLATILIDADE | BTG | XP | MANUAL`
+  (1,080 rows), renamed from `Cadastro` once it stopped being just a registry.
+
+  The rename was done with `updateSheetProperties`, which makes Sheets rewrite every
+  reference itself: **all 4,368 formula cells** repointed to `Fundos!` with **0 value changes**
+  (`Merge` 4,366 = 1062 B + 1121 H + 1121 I + 1062 J, plus 2 in `Missing`). Error counts held
+  at `Merge` 236 / `Principal` 1,475 / `Finalistas` 6. In code only the sheet-name string and
+  `writeCadastros` -> `writeFundos` changed; `getCadastros` keeps its name because it reads the
+  CVM *cadastro* CSV, which really is called that.
+
+  Note `Missing` is a live diagnostic over this table --
+  `=FILTER(Fundos!A:A;ISNA(MATCH(Fundos!A:A;Principal!A:A;0)))` and the reverse -- so it is
+  where the 18 funds of item 30 surface.
   `Merge!H/I` went from a whole-column double-criteria scan to a plain cell reference:
 
   ```

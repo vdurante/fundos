@@ -18,7 +18,19 @@ import {CsvType, range} from '../shared';
 import * as m from 'mathjs';
 import {isNumber} from 'lodash';
 import {getCadastros} from './crawler-cadastros';
+import {
+  Benchmarks,
+  CDI,
+  FIXED_SIX,
+  getBenchmarks,
+  IBOV,
+  RISK_FREE_BOND,
+} from './crawler-indices';
 import {e} from 'mathjs';
+
+const BENCHMARKS_SHEET = 'Benchmarks';
+const BENCHMARK_COLUMNS = [CDI, IBOV, RISK_FREE_BOND, FIXED_SIX];
+const BENCHMARK_START_YEAR = 2011;
 
 async function writeToSheet(
   doc: GoogleSpreadsheet,
@@ -123,6 +135,43 @@ async function writeVolatilidades(doc: GoogleSpreadsheet, quotas: CsvType[]) {
     ['CNPJ_FUNDO', 'VOLATILIDADE'],
     volatilidades
   );
+}
+
+async function writeBenchmarks(doc: GoogleSpreadsheet, benchmarks: Benchmarks) {
+  const headers = ['MONTH', ...BENCHMARK_COLUMNS];
+
+  let sheet = doc.sheetsByTitle[BENCHMARKS_SHEET];
+  if (!sheet) {
+    sheet = await doc.addSheet({
+      title: BENCHMARKS_SHEET,
+      headerValues: headers,
+    });
+  }
+
+  const rows = benchmarks.months.map(month => {
+    const row: {[key: string]: string | number} = {MONTH: month};
+    for (const name of BENCHMARK_COLUMNS) {
+      const value = benchmarks.series[name][month];
+      if (value !== undefined) {
+        row[name] = value;
+      }
+    }
+    return row;
+  });
+
+  await sheet.resize({
+    columnCount: headers.length,
+    rowCount: rows.length + 1,
+  });
+
+  await sheet.clear();
+  await sheet.saveUpdatedCells();
+
+  await sheet.setHeaderRow(headers);
+  await sheet.saveUpdatedCells();
+
+  await sheet.addRows(rows);
+  await sheet.saveUpdatedCells();
 }
 
 async function writeCadastros(doc: GoogleSpreadsheet, csv: CsvType[]) {
@@ -243,12 +292,28 @@ async function writeRentabilidades(doc: GoogleSpreadsheet, quotas: CsvType[]) {
   await writeToSheetNew(doc, 'Rentabilidade', headers, rentabilidades);
 }
 
+export async function runBenchmarks(startYear = BENCHMARK_START_YEAR) {
+  const doc = await getDoc();
+
+  const benchmarks = await getBenchmarks(startYear);
+  await writeBenchmarks(doc, benchmarks);
+
+  console.log(
+    `writeBenchmarks done (${benchmarks.months.length} months, ` +
+      `${benchmarks.months[benchmarks.months.length - 1]} .. ${benchmarks.months[0]})`
+  );
+}
+
 export async function run() {
   //const currentYear = new Date().getFullYear();
   const currentYear = 2022;
   const currentMonth = new Date().getMonth();
 
   const doc = await getDoc();
+
+  const benchmarks = await getBenchmarks(currentYear - 11);
+  await writeBenchmarks(doc, benchmarks);
+  console.log('writeBenchmarks done');
 
   const rawQuotas = await getQuotas(currentYear, currentYear - 11);
 

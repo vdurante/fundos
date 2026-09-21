@@ -259,27 +259,53 @@ migration cannot quietly alter any number for a reason other than the data.
 
 ---
 
-## Deploying the Apps Script — and the revert trap
+## Deploying the Apps Script — `clasp push` lies, so verify
 
-`npm run gs:push` **replaces the whole project** with the contents of `appsscript/`,
-and its success output is **not proof** the live code changed. On 2026-09-21 09:30 a
-push reported all 7 files pushed while the live `Sortino.js` was still the original
-pre-migration code, which then threw
-`TypeError: Cannot read properties of null (reading 'getRow')` — the old
-`getRentabilidadesByName` doing `createTextFinder(...).findNext().getRow()`, where
-`findNext()` returns `null` because the rewritten `Indices` has no series label down
-column A. The likeliest cause is a stale Apps Script editor tab saving its old
-buffer over the project; the live script timezone had been changed to
-`America/Sao_Paulo` in the same window (a better value than the repo's
-`America/New_York`, so it was adopted rather than overwritten).
+**Never trust `clasp push` output.** Use `npm run gs:deploy`, which pushes, pulls the
+live project back into a temp directory, diffs every file against `appsscript/`, and
+retries up to 3 times before failing non-zero. `npm run gs:push` is the raw push and
+should only be used when you intend to verify by hand.
 
-**Verify every push by reading the live project back.** Pull into a throwaway
-directory holding only a `.clasp.json` (`{"scriptId": "...", "rootDir": "src"}`) and
-diff each file against `appsscript/`. Close or reload the Apps Script editor tab
-around a push.
+Two independent defects make the naive push unreliable, and both bit on 2026-09-21.
 
-The failed run threw inside the first block, before `calculateBlock` writes, so
-`Merge` was left intact rather than half-written.
+**1. `clasp push` reports success without updating the remote —
+[google/clasp#507](https://github.com/google/clasp/issues/507).** Open since Jan 2019,
+**closed** as `API support needed — A lack of a Google API feature blocks this issue`,
+so it is an unfixed Apps Script API limitation rather than a config error. The
+reporter's repro is exactly ours: push, reload, change absent; push again, change
+present. Observed live: a 09:30 push printed `Pushed 7 files` while the remote
+`Sortino.js` stayed on the pre-migration code; the byte-identical 09:38 push landed.
+
+The symptom that surfaced it was
+`TypeError: Cannot read properties of null (reading 'getRow')` from **Atualizar
+cálculos** — the old `getRentabilidadesByName` doing
+`createTextFinder(...).findNext().getRow()`, where `findNext()` returns `null`
+because the rewritten `Indices` carries its series as column headers (`B1:E1`)
+instead of row labels down column A. Old code, new sheet. It threw inside the first
+block, before `calculateBlock` writes, so `Merge` was left intact rather than
+half-written.
+
+**2. A changed `appsscript.json` silently skips the ENTIRE push in any non-TTY
+shell.** From `node_modules/@google/clasp/build/src/commands/push.js`:
+
+```js
+if (isManifestUpdated && !force) {
+    force = await confirmManifestUpdate();
+    if (!force) { console.log("Skipping push."); return; }   // pushes NOTHING
+}
+async function confirmManifestUpdate() {
+    if (!isInteractive()) { return false; }   // piped shell, CI, agent shell
+```
+
+Not just the manifest — every file. So `gs:push` and `gs:deploy` both pass
+`--force`, and `gs-deploy.js` additionally fails loudly if it ever sees
+`Skipping push`.
+
+The live script timezone is `America/Sao_Paulo`, matching the spreadsheet; the repo
+manifest was `America/New_York` until 2026-09-21 and was aligned to the live value
+rather than overwriting it. `monthKeyOf` formats with the **spreadsheet's** timezone
+regardless, so the two can differ without corrupting a month key, but aligning them
+removes the seam.
 
 **Triggering a function from the CLI does not work for this script.**
 `clasp run sortino` reaches the Execution API but fails with
@@ -295,8 +321,8 @@ script limitation, not a setup gap. A recalculation therefore needs one of:
 3. moving the Sortino calculation into the Node job, which already authenticates
    with the service account and already writes this workbook.
 
-Option 3 is the one that removes the whole failure class (no push/revert race, no
-timezone seam, no click, and `calcSortino` becomes locally testable).
+Option 3 is the one that removes the whole failure class — no push/verify dance, no
+timezone seam, no click, and `calcSortino` becomes locally testable.
 
 ---
 

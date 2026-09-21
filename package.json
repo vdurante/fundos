@@ -16,11 +16,12 @@
     "compile": "tsc",
     "fix": "gts fix",
     "gs:pull": "clasp pull",
-    "gs:push": "clasp push",
+    "gs:push": "clasp push --force",
     "gs:status": "clasp status",
     "prepare": "npm run compile",
     "pretest": "npm run compile",
-    "posttest": "npm run lint"
+    "posttest": "npm run lint",
+    "gs:deploy": "node scripts/gs-deploy.js"
   },
   "devDependencies": {
     "@google/clasp": "^3.4.1",

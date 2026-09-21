@@ -543,6 +543,35 @@ funds, which is what you would expect when a reference range stops growing.
 
 ## P2 — the Node pipeline
 
+- [x] **35. `Volatilidade` folded into `Cadastro`.** DONE 2026-09-21 (step 1 of 2).
+  `Cadastro` and `Volatilidade` were the same grain — 1,080 rows, same key set, **identical
+  key order** — so `Volatilidade!B` became `Cadastro!C`.
+
+  | Step | What |
+  |---|---|
+  | data | `Cadastro` widened to 3 columns, `VOLATILIDADE` written to `C`; verified **0 differences** against `Volatilidade!B` on all 1,080 rows |
+  | `Merge!J` | 1,062 formulas repointed `=ROUND(Volatilidade!B{n};2)` → `=ROUND(Cadastro!C{n};2)`; the 59 `=ROUND(#REF!;2)` rows deliberately left for item 33 |
+  | verify | `Merge!J` matches `ROUND(vol,2)` on all 1,033 valid numeric rows, 0 mismatches (29 blank-volatility rows, 59 `#REF!` rows) |
+  | code | `writeVolatilidades` → pure `computeVolatilidades(quotas)`; `writeCadastros(doc, csv, volatilidades)` now writes 3 columns; `run()` no longer writes a `Volatilidade` sheet |
+
+  The code change was **not optional**: `writeToSheetNew` resizes to `headers.length`
+  columns, so the next run would have deleted a hand-added column C.
+
+  40 of 1,080 funds have no volatility value; they are written blank, not zero.
+
+  **The `Volatilidade` sheet still exists and is now orphaned** — nothing writes or reads
+  it, and its contents are duplicated in `Cadastro!C`. Delete it when convenient.
+
+  Remaining for a single fund table (step 2): fold in `Corretoras`. Different grain
+  (1,306 rows, 1:many, 226 funds at 2 brokers) but it pivots cleanly to boolean columns —
+  only 3 values (`XP` 608, `BTG` 672, `MANUAL` 26), max 2 per fund, and its CNPJ set is
+  exactly the same 1,080. `Merge!H/I` already compute that pivot per row with
+  `=COUNTIFS(Corretoras!$A:$A; …; Corretoras!$B:$B; …)>0` — 2,242 whole-column
+  double-criteria scans per recalc that collapse to cell references once folded in.
+  Note `MANUAL` is the `CNPJ_MANUAL` name-override path, i.e. provenance rather than a
+  broker, so it should not silently become a third broker flag.
+
+
 - [ ] **15. Reconcile `currentYear = 2022` with reality.**
   `fundos.ts` `run()` caps the quota download at 2022, yet `Rentabilidade` holds real returns through 2025-02. The committed code cannot have produced the live sheet — either the constant was edited locally and never committed, or a newer copy exists elsewhere. Running the repo as-is would blank the 2023-2025 columns. Settle this before the next run.
 

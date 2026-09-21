@@ -102,12 +102,10 @@ async function writeToSheetNew(
   await sheet.saveUpdatedCells();
 }
 
-async function writeVolatilidades(doc: GoogleSpreadsheet, quotas: CsvType[]) {
-  const SQRT_252 = m.sqrt(252);
-
-  const volatilidades = _(quotas)
+function computeVolatilidades(quotas: CsvType[]) {
+  return _(quotas)
     .groupBy('CNPJ_FUNDO')
-    .mapValues((g, k) => {
+    .mapValues(g => {
       const fq = _(g)
         .filter(p => {
           return +p['DT_COMPTC'].substring(0, 4) >= 2018;
@@ -133,13 +131,6 @@ async function writeVolatilidades(doc: GoogleSpreadsheet, quotas: CsvType[]) {
       };
     })
     .value();
-
-  await writeToSheetNew(
-    doc,
-    'Volatilidade',
-    ['CNPJ_FUNDO', 'VOLATILIDADE'],
-    volatilidades
-  );
 }
 
 async function writeBenchmarks(doc: GoogleSpreadsheet, benchmarks: Benchmarks) {
@@ -216,8 +207,28 @@ async function dropLegacyBenchmarksSheet(doc: GoogleSpreadsheet) {
   console.log(`dropped legacy sheet ${LEGACY_BENCHMARKS_SHEET}`);
 }
 
-async function writeCadastros(doc: GoogleSpreadsheet, csv: CsvType[]) {
-  await writeToSheetNew(doc, 'Cadastro', ['CNPJ_FUNDO', 'DENOM_SOCIAL'], csv);
+async function writeCadastros(
+  doc: GoogleSpreadsheet,
+  csv: CsvType[],
+  volatilidades: {CNPJ_FUNDO: string; VOLATILIDADE: number}[]
+) {
+  const byCnpj = _.keyBy(volatilidades, 'CNPJ_FUNDO');
+
+  const rows = csv.map(p => {
+    const cnpj = p['CNPJ_FUNDO'].toString();
+    const volatilidade = byCnpj[cnpj]?.VOLATILIDADE;
+    return {
+      ...p,
+      VOLATILIDADE: volatilidade === undefined ? '' : volatilidade,
+    } as {[key: string]: string | number};
+  });
+
+  await writeToSheetNew(
+    doc,
+    'Cadastro',
+    ['CNPJ_FUNDO', 'DENOM_SOCIAL', 'VOLATILIDADE'],
+    rows
+  );
 }
 
 async function writeCorretoras(doc: GoogleSpreadsheet, cadastros: CsvType[]) {
@@ -360,15 +371,15 @@ export async function run() {
 
   const rawQuotas = await getQuotas(currentYear, currentYear - 11);
 
-  await writeVolatilidades(doc, rawQuotas);
-  console.log('writeVolatilidades done');
+  const volatilidades = computeVolatilidades(rawQuotas);
+  console.log(`computeVolatilidades done (${volatilidades.length} funds)`);
 
   await writeRentabilidades(doc, rawQuotas);
   console.log('writeRentabilidades done');
 
   const cadastros = await getCadastros();
 
-  await writeCadastros(doc, cadastros);
+  await writeCadastros(doc, cadastros, volatilidades);
   console.log('writeCadastros done');
 
   await writeCorretoras(doc, cadastros);

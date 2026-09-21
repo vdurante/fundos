@@ -833,8 +833,31 @@ Resolved shape of the refresh:
 | Fund → class join | `ID_Registro_Fundo`, present in BOTH files | 921/1080 resolve to ≥1 class |
 | NAV / rentability | `INF_DIARIO` keyed on `CNPJ_Classe` | 921 funds, all with ≥1 live class |
 
-Health of the tracked set: **921 `Em Funcionamento Normal`, 159 `Cancelado`**. The 159 dead ones
-are exactly the 159 that resolve to zero classes, so "no class" is a reliable dead-fund signal.
+**`registro_fundo.csv` is NOT unique on `CNPJ_Fundo`** — 90,218 rows for 81,373 distinct CNPJs.
+A first pass here keyed a Map by CNPJ (last-write-wins) and reported 921 live / 159 dead; that
+was an artifact of picking an arbitrary row per fund. Corrected counts, treating a fund as live
+when ANY of its rows is `Em Funcionamento`:
+
+```
+rows per CNPJ:  {1: 995, 2: 72, 3: 12, 4: 1}     85 of the 1,080 funds have >1 row
+CORRECTED:      946 live, 134 dead
+```
+
+The duplicates are **re-registrations**, and they change `Tipo_Fundo`:
+
+```
+45.123.558/0001-00  ID=1523   FII      Cancelado                reg 2022-04-08  canc 2025-09-30
+45.123.558/0001-00  ID=88762  FIAGRO   Em Funcionamento Normal  reg 2025-09-30
+```
+
+So the crawler MUST dedupe on `CNPJ_Fundo` preferring the live row (or the latest
+`Data_Registro`). 55 of the 85 are exactly one `Cancelado` + one `Em Funcionamento` pair.
+
+Refinement of the key argument above: the 134 CNPJs that `CNPJ_Classe` fails to match are
+**exactly the 134 dead funds** — for a live single-class fund the class inherits the fund's CNPJ,
+which is why `CNPJ_Classe` matches 946 and live funds number 946. So keying on `CNPJ_Classe`
+would orphan the cancelled funds specifically, not an arbitrary scatter. `CNPJ_Fundo` is still
+the right key, because `Principal` tracks dead funds too and carries manual annotations on them.
 
 Class cardinality: **920 funds map 1:1 to a class, exactly 1 fund has 2 classes** — that single
 case needs a pick rule (prefer the live class) before the NAV fetch can be fully automatic.

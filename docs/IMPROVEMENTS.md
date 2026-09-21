@@ -381,7 +381,7 @@ Everything below is about the rows around that data, not the maths.
   which is `0`, because `T`'s weight is `0` — so the fund has zero weighted evidence and
   the ratio is genuinely undefined. `K=0` indexes row 0, returning the whole range.
 
-  Fix applied by `node scripts/fix-nota-guard.js --apply`: every `Nota` formula in
+  Fix applied by `node scripts/fix-nota-guard.js --apply` (script since deleted): every `Nota` formula in
   `Merge!L` and `Merge!R` is now wrapped as `=IFERROR(<original>; "")`, so a fund with no
   weighted evidence shows **blank** rather than an error. Blank is the right answer — a
   fund with under 12 months of history cannot be scored on 12m/24m/36m/60m, and blank
@@ -434,12 +434,14 @@ Everything below is about the rows around that data, not the maths.
 
 | Script | What it proves |
 |---|---|
-| `scripts/verify-sortino.js [n]` | recomputes Sortino independently and diffs against `Merge`; also previews the item-2 fix |
-| `scripts/check-merge-blocks.js` | per-block coverage, `9.99` counts, and how much of each RANK/COUNT denominator is junk |
-| `scripts/check-row-alignment.js` | `Merge!A` vs `Rentabilidade!A` positional alignment and `#REF!` census |
+| `scripts/verify-sortino.js [n]` | recomputes Sortino independently and diffs against `Principal`; also previews the item-2 fix |
 | `scripts/verify-indices.js` | `Indices` month sequence, gaps, empty cells, percent formatting |
 | `scripts/read-range.js <A1>` | ad-hoc range dump |
 | `scripts/gs-deploy.js` | pushes Apps Script and **verifies** it landed (see clasp#507 above) |
+| `scripts/test-sheet-writer.js` | 24 live-API checks on the keyed writer, on a throwaway sheet (`npm run test:writer`) |
+| `scripts/find-sheet-references.js <Sheet>` | formulas + named ranges + conditional formats naming a sheet, before deleting it |
+| `scripts/dry-run-fundos.js` | measures what a `writeFundos` run WOULD change, read-only |
+| `scripts/probe-cvm-registry.js` | CNPJ coverage of `registro_fundo` / `registro_classe` against the live sheet |
 
 Note when writing a checker: the Sheets API **omits trailing empty cells**, so a
 short-history fund's row comes back shorter rather than padded. Apps Script's
@@ -505,6 +507,26 @@ funds, which is what you would expect when a reference range stops growing.
 ---
 
 ## Destination — one table in `Principal` (agreed direction, not yet scheduled)
+
+### DONE 2026-09-21 — spent Merge-era scripts deleted (part of item 21)
+
+Eleven one-shot scripts removed: they either read the now-deleted `Merge` sheet or were
+already-applied migrations to sheets that no longer exist.
+
+```
+check-row-alignment.js   compare-blocks.js        add-bond-block.js
+fix-nota-guard.js        check-merge-blocks.js    merge-corretoras-into-cadastro.js
+merge-volatilidade-into-cadastro.js               compare-nota-weights.js
+probe-merge-blocks.js    add-bond-block-principal.js   capture-collapse-baseline.js
+```
+
+No `npm` script referenced any of them. The artifacts they produced are kept:
+`docs/collapse-baseline.json`, `docs/merge-snapshot.json`, `docs/volatilidade-snapshot.json`,
+`docs/fundos-snapshot.json`, `docs/principal-cf-snapshot.json`.
+
+Kept deliberately: `test-sheet-writer.js` (only a comment mentions `Merge`),
+`read-range.js` (default range repointed to `Principal`), and the `collapse-step*.js` pair,
+which are idempotent and document how the collapse was executed.
 
 ### DONE 2026-09-21 — item 10, `Principal` conditional formats consolidated 40 -> 11
 
@@ -664,7 +686,7 @@ the collapse deletes them rather than completing them. Doing them first is waste
 |---|---|
 | **33.** repair the 59 `#REF!` rows on `Merge` 1065–1123 | The 18 missing funds are missing *because* `Merge` has a gap. Writing `Principal` directly from data admits them with no repair. Interim value only. |
 | Guard `Merge!C`/`J` on `ISBLANK` | `Merge!J = ROUND(Fundos!C;2)` reads a blank as `0`, and `IFS` then bands it as lowest-risk. Measured, real — but it is a formula artifact. The Node writer computes Risco/Vol itself and writes a true blank. |
-| `Merge` block-probing tooling | `check-merge-blocks.js`, `probe-merge-blocks.js`, `compare-blocks.js` all describe a sheet that stops existing. |
+| `Merge` block-probing tooling | `check-merge-blocks.js`, `probe-merge-blocks.js`, `compare-blocks.js` described a sheet that no longer exists — all deleted 2026-09-21. |
 
 ### What survives the collapse — safe to do now
 
@@ -1030,7 +1052,7 @@ case needs a pick rule (prefer the live class) before the NAV fetch can be fully
   `Variáveis!B3` changed `0 → 1`. `Acumulado` is a running total (`=B3`, `=B4+C3`, …) so
   one cell was enough: `C3:C7` went `0,1,2,3,4` → `1,2,3,4,5`.
 
-  Effect, measured with `node scripts/compare-nota-weights.js` (which reproduces the
+  Effect, measured with `node scripts/compare-nota-weights.js` (script since deleted; it reproduced the
   sheet's `Nota` on 1019/1019 funds, so the comparison is trustworthy):
 
   | | CDI | IBOV |

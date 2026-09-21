@@ -9,6 +9,7 @@ import {
   BTG_FUNDOS,
   CNPJ_FUNDOS,
   isTracked,
+  MANUAL_FUNDOS,
   XP_FUNDOS,
   CNPJ_MANUAL,
 } from '../tracker';
@@ -213,6 +214,9 @@ async function writeCadastros(
   volatilidades: {CNPJ_FUNDO: string; VOLATILIDADE: number}[]
 ) {
   const byCnpj = _.keyBy(volatilidades, 'CNPJ_FUNDO');
+  const btg = new Set(BTG_FUNDOS);
+  const xp = new Set(XP_FUNDOS);
+  const manual = new Set(MANUAL_FUNDOS);
 
   const rows = csv.map(p => {
     const cnpj = p['CNPJ_FUNDO'].toString();
@@ -220,13 +224,16 @@ async function writeCadastros(
     return {
       ...p,
       VOLATILIDADE: volatilidade === undefined ? '' : volatilidade,
-    } as {[key: string]: string | number};
+      BTG: btg.has(cnpj),
+      XP: xp.has(cnpj),
+      MANUAL: manual.has(cnpj),
+    } as unknown as {[key: string]: string | number};
   });
 
   await writeToSheetNew(
     doc,
     'Cadastro',
-    ['CNPJ_FUNDO', 'DENOM_SOCIAL', 'VOLATILIDADE'],
+    ['CNPJ_FUNDO', 'DENOM_SOCIAL', 'VOLATILIDADE', 'BTG', 'XP', 'MANUAL'],
     rows
   );
 }

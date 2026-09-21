@@ -565,14 +565,50 @@ funds, which is what you would expect when a reference range stops growing.
   unchanged (`Merge` 236 = 59 rows x 4 columns, `Principal` 1475 = 59 x 25, `Finalistas` 6),
   confirming no new `#REF!`. Final contents snapshotted to `docs/volatilidade-snapshot.json`.
 
-  Remaining for a single fund table (step 2): fold in `Corretoras`. Different grain
-  (1,306 rows, 1:many, 226 funds at 2 brokers) but it pivots cleanly to boolean columns —
-  only 3 values (`XP` 608, `BTG` 672, `MANUAL` 26), max 2 per fund, and its CNPJ set is
-  exactly the same 1,080. `Merge!H/I` already compute that pivot per row with
-  `=COUNTIFS(Corretoras!$A:$A; …; Corretoras!$B:$B; …)>0` — 2,242 whole-column
-  double-criteria scans per recalc that collapse to cell references once folded in.
-  Note `MANUAL` is the `CNPJ_MANUAL` name-override path, i.e. provenance rather than a
-  broker, so it should not silently become a third broker flag.
+  Remaining for a single fund table (step 2): fold in `Corretoras`. **DONE 2026-09-21.**
+
+- [x] **36. `Corretoras` folded into `Cadastro` as broker columns.** DONE 2026-09-21.
+  `Cadastro` is now `CNPJ_FUNDO | DENOM_SOCIAL | VOLATILIDADE | BTG | XP | MANUAL` (1,080 rows).
+  `Merge!H/I` went from a whole-column double-criteria scan to a plain cell reference:
+
+  ```
+  before: =COUNTIFS(Corretoras!$A:$A; "="&H$2; Corretoras!$B:$B; "="&$A3)>0
+  after:  =Cadastro!D2
+  ```
+
+  That removes **2,242 whole-column scans per recalculation** (2 brokers x 1,121 rows over a
+  1,306-row range).
+
+  **Derived from the live sheet, not the code constants** — deliberately, so values could be
+  proven unchanged: all **1,062 valid rows identical, 0 changed**. The 59 `#REF!` rows now
+  show real flags instead of `false`; cosmetic, since they are excluded from Sortino, `Nota`
+  and `Principal` alike.
+
+  Positional (`=Cadastro!D{r-1}`) rather than a lookup is safe because `Rentabilidade!A` and
+  `Cadastro!A` are positionally identical — verified, **0 differences over 1,080 rows** — and
+  it matches how `Merge!B` and `Merge!J` already work.
+
+  `Filters.js` needed no change at all, as predicted: it resolves columns by header **name**
+  (`get_column`), `Principal!H/I` were already headed `BTG`/`XP`, and only the right-hand side
+  of the formula moved.
+
+  **The code constants have drifted from the sheet.** The next full `run()` will change these
+  flags materially:
+
+  | | code constants | live sheet |
+  |---|---|---|
+  | XP | 705 | 604 funds (608 rows) |
+  | BTG | 663 | 672 |
+  | MANUAL | 8 | 26 |
+  | distinct funds | 1,139 | 1,080 |
+
+  Also `Corretoras` holds **4 duplicate** fund/broker rows (1,306 rows → 1,302 distinct pairs),
+  and `writeCorretoras` **never writes `MANUAL_FUNDOS`** — so the sheet's 26 `MANUAL` rows are
+  hand-maintained and a full run would drop them to 0. Worth fixing before the next full run.
+
+  `Corretoras` is now unreferenced by any formula (`node scripts/find-sheet-references.js
+  Corretoras` → clean) but `writeCorretoras` still writes it, so do not delete the sheet
+  without removing that call first.
 
 
 - [ ] **15. Reconcile `currentYear = 2022` with reality.**

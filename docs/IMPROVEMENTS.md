@@ -8,7 +8,7 @@ Scope spans three artifacts:
 |---|---|---|
 | Node job | `/Volumes/workplace/meshclaw-workspace/fundos/` | writes `Volatilidade`, `Rentabilidade`, `Cadastro`, `Corretoras` |
 | Apps Script | bound to the Sheet (`Extensions → Apps Script`) | writes `Merge!M:Q` and `Merge!S:W`; menu `CLIQUE AQUI` |
-| Spreadsheet | id `1Ev0j3XqQJYWCSDftuud7IFAWya7gIiQGvp2ULfjWCi0` | `Merge` = join + `Nota`; `Principal`/`Finalistas` = views; `Indices`/`Variáveis`/`Manual` = hand-maintained |
+| Spreadsheet | id `1Ev0j3XqQJYWCSDftuud7IFAWya7gIiQGvp2ULfjWCi0` | `Merge` = join + `Nota`; `Principal`/`Finalistas` = views; `Indices` = machine-filled benchmarks; `Variáveis`/`Manual` = hand-maintained |
 
 ---
 
@@ -16,7 +16,7 @@ Scope spans three artifacts:
 
 - **`sortino()` runs.** Verified 2026-09-20 22:05 by filling `Indices!B4:AC4` with `0.1` and recalculating: `Merge!S:W` and `Nota-IBOV` changed on every sampled row. An earlier prediction that `init()` would throw on an out-of-bounds `getRange` was **wrong** — Apps Script tolerates the oversized request.
 - **The values in the sheet are current, not stale.** So every bug below has been actively affecting the rankings.
-- **Live grids:** `Merge` 2103×144, `Rentabilidade` 1081×135, `Indices` 997×171, `Principal` 3816×151, `Finalistas` 969×142.
+- **Live grids:** `Merge` 2103×144, `Rentabilidade` 1081×135, `Indices` 190×5 (was 997×171 before the rewrite), `Principal` 3816×151, `Finalistas` 969×142.
 - **`Merge` row order is `Rentabilidade` row order** (`A3 = =Rentabilidade!A2`), and the script writes by that index. Sorting `Merge` silently scrambles every value in it. `Principal` is the sortable view.
 - **Block discovery is driven by merged cells in `Merge` row 1** (`L1:Q1` = CDI, `R1:W1` = IBOV). The script writes from the *second* column of each block, so `Nota` stays a formula.
 - **The metric is a monthly Sortino ratio**, benchmark-as-MAR: `mean(excess) / sqrt(mean(min(excess,0)^2))`. Not annualized. `SORTINO_OLD`'s numerator is algebraically identical to the current one; `SORTINO_DEBUG`'s compounded numerator over a monthly denominator was dimensionally wrong and correctly abandoned.
@@ -106,16 +106,17 @@ Resolve these URLs through the CKAN API rather than hardcoding a resource id:
 
 ---
 
-## P0 — superseded by the `Benchmarks` migration
+## P0 — resolved by the `Indices` rewrite
 
-Both items below were about repairing the legacy `Indices` row. `Benchmarks` now holds
-correct IBOV for all 189 months, verified against B3, so these matter **only if you
-decide not to migrate**. As of 2026-09-20 22:47 the 28 months are blank again (the
-`0.1` test values were cleared) and `2022-10` still reads `+0.0684`.
+Both items below were about repairing the legacy hand-maintained `Indices` row.
+That row no longer exists: `Indices` **is** the machine-filled tall sheet as of
+2026-09-21 09:30, carrying correct IBOV for all 189 months from B3. Nothing to
+restore and nothing to fix by hand. Kept here for the record.
 
-- [ ] **1. Restore the `Indices` IBOV row and recalculate.**
-  Columns `B4:AC4` (2025-02 back to 2022-11) are blank; they briefly held `0.1` during the write test. The 142 older values (2022-10 back to 2011-01) were never touched, so no history was lost.
-  Real monthly returns for those 28 months, from **B3** (the confirmed source — see facts above), in order 2025-02 → 2022-11, to paste into `B4:AC4` as values:
+- [x] **1. Restore the `Indices` IBOV row and recalculate.** ~~Moot~~ — the 28
+  blank months (2025-02 back to 2022-11) are now filled from B3 by
+  `crawler-indices.ts`, along with the other 161. The B3 values that would have
+  been pasted by hand are preserved below in case you ever need to audit them.
 
   | 2025-02 | 2025-01 | 2024-12 | 2024-11 | 2024-10 | 2024-09 | 2024-08 |
   |---|---|---|---|---|---|---|
@@ -133,16 +134,28 @@ decide not to migrate**. As of 2026-09-20 22:47 the 28 months are blank again (t
   |---|---|---|---|---|---|---|
   | 0.0374 | 0.0250 | -0.0291 | -0.0749 | 0.0337 | -0.0245 | -0.0306 |
 
-- [ ] **1b. Fix the one bad historical IBOV cell.**
-  `2022-10` reads `+0.0684`; B3 and Yahoo both say `+0.0545` (B3 exactly `+0.054530`). Single hand-entry error — the only one in 142 months.
+- [x] **1b. Fix the one bad historical IBOV cell.** ~~Moot~~ — `2022-10` read
+  `+0.0684` in the old hand-typed row; the rewritten sheet carries B3's
+  `+0.054530`. The only hand-entry error in 142 months, gone with the row.
 
 ---
 
-## P1 — `Indices`: DONE 2026-09-20 23:00
+## P1 — `Indices`: DONE 2026-09-21 09:30
 
-Migrated and verified live. `Benchmarks` (tab 12) is the source; `Indices` is
-unused and safe to delete. The Apps Script is in git and deployable with
-`npm run gs:push` (script id `1H_v74o7Weu6N7aNp-PI0_enw_IpP08gTOWziUTJxLwQzaynBm_HTdafA`).
+Migrated, shipped and verified live. **`Indices` itself is now the tall
+machine-filled sheet** (`MONTH | CDI | IBOV | Risk Free Bond | 6 % a.a.`, newest
+first, 189 rows, values percent-formatted `0.00%`). The interim `Benchmarks` tab
+has been deleted; the sheet id `506484335` is the original `Indices`, repurposed
+in place rather than replaced, so any bookmark or tab-order habit still lands on
+it. The Apps Script is in git and deployable with `npm run gs:push` (script id
+`1H_v74o7Weu6N7aNp-PI0_enw_IpP08gTOWziUTJxLwQzaynBm_HTdafA`).
+
+Before the rewrite, the whole workbook was scanned for cell formulas referencing
+`Indices` (`scripts/probe-indices-refs.js`, FORMULA render over every sheet):
+**zero hits**. Apps Script was the only reader, which is what made repurposing the
+sheet safe rather than merely convenient. The pre-migration wide sheet — values
+*and* formulas, including the `=Pow(1,1493; 1/12)-1` bond entries — is snapshotted
+at `docs/indices-wide-snapshot.json`.
 
 **Post-recalc verification, `Merge` rows 3-5 against the pre-change baseline:**
 
@@ -181,16 +194,22 @@ Files:
 | File | What |
 |---|---|
 | `src/fundos/crawler-indices.ts` | new — CDI (BCB 4391), IBOV (B3), bond (Tesouro CKAN→CSV), `6 % a.a.` constant. Whole fetch runs in ~2.7s |
-| `src/fundos/fundos.ts` | `writeBenchmarks()`, `runBenchmarks()`, plus a call in `run()` |
-| `src/indices.ts` | new entry point — refreshes ONLY `Benchmarks`; no Puppeteer, no fund data |
-| `appsscript/Sortino.gs` | new — reads the tall sheet by month key |
-| `package.json` | `npm.cmd` → `npm` (item 20, was breaking `npm install` on macOS) |
+| `src/fundos/fundos.ts` | `writeBenchmarks()` (targets `Indices`), `formatBenchmarkPercentages()`, `dropLegacyBenchmarksSheet()`, `runBenchmarks()` |
+| `src/indices.ts` | entry point — refreshes ONLY `Indices`; no Puppeteer, no fund data |
+| `appsscript/Sortino.js` | reads `Indices` by month key |
+| `scripts/probe-indices-refs.js` | lists sheets, scans every formula for `Indices` references, snapshots the sheet |
+| `scripts/verify-indices.js` | post-write check: month sequence, gaps, empty cells, percent formatting |
+| `package.json` | `npm.cmd` → `npm` (item 20, was breaking `npm install` on macOS); `gs:pull`/`gs:push`/`gs:status`; `googleapis` devDep for the two scripts |
 
 Refresh the benchmarks any time with:
 
 ```bash
 cd /Volumes/workplace/meshclaw-workspace/fundos && node build/src/indices.js
+node scripts/verify-indices.js      # optional post-write check
 ```
+
+The run is idempotent: it clears and rewrites `Indices`, re-applies the percent
+format, and deletes a stray `Benchmarks` tab if one ever reappears.
 
 Note the writer sends `MONTH` as `'YYYY-MM'` and Sheets coerces it to a date serial.
 That is fine and even desirable — the cell still *displays* `2026-09`, it sorts
@@ -198,11 +217,7 @@ correctly, and Apps Script reads it back as a `Date`, which `monthKeyOf()` handl
 It formats using the **spreadsheet's** timezone, not the script's, because the
 serial→Date conversion happens in the spreadsheet's zone and the two can differ.
 
-Remaining, in order:
-
-1. Paste `appsscript/Sortino.gs` over the bound project's `Sortino.gs`.
-2. Run **Atualizar cálculos**; check `Merge!M:Q` (should be unchanged — CDI is identical) and `Merge!S:W` (should change: real IBOV replaces 28 zero-benchmark months).
-3. Delete `Indices` once satisfied.
+Remaining: nothing. Deployed and recalculated.
 
 What the rewrite fixes structurally: `calculateBlock` now builds the benchmark array
 from `Rentabilidade`'s own month headers via a month→value map, so position
@@ -211,8 +226,11 @@ the month** instead of silently becoming 0%. `calcSortino` is byte-identical to 
 current version on purpose — the off-by-one (item 2) stays a separate change so this
 migration cannot quietly alter any number for a reason other than the data.
 
-- [x] **A. Transpose to tall.** Done and verified as the `Benchmarks` sheet.
+- [x] **A. Transpose to tall.** Done — `Indices` itself, 189 rows × 5 columns.
 - [x] **B. Automate all three series.** Done and verified in `crawler-indices.ts`.
+- [x] **D. Show the numbers as percentages.** `0.00%` on every value cell, applied by
+  the writer so a rerun cannot lose it. Renders pt-BR (`0,67%`); the underlying values
+  stay full-precision decimals, so nothing downstream changes.
 - [x] **C. Bond hurdle → monthly, ≥12-month floor.** Chosen and implemented.
 
   Rule: `Tesouro Prefixado` (not the semiannual-coupon variant), `Taxa Compra Manha`,
@@ -246,8 +264,11 @@ migration cannot quietly alter any number for a reason other than the data.
 - [ ] **2. `calcSortino` keeps the blank cell it slices at.**
   `expectedReturns.slice(0, emptyIndex+1)` retains the first empty month; `'' - rf` coerces to `-rf`, injecting a fake 0%-return month that hits the numerator *and* lands fully in the downside denominator. Affects the `T` column of every fund without ~10 years of history, i.e. most of them. Fix: `slice(0, emptyIndex)` on both arrays.
 
-- [ ] **3. A blank in the `Indices` row is silently read as 0%.**
-  `calcSortino` only inspects `expectedReturns` for blanks, never `riskFreeReturns`, and the `riskFreeReturns.length < expectedReturns.length` guard can't catch it because trailing blanks still occupy their slots. This is what made the IBOV block measure against zero for 28 months. Fix: validate the benchmark slice is all finite numbers and return `''` (or throw) otherwise — never substitute 0.
+- [x] **3. A blank in the `Indices` row is silently read as 0%.** Fixed by the
+  `Indices` rewrite: `calculateBlock` resolves each month through a month→value map
+  and throws `Indices nao tem <série> para <YYYY-MM>` on a miss, so a gap can no
+  longer coerce to 0. `calcSortino` itself is unchanged — the guarantee now comes
+  from the caller, which is the right place for it.
 
 - [ ] **4. The `9.99` sentinel distorts `Nota`.**
   `denominador === 0` → `9.99`. `Nota` ranks by `RANK(...)/COUNT(...)`, so every sentinel fund ties at the top percentile. Under bug #3 this handed the top of the IBOV ranking to "never had a down month", which low-volatility funds satisfy trivially. Decide: return `''`, or keep a cap and have `Nota` exclude sentinels from the rank.
@@ -319,7 +340,7 @@ migration cannot quietly alter any number for a reason other than the data.
 
 - [ ] **23. Decide whether to annualize.** The current ratio is monthly. `×√12` makes it comparable to published figures; it does not change any ranking.
 
-- [ ] **24. Two maintained-but-unread `Indices` series.** `6 % a.a.` and `Risk Free Bond` are both 170/170 filled and never read — `sortino()` only processes labels merged in `Merge` row 1. Either give them blocks or stop maintaining them. Same for the `Dif` row in `Manual`.
+- [ ] **24. Two maintained-but-unread `Indices` series.** `6 % a.a.` and `Risk Free Bond` are both 189/189 filled and never read — `sortino()` only processes labels merged in `Merge` row 1. Either give them blocks or stop maintaining them. Same for the `Dif` row in `Manual`.
 
 - [ ] **25. Volatility hardcodes 2018.** `writeVolatilidades` filters `DT_COMPTC >= 2018` and recomputes `m.sqrt(252)` inline while the `SQRT_252` const sits unused. Make the start year a parameter.
 

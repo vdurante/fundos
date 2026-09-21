@@ -12,7 +12,10 @@ import {
   XP_FUNDOS,
   CNPJ_MANUAL,
 } from '../tracker';
-import {GoogleSpreadsheet} from 'google-spreadsheet';
+import {
+  GoogleSpreadsheet,
+  GoogleSpreadsheetWorksheet,
+} from 'google-spreadsheet';
 import {getQuotas, getQuotasMonthly} from './crawler-quotas';
 import {CsvType, range} from '../shared';
 import * as m from 'mathjs';
@@ -28,9 +31,11 @@ import {
 } from './crawler-indices';
 import {e} from 'mathjs';
 
-const BENCHMARKS_SHEET = 'Benchmarks';
+const BENCHMARKS_SHEET = 'Indices';
+const LEGACY_BENCHMARKS_SHEET = 'Benchmarks';
 const BENCHMARK_COLUMNS = [CDI, IBOV, RISK_FREE_BOND, FIXED_SIX];
 const BENCHMARK_START_YEAR = 2011;
+const BENCHMARK_PERCENT_PATTERN = '0.00%';
 
 async function writeToSheet(
   doc: GoogleSpreadsheet,
@@ -172,6 +177,43 @@ async function writeBenchmarks(doc: GoogleSpreadsheet, benchmarks: Benchmarks) {
 
   await sheet.addRows(rows);
   await sheet.saveUpdatedCells();
+
+  await formatBenchmarkPercentages(sheet, rows.length);
+}
+
+async function formatBenchmarkPercentages(
+  sheet: GoogleSpreadsheetWorksheet,
+  dataRowCount: number
+) {
+  if (dataRowCount === 0) {
+    return;
+  }
+
+  const lastColumn = String.fromCharCode('A'.charCodeAt(0) + BENCHMARK_COLUMNS.length);
+  const lastRow = dataRowCount + 1;
+  await sheet.loadCells(`B2:${lastColumn}${lastRow}`);
+
+  for (let row = 1; row <= dataRowCount; row++) {
+    for (let column = 1; column <= BENCHMARK_COLUMNS.length; column++) {
+      const cell = sheet.getCell(row, column);
+      cell.numberFormat = {
+        type: 'PERCENT',
+        pattern: BENCHMARK_PERCENT_PATTERN,
+      };
+    }
+  }
+
+  await sheet.saveUpdatedCells();
+}
+
+async function dropLegacyBenchmarksSheet(doc: GoogleSpreadsheet) {
+  const legacy = doc.sheetsByTitle[LEGACY_BENCHMARKS_SHEET];
+  if (!legacy) {
+    return;
+  }
+
+  await legacy.delete();
+  console.log(`dropped legacy sheet ${LEGACY_BENCHMARKS_SHEET}`);
 }
 
 async function writeCadastros(doc: GoogleSpreadsheet, csv: CsvType[]) {
@@ -297,6 +339,7 @@ export async function runBenchmarks(startYear = BENCHMARK_START_YEAR) {
 
   const benchmarks = await getBenchmarks(startYear);
   await writeBenchmarks(doc, benchmarks);
+  await dropLegacyBenchmarksSheet(doc);
 
   console.log(
     `writeBenchmarks done (${benchmarks.months.length} months, ` +

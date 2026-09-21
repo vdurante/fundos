@@ -1,6 +1,6 @@
 const TRACKER_NAME = 'Merge';
 const RENT_NAME = 'Rentabilidade';
-const BENCH_NAME = 'Benchmarks';
+const BENCH_NAME = 'Indices';
 
 let trackerSheet;
 let rentSheet;

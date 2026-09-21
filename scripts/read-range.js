@@ -5,7 +5,7 @@ const {google} = require('googleapis');
 const PKG = path.resolve(__dirname, '..');
 const KEY = path.join(PKG, 'config', 'fundos-309615-2795009f4d3e.json');
 const DOC_ID = '1Ev0j3XqQJYWCSDftuud7IFAWya7gIiQGvp2ULfjWCi0';
-const RANGE = process.argv[2] || 'Merge!A1:X6';
+const RANGE = process.argv[2] || 'Principal!A1:AC6';
 
 async function main() {
   const key = JSON.parse(fs.readFileSync(KEY, 'utf8'));

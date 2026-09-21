@@ -1020,7 +1020,12 @@ make the collapsed table ~150 wide.
 - [x] **8. Two unguarded crashes in `sortino()`.** DONE — an unmerged row-1 label is skipped (`if (!merged.length) continue`), `isPeriodBlock()` rejects a non-period block, and `loadBenchmarkColumn` throws a named error listing the available columns.
   `merged[0]` is undefined if a row-1 label isn't merged (`SORTINO >>>` is merged on `Principal`/`Finalistas` as `I1:K1` — copy it into `Merge` row 1 and the loop dies). And `getRentabilidadesByName` does `.findNext().getRow()` with no null check, so a label with no matching `Indices` row throws. Fix: skip a column with no merged range, and report a missing index by name.
 
-- [x] **9. The 122-month window is hardcoded in two places.** DONE on the Node side — `HISTORY_MONTHS = 122` in `fundos.ts` now drives the header set (`rentMonthKeys()`), the download range (`rentYearRange()`) and the column count. `appsscript/Sortino.js` still carries its own `122` for `parseMonthCount('T')`; the two agree by construction but are not shared, because Apps Script cannot import. Original text:
+- [x] **9. The 122-month window is hardcoded in two places.** DONE — the window is now a single
+  constant, `HISTORY_MONTHS` in `src/fundos/window.ts` (`120`, called `RENT_MONTHS` and set to `122`
+  when this item was first closed), driving the header set (`rentMonthKeys()`), the download range
+  (`rentYearRange()`) and the trim. Every consumer derives its width from the sheet instead, so
+  `sortino.ts`, `appsscript/Sortino.js` and `verify-sortino.js` carry no window literal at all.
+  Original text:
   `rentabilidades.map(p => p.slice(1, 123))` and `parseMonthCount('T') → 122`, whose comment says "10 anos - 1 mes" (which would be 119; 10 years is 120). Derive the width from `Rentabilidade`'s column count and fix the comment.
 ### The 122-month window, measured (item 9 context)
 
@@ -1499,6 +1504,15 @@ case needs a pick rule (prefer the live class) before the NAV fetch can be fully
 - [ ] **25. Volatility hardcodes 2018.** `writeVolatilidades` filters `DT_COMPTC >= 2018` and recomputes `m.sqrt(252)` inline while the `SQRT_252` const sits unused. Make the start year a parameter.
 
 - [ ] **26. Move the service-account key out of `~/Downloads`.**
+
+- [ ] **36. Build `writePrincipal`.** The largest remaining piece, and until now tracked only in prose
+  rather than as an item. `Principal`'s data columns are frozen literals from the collapse; nothing
+  writes them, so there is no drift check and no way for a new fund to appear. Spec already recorded
+  above: join volatility by CNPJ, set the broker flags from the tracker sets, override names from
+  `CNPJ_MANUAL`, write owned columns through `writeKeyed`, write volatility **unrounded**, exclude
+  `FIP`/`FII` by type and skip `DP = 0` at write time. It must also re-extend the 11 conditional
+  formats and the filter whenever it raises `rowCount`, using `setBasicFilter` WITHOUT `sortSpecs`.
+  Blocked on item 16 (the dead cadastral source).
 
 - [ ] **35. Revisit `HISTORY_MONTHS = 120`.** Deferred 2026-09-21 — keep 120 for now. It is the single
   knob for how much return history is kept, and `T` follows it automatically, so raising it is a

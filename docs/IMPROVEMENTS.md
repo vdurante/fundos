@@ -506,6 +506,42 @@ funds, which is what you would expect when a reference range stops growing.
 
 ## Destination — one table in `Principal` (agreed direction, not yet scheduled)
 
+### Corrected collapse design — formulas STAY on `Principal`
+
+Vitor, 2026-09-21: **`Nota` must remain a live formula.** The point of the sheet is to change
+a weight in `Variáveis` and immediately see how the evaluation moves. A Node-computed `Nota`
+would need a job re-run to reflect a weight change, destroying that loop. An earlier plan to
+port `Nota` to Node was wrong and is withdrawn.
+
+`Merge`'s columns are two different kinds, and only the first kind moves:
+
+| Kind | Columns | Where it goes |
+|---|---|---|
+| **Data** — static input, no interactivity | `B` DENOM, `H` BTG, `I` XP, `J` Vol, and the three Sortino blocks `M:Q` / `S:W` / `Y:AC` | Node writes VALUES straight into `Principal` |
+| **Live formula** — must recalc on edit | `C` Risco, `K` DP, `L`/`R`/`X` Nota | Stays a formula, rewritten to reference `Principal`'s OWN columns |
+
+So the collapse removes `Merge` as an **indirection layer**, not as a calculation. The formulas
+move onto `Principal` and get simpler, losing the `INDEX(...; $AD{row})` wrapper:
+
+```
+Principal!C3   =IFS(J3<=0,05; "00 ~ 05"; J3<=0,1; "05 ~ 10"; J3<=0,25; "10 ~ 25"; J3<=100; "25~100")
+Principal!K3   =COUNTIF(M3:Q3; "<>"&"")
+Principal!L3   the existing Nota formula, reading Principal!M:Q + 'Variáveis'!$B$3:$B$7
+Principal!AD   DELETED — no MATCH into Merge is needed any more
+```
+
+`RANK`/`COUNT` still work on whole columns because the data now lives in `Principal`'s own
+`M:Q` / `S:W` / `Y:AC`.
+
+**Consequence to expect: every `Nota` value will shift.** The ranking population changes from
+`Merge`'s row set (1,062 valid of 1,123) to `Principal`'s curated rows (1,080). Ranking among
+the funds actually tracked is the more correct behaviour, but it is not a no-op and must not be
+mistaken for a regression.
+
+**New requirement on the writer.** Columns `C`, `K`, `L`, `R`, `X` are owned-but-formula: an
+appended fund needs its formulas written with the correct row number, not a value. `writeKeyed`
+must therefore support per-column formula templates alongside plain values.
+
 ### What the collapse subsumes — do NOT do these first
 
 Sequencing note added 2026-09-21. Several backlog items only exist to prop up `Merge`, and

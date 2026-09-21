@@ -449,7 +449,63 @@ the first run.
 
 ---
 
+## P1 — root cause of the `#REF!` rows and the 18 missing funds (diagnosed 2026-09-21)
+
+**`Merge` joins by row-pinned reference, and the Node job deletes the rows it points at.**
+
+`Merge` builds each row from fixed single-cell references, offset by one:
+
+```
+Merge!A3    = =Rentabilidade!A2          Merge!B3    = =Cadastro!B2
+Merge!A1064 = =Rentabilidade!A1063       Merge!J3    = =ROUND(Volatilidade!B2;2)
+Merge!A1065 = =#REF!                     Merge!J1065 = =ROUND(#REF!;2)
+```
+
+`=#REF!` is the permanent scar of a **deleted** source row. Sheets does not heal it when
+data grows back, and `Merge!C` (`=IFS(J…)`) inherits the failure from `J`.
+
+The deletion comes from `writeToSheetNew` in `src/fundos/fundos.ts`:
+
+```ts
+await sheet.resize({columnCount: headers.length, rowCount: data.length + 1});
+```
+
+Shrinking `rowCount` **deletes rows**. That function writes precisely the three sheets
+`Merge` references — `Volatilidade` (line 137), `Cadastro` (220), `Rentabilidade` (334).
+So any run where the fund count *falls* silently breaks every `Merge` formula pointing
+past the new end, forever.
+
+**The arithmetic closes exactly.** `Merge` formulas reach `Rentabilidade` row 1063
+(= `Merge` row 1064), covering 1,062 funds. All three source sheets now hold 1,080 funds
+(rows 2-1081).
+
+| | |
+|---|---|
+| broken `Merge` rows | 1065-1123 = **59** |
+| would point at `Rentabilidade` rows | 1064-1122 |
+| of which rows that hold a real fund (1064-1081) | **18** — invisible today |
+| of which rows past the end of the data (1082-1122) | **41** — would correctly go blank |
+
+`59 = 18 + 41`, and `Principal!A` independently shows 1,080 CNPJs across 1,121 rows,
+i.e. 41 blanks. The 18 are all `57.x / 58.x / 59.x` CNPJs — the most recently registered
+funds, which is what you would expect when a reference range stops growing.
+
+- [ ] **33. Repair the 59 rows.** Restore the pattern on `Merge` rows 1065-1123:
+  `A{r} = =Rentabilidade!A{r-1}`, `B{r} = =Cadastro!B{r-1}`,
+  `J{r} = =ROUND(Volatilidade!B{r-1};2)`. `C` heals itself once `J` works. This admits the
+  18 funds and blanks the other 41. It also changes every ranking, because 18 funds enter
+  `COUNT`/`RANK`.
+
+- [ ] **34. Stop the recurrence.** Repairing alone is not enough — the next shrinking run
+  re-breaks it. Either (a) never shrink: clear values instead of resizing `rowCount` down,
+  or (b) make the join shrink-proof by replacing ~1,100 pinned references per column with
+  one dynamic `ARRAYFORMULA`/`QUERY` over `Rentabilidade!A2:A`, which cannot be pin-broken.
+  (b) is the real fix; (a) is the one-line stopgap.
+
+---
+
 ## P2 — robustness in the Apps Script
+
 
 - [ ] **5. `init()` sizes its read off the wrong sheet.**
   `rentSheet.getRange(2, 1, trackerSheet.getMaxRows(), trackerSheet.getMaxColumns())` asks 2,103 rows × 144 cols of an 1,081 × 135 sheet. It does not throw, but it hauls back ~1,000 padded blank rows every run. Fix: `rentSheet.getLastRow() - 1` and `rentSheet.getLastColumn()`.

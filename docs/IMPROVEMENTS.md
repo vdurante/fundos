@@ -743,6 +743,31 @@ make the collapsed table ~150 wide.
 - [ ] **15. Reconcile `currentYear = 2022` with reality.**
   `fundos.ts` `run()` caps the quota download at 2022, yet `Rentabilidade` holds real returns through 2025-02. The committed code cannot have produced the live sheet — either the constant was edited locally and never committed, or a newer copy exists elsewhere. Running the repo as-is would blank the 2023-2025 columns. Settle this before the next run.
 
+- [ ] **16. Migrate off the dead CVM cadastral file.** **BLOCKING `writeFundos`.**
+  Measured 2026-09-21 via `node scripts/dry-run-fundos.js` (read-only), against a live
+  snapshot of `Fundos` saved to `docs/fundos-snapshot.json` (1,080 rows):
+
+  ```
+  getCadastros():      112 rows, 110 distinct CNPJ, SIT = {"CANCELADA": 112}
+  CNPJ_FUNDOS:         1,139 distinct        live Fundos rows: 1,080
+  would be padded:     1,029  (no cadastro row at all)
+    of those, live rows WITH a name that would be blanked: 424
+  would be appended:   394    (in CNPJ_FUNDOS, not in the sheet)
+  would be blanked:    335    (in the sheet, not in CNPJ_FUNDOS)
+  ```
+
+  So a `writeFundos` run today **wipes 424 fund names** and churns ~730 rows. Two
+  independent causes, both must be fixed before any run:
+  1. `cad_fi.csv` yields only 112 rows for the 1,139 tracked funds, every one
+     `CANCELADA` — names cannot be sourced from it at all.
+  2. `CNPJ_FUNDOS` has diverged from the sheet in BOTH directions (335 live keys absent
+     from the constant, 394 constant keys absent from the sheet). They share 745 keys.
+     The sheet is the human-curated truth; the constant is stale.
+
+  The keyed writer contains the blast radius — it blanks instead of deleting, so no
+  `#REF!` is produced — but it cannot protect against bad input. Do not run `writeFundos`
+  until the cadastral source is migrated and `CNPJ_FUNDOS` is reconciled against the sheet.
+  <!-- original note follows -->
 - [ ] **16. Migrate off the dead CVM cadastral file.**
   `cad_fi.csv` is effectively dead (46,575 `CANCELADA`, 22 live). The live universe is `registro_fundo_classe.zip` (`registro_classe.csv`), keyed on `CNPJ_Classe` under RCVM 175. The daily NAV report is per *class*, so `crawler-quotas.ts`'s `isTracked(results.data['CNPJ_FUNDO'])` filter probably needs `CNPJ_FUNDO_CLASSE` for recent files. Own research is already written up in `docs/itau-pension-opendata.md`.
 

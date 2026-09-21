@@ -251,7 +251,7 @@ migration cannot quietly alter any number for a reason other than the data.
   putting a step in the hurdle unrelated to rates. A constant 2-year point would need
   curve interpolation — more machinery than a ranking hurdle justifies.
 
-- [ ] **D. Decide whether the bond becomes a ranked block.** Still nothing reads it:
+- [x] **D. Decide whether the bond becomes a ranked block.** DONE — it IS one. `Risk Free Bond` is the third block (`Principal!X:AC`, label + 5 periods), written by `sortino()` and ranked by its own `Nota` in `X`. Original text: Still nothing reads it:
   `sortino()` only processes labels merged in `Merge` row 1 (`L1:Q1` CDI, `R1:W1` IBOV),
   so `Risk Free Bond` and `6 % a.a.` are now *correctly computed and still unused*.
   Making the bond matter means a third merged block plus six columns in `Merge`,
@@ -1197,7 +1197,7 @@ case needs a pick rule (prefer the live class) before the NAV fetch can be fully
 
 - [ ] **16. Migrate off the dead CVM cadastral file.** **BLOCKING `writeFundos`.**
   Measured 2026-09-21 via `node scripts/dry-run-fundos.js` (read-only), against a live
-  snapshot of `Fundos` saved to `docs/fundos-snapshot.json` (1,080 rows):
+  snapshot of `Fundos` saved to `docs/fundos-final-snapshot.json` (1,080 rows):
 
   ```
   getCadastros():      112 rows, 110 distinct CNPJ, SIT = {"CANCELADA": 112}
@@ -1237,11 +1237,11 @@ case needs a pick rule (prefer the live class) before the NAV fetch can be fully
 
 ## P3 — metrics and hygiene
 
-- [ ] **22. Add Sharpe.** Same excess-return array as `calcSortino`, two-sided `stdev` in the denominator. Would need a third merged block in `Merge` row 1 and five more columns.
+- [ ] **22. Add Sharpe.** Same excess-return array as `calcSortino`, two-sided `stdev` in the denominator. Would need a FOURTH merged block (`Merge` is gone; blocks now live on `Principal` row 1, currently `L:Q` CDI, `R:W` IBOV, `X:AC` Risk Free Bond) plus six columns.
 
 - [ ] **23. Decide whether to annualize.** The current ratio is monthly. `×√12` makes it comparable to published figures; it does not change any ranking.
 
-- [ ] **24. Two maintained-but-unread `Indices` series.** `6 % a.a.` and `Risk Free Bond` are both 189/189 filled and never read — `sortino()` only processes labels merged in `Merge` row 1. Either give them blocks or stop maintaining them. Same for the `Dif` row in `Manual`.
+- [ ] **24. ONE maintained-but-unread `Indices` series.** `Risk Free Bond` is now read (it is the `X:AC` block). Only **`6 % a.a.`** remains filled 189/189 and read by nothing — `sortino()` processes only the labels merged in `Principal` row 1, which are `CDI`, `IBOV`, `Risk Free Bond`. Either give it a block or stop maintaining it. Same for the `Dif` row in `Manual`.
 
 - [x] **31. `T` now carries weight 1.** DONE 2026-09-21, at the user's instruction.
   `Variáveis!B3` changed `0 → 1`. `Acumulado` is a running total (`=B3`, `=B4+C3`, …) so

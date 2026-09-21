@@ -9,6 +9,8 @@ const MAX_CELLS_PER_REQUEST = 20000;
 
 export type CellValue = string | number | boolean | undefined | null;
 
+export type ColumnMap = {[header: string]: string};
+
 export interface KeyedWriteSummary {
   sheet: string;
   matched: number;
@@ -19,6 +21,7 @@ export interface KeyedWriteSummary {
   columnCountBefore: number;
   columnCountAfter: number;
   appendedKeys: string[];
+  columnRuns: string[];
 }
 
 function client(): sheets_v4.Sheets {
@@ -45,12 +48,86 @@ function encode(value: CellValue): sheets_v4.Schema$ExtendedValue {
 }
 
 function chunkRows<T>(rows: T[], columns: number): T[][] {
-  const perChunk = Math.max(1, Math.floor(MAX_CELLS_PER_REQUEST / Math.max(1, columns)));
+  const perChunk = Math.max(
+    1,
+    Math.floor(MAX_CELLS_PER_REQUEST / Math.max(1, columns))
+  );
   const chunks: T[][] = [];
   for (let i = 0; i < rows.length; i += perChunk) {
     chunks.push(rows.slice(i, i + perChunk));
   }
   return chunks;
+}
+
+export function columnLetter(index: number): string {
+  let name = '';
+  let n = index + 1;
+  while (n > 0) {
+    const remainder = (n - 1) % 26;
+    name = String.fromCharCode(65 + remainder) + name;
+    n = Math.floor((n - 1) / 26);
+  }
+  return name;
+}
+
+export function columnIndexOf(letter: string): number {
+  const text = letter.trim().toUpperCase();
+  if (!/^[A-Z]+$/.test(text)) {
+    throw new Error(`Coluna invalida: ${letter}`);
+  }
+  let index = 0;
+  for (const character of text) {
+    index = index * 26 + (character.charCodeAt(0) - 64);
+  }
+  return index - 1;
+}
+
+export interface ColumnRun {
+  startColumnIndex: number;
+  headers: string[];
+}
+
+export function resolveColumnRuns(
+  headers: string[],
+  columns?: ColumnMap
+): ColumnRun[] {
+  if (!columns) {
+    return [{startColumnIndex: 0, headers: [...headers]}];
+  }
+
+  const placed = headers.map(header => {
+    const letter = columns[header];
+    if (letter === undefined) {
+      throw new Error(`writeKeyed: coluna nao mapeada para "${header}"`);
+    }
+    return {header, index: columnIndexOf(letter)};
+  });
+
+  const byIndex = new Map<number, string>();
+  for (const {header, index} of placed) {
+    const clash = byIndex.get(index);
+    if (clash !== undefined) {
+      throw new Error(
+        `writeKeyed: "${header}" e "${clash}" mapeiam para a mesma coluna ${columnLetter(
+          index
+        )}`
+      );
+    }
+    byIndex.set(index, header);
+  }
+
+  placed.sort((a, b) => a.index - b.index);
+
+  const runs: ColumnRun[] = [];
+  for (const {header, index} of placed) {
+    const last = runs[runs.length - 1];
+    if (last && last.startColumnIndex + last.headers.length === index) {
+      last.headers.push(header);
+    } else {
+      runs.push({startColumnIndex: index, headers: [header]});
+    }
+  }
+  return runs;
 }
 
 export async function blankColumnsBeyond(
@@ -104,16 +181,28 @@ export async function blankColumnsBeyond(
  * - grows rowCount/columnCount when needed, never lowers either
  *
  * Row order is preserved, so positional references from other sheets stay valid.
+ *
+ * Without `columns` the headers occupy A, B, C... contiguously, which is only safe on a sheet the
+ * writer owns end to end. Pass `columns` ({header: 'A1 letter'}) for a sheet whose columns are
+ * shared with humans or with formulas: only the mapped columns are touched, one request per
+ * contiguous run, and the key column is read from wherever it is mapped rather than assumed to be A.
  */
 export async function writeKeyed(
   sheetTitle: string,
   headers: string[],
-  rows: {[header: string]: CellValue}[]
+  rows: {[header: string]: CellValue}[],
+  columns?: ColumnMap
 ): Promise<KeyedWriteSummary> {
   if (!headers.length) {
     throw new Error('writeKeyed needs at least one header');
   }
   const keyHeader = headers[0];
+  const columnRuns = resolveColumnRuns(headers, columns);
+  const keyColumnIndex = columns ? columnIndexOf(columns[keyHeader]) : 0;
+  const keyColumnLetter = columnLetter(keyColumnIndex);
+  const lastColumnIndex = Math.max(
+    ...columnRuns.map(run => run.startColumnIndex + run.headers.length - 1)
+  );
 
   const api = client();
 
@@ -131,7 +220,7 @@ export async function writeKeyed(
 
   const existing = await api.spreadsheets.values.get({
     spreadsheetId: DOC_ID,
-    range: `'${sheetTitle}'!A1:A`,
+    range: `'${sheetTitle}'!${keyColumnLetter}1:${keyColumnLetter}`,
     valueRenderOption: 'UNFORMATTED_VALUE',
   });
   const keyColumn = (existing.data.values ?? []).map(r => String(r[0] ?? ''));
@@ -150,7 +239,8 @@ export async function writeKeyed(
   }
 
   const seen = new Set<string>();
-  const placements: {rowIndex: number; values: CellValue[]}[] = [];
+  const placements: {rowIndex: number; row: {[header: string]: CellValue}}[] =
+    [];
   const appendedKeys: string[] = [];
   let nextAppendRow = lastPopulatedRow + 1;
 
@@ -166,7 +256,7 @@ export async function writeKeyed(
     if (existingRow === undefined) {
       appendedKeys.push(key);
     }
-    placements.push({rowIndex, values: headers.map(h => row[h])});
+    placements.push({rowIndex, row});
   }
 
   const blanks: number[] = [];
@@ -177,7 +267,7 @@ export async function writeKeyed(
   }
 
   const rowCountAfter = Math.max(rowCountBefore, nextAppendRow);
-  const columnCountAfter = Math.max(columnCountBefore, headers.length);
+  const columnCountAfter = Math.max(columnCountBefore, lastColumnIndex + 1);
 
   const requests: sheets_v4.Schema$Request[] = [];
 
@@ -186,77 +276,103 @@ export async function writeKeyed(
       updateSheetProperties: {
         properties: {
           sheetId,
-          gridProperties: {rowCount: rowCountAfter, columnCount: columnCountAfter},
+          gridProperties: {
+            rowCount: rowCountAfter,
+            columnCount: columnCountAfter,
+          },
         },
         fields: 'gridProperties.rowCount,gridProperties.columnCount',
       },
     });
   }
 
-  requests.push({
-    updateCells: {
-      range: {
-        sheetId,
-        startRowIndex: 0,
-        endRowIndex: 1,
-        startColumnIndex: 0,
-        endColumnIndex: headers.length,
+  for (const run of columnRuns) {
+    requests.push({
+      updateCells: {
+        range: {
+          sheetId,
+          startRowIndex: 0,
+          endRowIndex: 1,
+          startColumnIndex: run.startColumnIndex,
+          endColumnIndex: run.startColumnIndex + run.headers.length,
+        },
+        fields: 'userEnteredValue',
+        rows: [
+          {
+            values: run.headers.map(h => ({
+              userEnteredValue: {stringValue: h},
+            })),
+          },
+        ],
       },
-      fields: 'userEnteredValue',
-      rows: [{values: headers.map(h => ({userEnteredValue: {stringValue: h}}))}],
-    },
-  });
+    });
+  }
 
   placements.sort((a, b) => a.rowIndex - b.rowIndex);
 
   // Contiguous runs become one request each; chunked so no request is oversized.
-  const runs: {start: number; rows: CellValue[][]}[] = [];
+  const rowRuns: {start: number; rows: {[header: string]: CellValue}[]}[] = [];
   for (const placement of placements) {
-    const last = runs[runs.length - 1];
+    const last = rowRuns[rowRuns.length - 1];
     if (last && last.start + last.rows.length === placement.rowIndex) {
-      last.rows.push(placement.values);
+      last.rows.push(placement.row);
     } else {
-      runs.push({start: placement.rowIndex, rows: [placement.values]});
+      rowRuns.push({start: placement.rowIndex, rows: [placement.row]});
     }
   }
 
-  for (const run of runs) {
-    let offset = 0;
-    for (const chunk of chunkRows(run.rows, headers.length)) {
-      requests.push({
-        updateCells: {
-          range: {
-            sheetId,
-            startRowIndex: run.start + offset,
-            endRowIndex: run.start + offset + chunk.length,
-            startColumnIndex: 0,
-            endColumnIndex: headers.length,
+  for (const columnRun of columnRuns) {
+    for (const rowRun of rowRuns) {
+      let offset = 0;
+      for (const chunk of chunkRows(rowRun.rows, columnRun.headers.length)) {
+        requests.push({
+          updateCells: {
+            range: {
+              sheetId,
+              startRowIndex: rowRun.start + offset,
+              endRowIndex: rowRun.start + offset + chunk.length,
+              startColumnIndex: columnRun.startColumnIndex,
+              endColumnIndex:
+                columnRun.startColumnIndex + columnRun.headers.length,
+            },
+            fields: 'userEnteredValue',
+            rows: chunk.map(row => ({
+              values: columnRun.headers.map(h => ({
+                userEnteredValue: encode(row[h]),
+              })),
+            })),
           },
-          fields: 'userEnteredValue',
-          rows: chunk.map(values => ({
-            values: values.map(v => ({userEnteredValue: encode(v)})),
-          })),
-        },
-      });
-      offset += chunk.length;
+        });
+        offset += chunk.length;
+      }
     }
   }
 
   // A vanished key keeps its identity; only its value columns are emptied.
   for (const rowIndex of blanks) {
-    requests.push({
-      updateCells: {
-        range: {
-          sheetId,
-          startRowIndex: rowIndex,
-          endRowIndex: rowIndex + 1,
-          startColumnIndex: 1,
-          endColumnIndex: headers.length,
+    for (const run of columnRuns) {
+      const valueHeaders = run.headers.filter(h => h !== keyHeader);
+      if (!valueHeaders.length) {
+        continue;
+      }
+      const startColumnIndex =
+        run.headers[0] === keyHeader
+          ? run.startColumnIndex + 1
+          : run.startColumnIndex;
+      requests.push({
+        updateCells: {
+          range: {
+            sheetId,
+            startRowIndex: rowIndex,
+            endRowIndex: rowIndex + 1,
+            startColumnIndex,
+            endColumnIndex: startColumnIndex + valueHeaders.length,
+          },
+          fields: 'userEnteredValue',
+          rows: [{values: valueHeaders.map(() => ({userEnteredValue: {}}))}],
         },
-        fields: 'userEnteredValue',
-        rows: [{values: headers.slice(1).map(() => ({userEnteredValue: {}}))}],
-      },
-    });
+      });
+    }
   }
 
   const BATCH = 100;
@@ -277,5 +393,11 @@ export async function writeKeyed(
     columnCountBefore,
     columnCountAfter,
     appendedKeys,
+    columnRuns: columnRuns.map(
+      run =>
+        `${columnLetter(run.startColumnIndex)}:${columnLetter(
+          run.startColumnIndex + run.headers.length - 1
+        )}`
+    ),
   };
 }

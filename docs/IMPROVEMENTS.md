@@ -1095,6 +1095,66 @@ the verifier was stale, not the sheet. It now READS the period labels from `Prin
 derives the widest-period rule itself, so a future relabel cannot silently invalidate it. The
 Sortino math stays an independent implementation. Back to **15390/15390**.
 
+### DONE 2026-09-21 — `writeKeyed` learned a column map
+
+`writeKeyed` wrote ONE contiguous block from column A:
+
+```ts
+startColumnIndex: 0,
+endColumnIndex: headers.length,
+```
+
+Fine for the old `Fundos` sheet, which the writer owned end to end. Fatal on `Principal`, where
+ownership is interleaved after today's collapse:
+
+| columns | header | owner |
+|---|---|---|
+| `A` `B` | CNPJ, DENOM_SOCIAL | writer |
+| `C` | Risco | formula |
+| `D` `E` `F` `G` | Tipo, Resgate, M, Buy | **human** |
+| `H` `I` | BTG, XP | writer |
+| `J` | Vol | writer |
+| `K` `L` `R` `X` | DP, Nota x3 | formula |
+| `M:Q` `S:W` `Y:AC` | 1Y..T x3 | sortino job |
+| `AD` | MANUAL | writer |
+
+`writeKeyed('Principal', ['CNPJ','DENOM_SOCIAL','BTG','XP','Vol','MANUAL'], …)` would have written
+those six values into `A:F`, destroying the `Risco` formula and all four annotation columns.
+
+Now optional 4th argument `columns` maps header -> A1 letter. Mapped columns are sorted, grouped into
+contiguous runs, and written one request per run, so unmapped columns are never in any range. Three
+consequences worth naming:
+
+- **The key column is read from wherever it is mapped**, not assumed to be `A` — the existing
+  `values.get` on `A1:A` was a second hidden assumption in the same function.
+- **The blank path is run-aware too.** A vanished key blanks only mapped value columns; a human note
+  on that row survives. Previously it blanked `1 .. headers.length` as one span.
+- **A bad map throws before any request is issued** — an unmapped header, or two headers on the same
+  column. Failing at build time rather than half-way through a batch matters for a writer that
+  cannot be rolled back.
+
+Omitting `columns` keeps the old contiguous-from-A behaviour, which is what `Rentabilidade` and
+`Indices` use, and runs 1-3 of the harness are unchanged as the regression proof.
+
+**Proved on scratch sheets, 49 checks passing.** Runs 4-7 added, on throwaway sheets created and
+deleted per run:
+
+- **run 4** writes `A B / E / G` and asserts the runs come back as `['A:B','E:E','G:G']`, then fills
+  the gaps with a live formula and a human note.
+- **run 5** writes again and checks the gaps survived: both gap formulas are still formulas, the
+  human column is byte-identical, the derived column RECOMPUTED from the newly-written value
+  (`0.9 -> 90`), the dropped key kept its identity with only its mapped columns blanked, and its
+  human note survived the blanking.
+- **run 6** puts the key in `C` and a value in `A`, then re-writes to prove matching reads the key
+  from `C`.
+- **run 7** asserts the two rejections and the `columnIndexOf` / `columnLetter` round-trips,
+  including `AD` -> 29.
+
+Three of the four initial failures were the test's own bugs, not the writer's: `;` as a formula
+argument separator is locale-dependent through `USER_ENTERED` (switched to a single-argument
+`=E2*100`), and the values API trims trailing empty cells so a blanked row comes back short — the
+assertions normalise `undefined` to `''`.
+
 ### DONE 2026-09-21 — `RENT_MONTHS` renamed `HISTORY_MONTHS`
 
 `RENT` was short for *rentabilidade*, but the name reads as "rental months" and Vitor had to ask what
@@ -1512,7 +1572,9 @@ case needs a pick rule (prefer the live class) before the NAV fetch can be fully
   `CNPJ_MANUAL`, write owned columns through `writeKeyed`, write volatility **unrounded**, exclude
   `FIP`/`FII` by type and skip `DP = 0` at write time. It must also re-extend the 11 conditional
   formats and the filter whenever it raises `rowCount`, using `setBasicFilter` WITHOUT `sortSpecs`.
-  Blocked on item 16 (the dead cadastral source).
+  The writer prerequisite is DONE — `writeKeyed` takes a column map, so `{CNPJ:'A', DENOM_SOCIAL:'B',
+  BTG:'H', XP:'I', Vol:'J', MANUAL:'AD'}` writes without touching `C`, `D:G` or the formula columns.
+  Still blocked on item 16 (the dead cadastral source) for the DATA, not for the write mechanism.
 
 - [ ] **35. Revisit `HISTORY_MONTHS = 120`.** Deferred 2026-09-21 — keep 120 for now. It is the single
   knob for how much return history is kept, and `T` follows it automatically, so raising it is a

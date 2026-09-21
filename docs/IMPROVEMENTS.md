@@ -1499,6 +1499,15 @@ case needs a pick rule (prefer the live class) before the NAV fetch can be fully
 - [ ] **25. Volatility hardcodes 2018.** `writeVolatilidades` filters `DT_COMPTC >= 2018` and recomputes `m.sqrt(252)` inline while the `SQRT_252` const sits unused. Make the start year a parameter.
 
 - [ ] **26. Move the service-account key out of `~/Downloads`.**
+
+- [ ] **35. Revisit `HISTORY_MONTHS = 120`.** Deferred 2026-09-21 — keep 120 for now. It is the single
+  knob for how much return history is kept, and `T` follows it automatically, so raising it is a
+  one-line change plus a re-download. Worth revisiting because **188 of 1,026 funds** sit at the
+  ceiling — their history fills the whole window, so `T` is truncated by the window rather than by
+  their real lifetime, which is the opposite of what `T` is meant to mean. How much longer those
+  funds actually ran is unknown from the sheet alone. Cost of raising it: `rentYearRange` widens, so
+  the CVM `INF_DIARIO` download grows by roughly 12 monthly CSVs per extra year, and every Sortino
+  and `Nota` moves.
   `/Users/vcd/Downloads/fundos/config/fundos-309615-2795009f4d3e.json` grants **edit** rights on the document. `fundos.ts` expects it at `config/fundos-309615-2795009f4d3e.json` relative to cwd, and `.gitignore` already names that exact filename — so *move* (not copy) it into the repo's `config/`. Broaden the ignore to `config/` so a rotated key with a new filename is still covered.
 
 - [x] **27. Get the Apps Script into version control and deployable via `clasp`.** DONE — `appsscript/` is tracked and `npm run gs:deploy` pushes AND verifies (defends clasp#507 and the non-TTY manifest skip).

@@ -1095,6 +1095,77 @@ the verifier was stale, not the sheet. It now READS the period labels from `Prin
 derives the widest-period rule itself, so a future relabel cannot silently invalidate it. The
 Sortino math stays an independent implementation. Back to **15390/15390**.
 
+### DONE 2026-09-21 — previdência sources: Open Insurance works, but NOT for Onze
+
+Verified live today against real requests. Open Insurance (OPIN) `products-services/v2/life-pension`
+is published per insurer, unauthenticated, and is the only source carrying the plan -> fund link.
+Hosts are discoverable from the OPIN participant directory
+(`https://data.directory.opinbrasil.com.br/participants`, 200, no auth; 14 insurers publish this
+family).
+
+```
+Itau   https://api.itau/open-insurance/products-services/v2/life-pension
+       cache-control: no-cache is MANDATORY -- bare GET returns 400 BAD_REQUEST_PARAMETERS
+       still v2 (/v3 -> 403, not deployed);  1,106 products -> 235 distinct funds
+Icatu  https://opin.icatuseguros.com.br/open-insurance/products-services/v2/life-pension
+       NO header required -- bare GET returns 200.  Gateways differ per host, so probe
+       bare-then-header rather than assuming the Itau behaviour.
+       31,312 products over 32 pages -> 415 distinct funds
+```
+
+Field mapping, identical schema on both hosts:
+
+| fact | path |
+|---|---|
+| fund CNPJ | `data.brand.companies[].products[].productDetails[].defferalPeriod.investmentFunds[].cnpjNumber` |
+| fund name | same object -> `.companyName` |
+| PGBL vs VGBL | `products[].type` — a CONTRACT attribute, not a fund attribute |
+
+`defferalPeriod` is misspelled in the OPIN spec itself. Spell it wrong or read nothing.
+
+**PAGINATION TRAP — `page-size=1000` does NOT return everything.** The research agent reported that
+it does and that the page loop was no longer needed. Measured: `meta.totalPages = 2` for
+`totalRecords = 1106`, and one page yields 1000 products -> **220** distinct funds versus **235** when
+all pages are fetched. Following that advice silently loses 15 funds. Always read `meta.totalPages`
+and loop; never infer coverage from a 200. Icatu caps at ~978 products/page despite honouring
+`page-size=1000`, so its 32-page loop is required too.
+
+**Itau's retail shelf filter still holds.** Products-per-fund today
+`{1:9, 2:55, 3:4, 4:46, 5:1, 6:97, 8:16, 10:4, 12:3}`; `>=4 AND even` -> 166 funds, matching the
+earlier prediction of the 160-fund logged-in shelf.
+
+**OPIN carries no status field** (zero `status|situacao|aberto|fechado` keys), so operating status
+must come from CVM regardless.
+
+#### Icatu's OPIN publication does NOT cover Onze's shelf
+
+Cross-referenced Icatu's 415 published funds against the 24 `ONZE`-flagged funds in `Principal`:
+
+```
+ONZE-flagged in the sheet:            24
+present in Icatu's published set:      8
+absent:                               16
+```
+
+The obvious explanation would be the fund-vs-class CNPJ mismatch, so it was tested and **ruled out**.
+All 16 absent funds are single-class (`CNPJ_Fundo == CNPJ_Classe`), all are
+`Em Funcionamento Normal`, and **not one has a sibling CNPJ anywhere in Icatu's set** — so no join
+would recover them. Several are unmistakably Icatu's own (`ICATU SEG FIC FI CORPORATE RENDA FIXA`,
+three `Icatu Vanguarda` funds), which rules out "wrong insurer" too.
+
+The remaining explanation is coverage: OPIN `products-services` is the **retail** product catalogue,
+while Onze is a **corporate** pension provider (planos empresariais). Its plans' funds are simply not
+published there. The same asymmetry appeared on the Itau side, where the published 235 exceeded the
+160-fund retail shelf partly because of "other corporate plans' funds".
+
+**Consequence:** `MANUAL`/ONZE stays hand-maintained, and now for a documented reason rather than
+inertia. 24 funds on a corporate plan churns slowly, and the alternative is a logged-in browser
+extraction like the one already used for Itau previdência. CVM still supplies name and status for all
+24, so only the availability flag is manual.
+
+Itau previdência funds and Icatu funds are **disjoint** (overlap 0) — a FIE belongs to one insurer —
+so the two hosts together publish 635 previdência funds, of which only 8 are currently tracked.
+
 ### DONE 2026-09-21 — CVM sources re-derived, and a SILENT DATA-LOSS bug found in the quota crawler
 
 Re-derived from today's live files rather than trusting the earlier write-up, after Vitor said the

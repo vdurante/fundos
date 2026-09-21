@@ -144,8 +144,12 @@ function calcSortino(expectedReturns, riskFreeReturns, allowNonEmpty = false) {
   if (!allowNonEmpty && emptyIndex !== -1) {
     return '';
   } else if (allowNonEmpty && emptyIndex !== -1) {
-    expectedReturns = expectedReturns.slice(0, emptyIndex + 1);
-    riskFreeReturns = riskFreeReturns.slice(0, emptyIndex + 1);
+    expectedReturns = expectedReturns.slice(0, emptyIndex);
+    riskFreeReturns = riskFreeReturns.slice(0, emptyIndex);
+  }
+
+  if (!expectedReturns.length) {
+    return '';
   }
 
   let numerador = average(expectedReturns.map((v, i) => v - riskFreeReturns[i]));

@@ -44,6 +44,8 @@ function calcSortino(expected, riskFree, allowNonEmpty, fixOffByOne) {
     riskFree = riskFree.slice(0, end);
   }
 
+  if (fixOffByOne && !expected.length) return '';
+
   const numerador = average(expected.map((v, i) => v - riskFree[i]));
   const denominador = Math.sqrt(
     average(expected.map((v, i) => Math.pow(Math.min(v - riskFree[i], 0), 2)))
@@ -117,7 +119,7 @@ async function main() {
           rents.slice(0, period.months),
           series[block.series].slice(0, period.months),
           period.months === 122,
-          false
+          true
         );
 
         checked++;
@@ -138,9 +140,9 @@ async function main() {
         }
 
         if (period.name === 'T' && typeof mine === 'number') {
-          const fixed = calcSortino(rents.slice(0, 122), series[block.series].slice(0, 122), true, true);
-          if (typeof fixed === 'number' && Math.abs(fixed - mine) > 1e-12) {
-            tShifts.push({cnpj: row[0], block: block.series, current: mine, fixed});
+          const broken = calcSortino(rents.slice(0, 122), series[block.series].slice(0, 122), true, false);
+          if (typeof broken === 'number' && Math.abs(broken - mine) > 1e-12) {
+            tShifts.push({cnpj: row[0], block: block.series, current: broken, fixed: mine});
           }
         }
       });
@@ -152,7 +154,7 @@ async function main() {
       `(${mergeRows.length} funds x 2 blocks x 5 periods)`
   );
 
-  console.log(`\nitem 2 preview — T column if the off-by-one is fixed (${tShifts.length} of the sampled T cells move):`);
+  console.log(`\nitem 2 — T cells that moved vs the pre-fix code (${tShifts.length}):`);
   for (const s of tShifts.slice(0, 8)) {
     const delta = s.fixed - s.current;
     console.log(

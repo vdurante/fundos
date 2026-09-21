@@ -375,15 +375,34 @@ Everything below is about the rows around that data, not the maths.
   Fix: repair or delete rows 1065-1123, and have `calculateBlock` clear the region below
   the rows it writes so a shrinking fund count cannot leave stale values behind.
 
-- [ ] **29. 95 real funds have no `Nota` at all — `#DIV/0!` in both blocks.**
+- [x] **29. 95 real funds have no `Nota` at all — `#DIV/0!` in both blocks.** FIXED 2026-09-21.
   `K3 = COUNTIF(M3:Q3;"<>"&"")` counts non-blank period cells and indexes the divisor:
-  `/INDEX('Variáveis'!$C$3:$C$7; $K3; 0)`. A fund with under 12 months of history has
-  `M:P` blank and only `T` filled, so `K3 = 1` → `INDEX(...;1)` → `Variáveis!C3` → **0**
-  → divide by zero. 154 error cells per block, of which **95 sit on valid CNPJ rows**
-  (the other 59 are the junk rows from item 28).
+  `/INDEX('Variáveis'!$C$3:$C$7; $K3; 0)`. `K=1` (only `T` filled) indexes `Variáveis!C3`
+  which is `0`, because `T`'s weight is `0` — so the fund has zero weighted evidence and
+  the ratio is genuinely undefined. `K=0` indexes row 0, returning the whole range.
 
-  Fix: wrap in `IFERROR`, or give T a non-zero weight, or exclude sub-12-month funds from
-  the sheet instead of ranking them.
+  Fix applied by `node scripts/fix-nota-guard.js --apply`: every `Nota` formula in
+  `Merge!L` and `Merge!R` is now wrapped as `=IFERROR(<original>; "")`, so a fund with no
+  weighted evidence shows **blank** rather than an error. Blank is the right answer — a
+  fund with under 12 months of history cannot be scored on 12m/24m/36m/60m, and blank
+  sorts to the end under `sort_nota`. Giving `T` a non-zero weight remains a separate,
+  open methodology choice; this fix does not preclude it.
+
+  Result: `err 0` in both columns (was 154 each), `blank 154` = 102 rows with `K=0` +
+  52 with `K=1`, and all 541 `K=5` rows numeric. `Nota` for full-history funds is
+  byte-identical (`0.2654331114532912`).
+
+  **Two traps this exposed, both worth remembering.**
+  (1) `updateCells` with `fields: 'userEnteredValue'` and an **empty** `userEnteredValue`
+  CLEARS the cell. A "skip this cell" branch must re-send the existing formula, not an
+  empty value — the first run wiped `L3`/`R3` (the 2 cells a prior test had already
+  wrapped) and they had to be restored with a `copyPaste` / `PASTE_FORMULA` from row 4.
+  (2) After rewriting ~1,100 formulas, Google recalculates **asynchronously**; a read
+  taken immediately afterwards returned stale values for the second column and made the
+  fix look like it had produced 1,121 numbers. Re-read before concluding anything.
+
+  The pt-BR `;` argument separator round-trips correctly through
+  `userEnteredValue.formulaValue`, so no locale translation is needed.
 
 - [ ] **30. `Merge` is missing 18 funds that `Rentabilidade` has.**
   1,062 valid CNPJs in `Merge` against 1,080 in `Rentabilidade`. Positional alignment is

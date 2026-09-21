@@ -534,6 +534,20 @@ it costs nothing in presentation. That is what makes the direction sound.
 | `Finalistas` basic filter | range `A2:W33` |
 | Hand-entered on `Principal` | column A order (1,080 literals), `D` Tipo 53, `E` Resgate 53, `F` M **0**, `G` Buy 30 |
 
+**`F` ("M") is a deliberate second Buy channel, not an abandoned column.** Confirmed by
+Vitor 2026-09-21: `G` ("Buy") records a buy recommendation for himself, `F` ("M") records
+one **for other people**. Same semantics, different audience. It is empty only because it
+has not been used lately.
+
+So `Finalistas`' `=QUERY(... WHERE F = 'B' OR G = 'B' ...)` is **correct as written** —
+"recommended to me OR to someone else". It currently yields 30 rows purely because all 30
+marks live in `G`. Do not "simplify" that predicate, do not drop the column, and do not
+read its emptiness as dead weight; the moment a mark lands in `F` the filter must pick it up.
+
+Its header is cryptic, and renaming it is safe if ever wanted: `Finalistas` filters by
+column **letter** (`F`), and `Filters.js` never references it, so a clearer header
+(`Buy (outros)`) would break nothing.
+
 1. **Row deletion breaks formatting; overwriting values does not.** Conditional-format
    ranges and the basic-filter range are row-index bound — insert/delete shifts and
    fragments them, writing over cells leaves them intact. So a keyed writer must
@@ -584,7 +598,7 @@ All of it is readable from `spreadsheets.get` (`basicFilter.range` / `.criteria`
 `.sortSpecs`), so backup-and-reapply is safe. `Principal`'s live state: criteria on
 columns **B, C, D, I, K** (the menu only sets C/D/K — B and I were set by hand) and a
 **9-deep sortSpec stack** (L desc, J asc, B asc, A asc, R desc, Q desc, C asc, M desc,
-F desc), which still includes `F`, the empty "M" column.
+F desc), which still includes `F` — the second Buy channel, currently unused.
 
 Consequences for the plan:
 

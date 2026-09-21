@@ -552,13 +552,50 @@ it costs nothing in presentation. That is what makes the direction sound.
    (`C3:C3816`, `H3:I3816`, `J3:J3816`) have stayed correct; the narrow ones rot.
 
 ### Invariants for the keyed writer
-
 - Key on the CNPJ in column A; write ONLY the columns that writer owns.
 - Append new funds below the last data row; never re-sort (row order is the human's).
 - Blank the owned columns of a row whose key disappeared; never delete the row.
 - Never lower `rowCount` or `columnCount`.
-- Declare conditional formats and the filter range **open-ended** (omit the end row) so
-  row-count changes need no maintenance, and widen both to `AC`.
+- Declare conditional formats and the filter range to the **grid height, never the data
+  height**, and widen both to `AC`.
+
+### Range and sort mechanics — tested 2026-09-21 on `Merge`
+
+**There is no unbounded range.** A `GridRange` with `endRowIndex` omitted is stored
+pinned to the sheet's current `rowCount`:
+
+```
+requested: {startRowIndex: 2, startColumnIndex: 0, endColumnIndex: 1}
+stored:    {startRowIndex: 2, endRowIndex: 2103, startColumnIndex: 0, endColumnIndex: 1}
+```
+
+`setBasicFilter` behaves identically (stored `endRowIndex: 2103`). This is exactly why
+`C3:C3816` / `H3:I3816` / `J3:J3816` have stayed correct while `L1124:L1137` rotted — the
+survivors were declared to the GRID height, the casualty to the DATA height. `Principal`
+has 3,816 rows for 1,121 of data, so grid-height declarations cover ~2,695 funds of growth.
+
+| Mechanic | Behaviour |
+|---|---|
+| Filter criteria | **live** — apply to appended rows automatically, if inside the range |
+| Sort | **not live** — a one-time physical reorder; appended rows stay at the bottom |
+| Filter range | **not extendable in place** — `setBasicFilter` replaces the whole filter, so widening requires resupplying criteria + sortSpecs |
+
+All of it is readable from `spreadsheets.get` (`basicFilter.range` / `.criteria` /
+`.sortSpecs`), so backup-and-reapply is safe. `Principal`'s live state: criteria on
+columns **B, C, D, I, K** (the menu only sets C/D/K — B and I were set by hand) and a
+**9-deep sortSpec stack** (L desc, J asc, B asc, A asc, R desc, Q desc, C asc, M desc,
+F desc), which still includes `F`, the empty "M" column.
+
+Consequences for the plan:
+
+- **One-time:** re-declare the filter as `A2:AC3816` carrying the 5 criteria and 9
+  sortSpecs back verbatim; re-declare the rotted format fragments at grid height.
+- **Per-run:** no filter or format work at all — appends land inside the range and
+  criteria apply live.
+- **Never sort in the writer.** Nothing re-sorts live, and `Sort Nota` is already the
+  deliberate user action.
+- **Only if the grid must grow past 3,816 rows** do formats and filter need re-extending,
+  since both stay pinned at the old height.
 
 `sortino.ts` already implements exactly this — keyed by column A, writes only
 `M:Q`/`S:W`/`Y:AC`, touches no formula and no manual cell. Making `writeFundos` behave

@@ -1,6 +1,7 @@
 const TRACKER_NAME = 'Principal';
 const RENT_NAME = 'Rentabilidade';
 const BENCH_NAME = 'Indices';
+const TOTAL_PERIOD_CAP_MONTHS = 120;
 
 let trackerSheet;
 let rentSheet;
@@ -167,7 +168,7 @@ function parseMonthCount(periodName) {
   }
 
   if (text.toUpperCase() === 'T') {
-    return 122;
+    return TOTAL_PERIOD_CAP_MONTHS;
   }
 
   return undefined;

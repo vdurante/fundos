@@ -9,7 +9,7 @@ const DOC_ID = '1Ev0j3XqQJYWCSDftuud7IFAWya7gIiQGvp2ULfjWCi0';
 const SHEETS_EPOCH_UTC = Date.UTC(1899, 11, 30);
 // Period definitions are READ FROM THE SHEET, so relabeling headers cannot make this
 // verifier silently stale. The Sortino math below stays an independent implementation.
-const TOTAL_FALLBACK_MONTHS = 122;
+const TOTAL_FALLBACK_MONTHS = 120;
 
 function parsePeriod(label) {
   const text = label === null || label === undefined ? '' : String(label).trim();
@@ -168,8 +168,13 @@ async function main() {
           }
         }
 
-        if (period.name === 'T' && typeof mine === 'number') {
-          const broken = calcSortino(rents.slice(0, 122), series[block.series].slice(0, 122), true, false);
+        if (period.months === widest && typeof mine === 'number') {
+          const broken = calcSortino(
+            rents.slice(0, period.months),
+            series[block.series].slice(0, period.months),
+            true,
+            false
+          );
           if (typeof broken === 'number' && Math.abs(broken - mine) > 1e-12) {
             tShifts.push({cnpj: row[0], block: block.series, current: broken, fixed: mine});
           }

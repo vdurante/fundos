@@ -1090,6 +1090,45 @@ the verifier was stale, not the sheet. It now READS the period labels from `Prin
 derives the widest-period rule itself, so a future relabel cannot silently invalidate it. The
 Sortino math stays an independent implementation. Back to **15390/15390**.
 
+### DONE 2026-09-21 — widest period relabelled back `10Y` -> `T`, capped at 120 months
+
+`10Y` was the wrong NAME for a column that was never a 10-year comparison. The widest period is
+best-effort, so for a fund with 40 months of history it holds a 40-month figure. Only **190 of
+1,080** funds in `Rentabilidade` have the full 120; 836 have less. Labelling that `10Y` invites
+reading it as a like-for-like decade comparison, which it is not for 4 funds in 5.
+
+`T` (total, capped at 120) describes it correctly: *the fund's whole life, up to ten years*. The
+computation did not change at all — `TOTAL_PERIOD_CAP_MONTHS = 120` equals the `10Y` it replaced,
+so **15390/15390** cells still match and the `DP` distribution is byte-identical.
+
+```
+headers: 1Y | 2Y | 3Y | 5Y | T      (x3 blocks, Q2 / W2 / AC2)
+T = 120 months, best-effort (a CAP, not a requirement)
+DP: {1:59, 2:60, 3:98, 4:268, 5:541}   unchanged
+independent recompute: 15390/15390     error cells: 0
+```
+
+**Best-effort on the widest period is load-bearing for `Nota`, not a convenience.** The denominator
+is `INDEX('Variáveis'!$C$3:$C$7; $K)` — a CUMULATIVE weight indexed by `DP`, whose rows are ordered
+`T, 12m, 24m, 36m, 60m`. That ordering assumes `T` is the term a fund gets FIRST: `DP = 1` means
+`T` alone is populated, `DP = 2` means `T` + `12m`, and so on. The formula confirms it —
+`'Variáveis'!$B$3` multiplies column `Q` (the widest), while `$B$4..$B$7` multiply `M..P`. So if the
+widest period were ever made strict, the 59 `DP = 1` funds would lose their only term and score 0.
+
+Contiguous months of history per fund, measured on `Rentabilidade`:
+
+```
+0 months: 54    1-11: 59    12-23: 60    24-35: 98    36-59: 268    60-119: 351    120+: 190
+median 60   p90 122   14 funds have an interior gap (truncated there, so T = months since the gap)
+```
+
+**Open, and it needs a decision.** `Variáveis` weights are now `T=1, 12m=1, 24m=1, 36m=1, 60m=1`
+(`T` was 0 in an earlier session), so `T` DOES feed `Nota` — and it is the one term where funds are
+ranked on unequal windows, a 3-month Sortino percentile-ranked against a 120-month one. Either
+accept that (it is what makes short-history funds rankable at all) or set `T=0` and let `Nota` rest
+on the fixed windows only. The `Variáveis` labels `12m..60m` are also now stale against
+`1Y..5Y`; renaming them is cosmetic since the mapping is by explicit cell reference, not by label.
+
 ### DONE 2026-09-21 — `Rentabilidade` extracted to its own entry point
 
 `writeRentabilidades()` was reachable only through `run()` — bundled with the blocked cadastral

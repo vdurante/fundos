@@ -10,7 +10,7 @@ const BENCH_NAME = 'Indices';
 
 const FIRST_DATA_ROW = 3;
 const RENT_MONTH_COUNT = 122;
-const TOTAL_PERIOD_MONTHS = 122;
+const TOTAL_PERIOD_CAP_MONTHS = 120;
 const SENTINEL = 9.99;
 const SHEETS_EPOCH_UTC = Date.UTC(1899, 11, 30);
 const CNPJ_PATTERN = /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/;
@@ -61,7 +61,7 @@ export function parseMonthCount(periodName: Cell): number | undefined {
   }
 
   if (text.toUpperCase() === 'T') {
-    return TOTAL_PERIOD_MONTHS;
+    return TOTAL_PERIOD_CAP_MONTHS;
   }
 
   return undefined;

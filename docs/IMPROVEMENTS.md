@@ -1095,6 +1095,81 @@ the verifier was stale, not the sheet. It now READS the period labels from `Prin
 derives the widest-period rule itself, so a future relabel cannot silently invalidate it. The
 Sortino math stays an independent implementation. Back to **15390/15390**.
 
+### DONE 2026-09-21 — CVM sources re-derived, and a SILENT DATA-LOSS bug found in the quota crawler
+
+Re-derived from today's live files rather than trusting the earlier write-up, after Vitor said the
+datasets he used might be outdated. Two separate findings; the second one was about to destroy data.
+
+#### The daily NAV schema CHANGED, and the crawler silently drops every row
+
+`INF_DIARIO` is the source of `Rentabilidade`. Its header now differs by vintage — verified by
+downloading and reading each file:
+
+```
+HIST yearly zip (2016, 2019)      CNPJ_FUNDO;DT_COMPTC;VL_TOTAL;VL_QUOTA;...
+monthly, up to 2023-10            TP_FUNDO;CNPJ_FUNDO;DT_COMPTC;...
+monthly, from 2024-01             TP_FUNDO_CLASSE;CNPJ_FUNDO_CLASSE;ID_SUBCLASSE;DT_COMPTC;...
+```
+
+`parseCsv` in `crawler-quotas.ts` read `results.data['CNPJ_FUNDO']`. On a 2024-01-or-later file that
+is `undefined`, so `isTracked(undefined)` is false and **every row is discarded without error**.
+Measured on `inf_diario_fi_202608.csv` (533,719 rows):
+
+```
+OLD code keeps:     0 rows
+FIXED code keeps:   16,300 rows across 749 tracked funds
+```
+
+That made `npm run rentabilidade` **destructive**, not merely stale. The months from 2024-01 onward
+would have produced no quotas, `writeRentabilidades` would have emitted `undefined` for those
+columns, and `writeKeyed` encodes `undefined` as blank — so the run would have BLANKED the sheet's
+existing 2024-02..2025-02 data while appearing to succeed. This is the real reason the pipeline could
+not be run, and it is a much bigger hazard than the `currentYear` pin.
+
+Fixed by resolving the CNPJ column from each file's own header, normalising it to `CNPJ_FUNDO` for
+everything downstream, and **throwing on an unrecognised header** so the next schema move fails loudly
+instead of silently blanking a year of returns. All three vintages resolve; an unknown header throws.
+
+CNPJ FORMAT is unchanged across all three vintages (`##.###.###/####-##`), so only the column name
+moved. Note this differs from the cadastral files, which store bare 14-digit CNPJs.
+
+Unresolved, stated as a question rather than a story: the live sheet holds real data for all 12 months
+of 2024, which the current code cannot produce. Either the March-2025 run saw the OLD header on those
+files and CVM has since rewritten them, or that run used different code. Both are consistent with what
+is on disk; the safe conclusion either way is that the header must be detected per file and never
+assumed.
+
+#### The cadastral registry, re-derived
+
+`https://dados.cvm.gov.br/dados/FI/CAD/DADOS/registro_fundo_classe.zip` — 200, 6.78 MB, rebuilt
+daily. `registro_fundo.csv` 90,218 rows / 21 cols, `registro_classe.csv` 36,753 / 30,
+`registro_subclasse.csv` 9,970 / 14.
+
+- **Name** = `Denominacao_Social` (at fund, class and subclass level).
+- **Still operating** = `Situacao == 'Em Funcionamento Normal'`. The fund file emits **7** distinct
+  values, not the 4 the earlier doc listed: `Cancelado` 52,607, `Em Funcionamento Normal` 34,391,
+  `Fase Pré-Operacional` 2,366, `Em Liquidação` 839, `Incorporação` 9, `Em Situação Especial` 5,
+  `Em Análise` 1. A status filter must handle unknown values explicitly.
+- **Open to new money: NOT PUBLISHED.** Confirmed by scanning every header in all three files for
+  `capt|subscri|aplica|fecha|distrib|resgate`. `Forma_Condominio` (`Aberto` 23,255 / `Fechado` 9,725)
+  is the condominium TYPE, and substituting it gives a wrong answer that looks right.
+- `cad_fi.csv` is now labelled by CVM's own CKAN catalogue as "Fundos de Investimento - **Não
+  Adaptados RCVM175**" — the leftovers. 46,575 of 46,806 rows `CANCELADA`, 22 normal. Stop reading it.
+
+**Fund CNPJ vs class CNPJ.** The join key is `ID_Registro_Fundo`, NOT a CNPJ. 36,627 funds have one
+class, 39 have two, 11 have three, one has four, one has eleven. For the single-class majority
+`CNPJ_Classe == CNPJ_Fundo`, which is why a fund-CNPJ join looks correct 99.7% of the time; for a
+multi-class fund each class carries its own CNPJ and the fund CNPJ appears NOWHERE in
+`registro_classe.csv` (worked example: `OPPORTUNITY OAWM FIF`, fund `58823409000198`, 11 classes all
+with different CNPJs). Broker shelves and `INF_DIARIO` are **class**-keyed, so match `CNPJ_Classe`
+first and `CNPJ_Fundo` second.
+
+**An empirical answer to the open-for-captação question, which the registry cannot give.**
+`INF_DIARIO` carries `CAPTC_DIA` and `RESG_DIA` — actual daily subscription and redemption flows — in
+every vintage. `CAPTC_DIA > 0` in recent months PROVES the fund took new money; sustained zero is
+suggestive but does not prove closure, since it may just mean no inflow. That is a proxy, not a
+status, and it must be labelled as one.
+
 ### DONE 2026-09-21 — `writePrincipal` built against fixtures
 
 `src/fundos/principal.ts`, exercised by `npm run test:principal` on a throwaway sheet. **34 checks**,
@@ -1550,7 +1625,15 @@ the right key, because `Principal` tracks dead funds too and carries manual anno
 Class cardinality: **920 funds map 1:1 to a class, exactly 1 fund has 2 classes** — that single
 case needs a pick rule (prefer the live class) before the NAV fetch can be fully automatic.
 
-- [ ] **16. Migrate off the dead CVM cadastral file.** **BLOCKING `writeFundos`.**
+- [ ] **16. Migrate off the dead CVM cadastral file.** **BLOCKING `writePrincipal`.** The target is now
+  CONFIRMED against today's files (see the CVM entry above): fetch+unzip
+  `https://dados.cvm.gov.br/dados/FI/CAD/DADOS/registro_fundo_classe.zip`, parse `registro_fundo.csv`
+  and `registro_classe.csv` (`;`, latin1), join on `ID_Registro_Fundo`, take name from
+  `Denominacao_Social` and operating status from `Situacao == 'Em Funcionamento Normal'`, and match
+  tracked CNPJs against `CNPJ_Classe` BEFORE `CNPJ_Fundo` (digits-only normalised — the registry
+  stores bare 14-digit CNPJs while the tracker and `INF_DIARIO` store formatted ones). Open-to-captacao
+  is not in the registry at all; the only honest signal is the `CAPTC_DIA` flow in `INF_DIARIO`.
+  Original text:
   Measured 2026-09-21 via `node scripts/dry-run-fundos.js` (read-only), against a live
   snapshot of `Fundos` saved to `docs/fundos-final-snapshot.json` (1,080 rows):
 

@@ -26,41 +26,43 @@ async function getYear(year: number): Promise<CsvType[]> {
   );
 }
 
+const CNPJ_COLUMNS = ['CNPJ_FUNDO_CLASSE', 'CNPJ_FUNDO'];
+
+export function cnpjColumnOf(headerLine: string): string {
+  const columns = headerLine.split(';').map(column => column.trim());
+  const found = CNPJ_COLUMNS.find(candidate => columns.includes(candidate));
+
+  if (!found) {
+    throw new Error(
+      `INF_DIARIO sem coluna de CNPJ conhecida. Esperado ${CNPJ_COLUMNS.join(
+        ' ou '
+      )}, recebido: ${columns.join(', ')}`
+    );
+  }
+
+  return found;
+}
+
 async function parseCsv(buffer: Buffer): Promise<CsvType[]> {
   const data: CsvType[] = [];
+  const text = buffer.toString();
+  const cnpjColumn = cnpjColumnOf(text.slice(0, text.indexOf('\n')));
 
-  Papa.parse<CsvType>(buffer.toString(), {
+  Papa.parse<CsvType>(text, {
     header: true,
     delimiter: ';',
     worker: true,
     skipEmptyLines: true,
     step: (results, parser) => {
-      if (isTracked(results.data['CNPJ_FUNDO'])) {
-        data.push(results.data as any);
+      const cnpj = results.data[cnpjColumn];
+      if (isTracked(cnpj)) {
+        data.push(Object.assign({}, results.data, {CNPJ_FUNDO: cnpj}) as any);
       }
     },
     complete: () => {},
   });
 
   return data;
-
-  // const fundos = _(data)
-  //   //.filter(e => isTracked(e['CNPJ_FUNDO']))
-  //   .groupBy('CNPJ_FUNDO')
-  //   .mapValues(a => {
-  //     return _.maxBy(a, 'DT_COMPTC') || {};
-  //   })
-  //   .value();
-
-  // for (const cnpj in fundos) {
-  //   const fundo = fundos[cnpj];
-  //   if (!finalObject[cnpj]) {
-  //     finalObject[cnpj] = {};
-  //   }
-  //   finalObject[cnpj][fundo['DT_COMPTC'].substring(0, 7)] = parseFloat(
-  //     fundo['VL_QUOTA']
-  //   );
-  // }
 }
 
 /**

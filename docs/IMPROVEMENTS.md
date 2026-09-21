@@ -1022,6 +1022,19 @@ make the collapsed table ~150 wide.
 
 - [ ] **9. The 122-month window is hardcoded in two places.**
   `rentabilidades.map(p => p.slice(1, 123))` and `parseMonthCount('T') → 122`, whose comment says "10 anos - 1 mes" (which would be 119; 10 years is 120). Derive the width from `Rentabilidade`'s column count and fix the comment.
+### The 122-month window, measured (item 9 context)
+
+```
+Rentabilidade: 134 month columns — newest 2025-02, oldest 2014-01
+code reads slice(1, 123) = the newest 122 → 2015-01 .. 2025-02
+12 columns (2014-01 .. 2014-12) are NEVER read
+```
+
+`122` appears twice and the two must agree: the read window `row.slice(1, 123)` and
+`parseMonthCount('T') → 122`, which makes the "T" period a fixed 10-year window rather than the
+total history its name implies. The comment says "10 anos - 1 mes" (119) while 10 years is 120,
+so the literal matches neither. Derive both from `Rentabilidade`'s column count.
+
 
 ---
 
@@ -1030,15 +1043,15 @@ make the collapsed table ~150 wide.
 - [x] **10. `format()` accumulates conditional-format rules forever.** DONE — drops existing gradient rules instead of appending, emits ONE rule spanning `L:AC`, and sizes from `getMaxRows()`. `Principal` consolidated 40 -> 11 rules. `Finalistas` still carries 47 and is NOT yet cleaned.
   `getConditionalFormatRules()` → `push` → `set` adds 12 rules per sheet per run and never removes the old ones; `clearFormat()` doesn't touch them. Currently 22 rules on `Principal`, 40 on `Finalistas`, including two-cell fragments (`M34:M35`) left from older row counts. Fix: filter out rules whose range matches the target column before pushing. Also `var rules` shadows the parameter of the same name.
 
-- [ ] **11. `Filters.gs` resolves everything at module load.**
+- [x] **11. `Filters.gs` resolves everything at module load.** DONE — `sheet_()`, `header_()`, `get_column()` and `getFilter()` all resolve per call, so a recreated filter or a moved column is picked up instead of throwing on a captured stale object.
   `const principalFilter = principal.getFilter()` is `null` when `Principal` has no filter, which makes every `filter_*` call throw — including via `format()`, which calls `filters_clear()` first — and goes stale if the filter is recreated in the UI. The four `get_column` calls plus three `SpreadsheetApp` lookups run on *every* execution in the project, `onOpen` included, which is what makes the menu slow. Fix: move them inside the functions.
 
-- [ ] **12. `get_column("Nota")` can only ever find the CDI column.**
+- [x] **12. `get_column("Nota")` can only ever find the CDI column.** DONE — `get_column(name, occurrence)` scans the FULL header width (was capped at 20 columns, which could not even see `X`) and takes an occurrence index. `sort_nota_ibov()` / `sort_nota_bond()` added; a missing column now throws a named error listing the headers.
   `indexOf` returns the first match (column L), so `sort_nota()` cannot sort by the IBOV `Nota` in column R. Add an explicit block argument.
 
-- [ ] **13. `sort_column(col, ascending)` ignores both parameters** and hardcodes `COLUMN_NOTA, false`.
+- [x] **13. `sort_column(col, ascending)` ignores both parameters.** DONE, and it was worse than described: it sorted `A3:Z` while the data now runs to `AD`, so `AA`/`AB`/`AC` (bond 36m/60m/T) and `AD` (MANUAL) stayed put while every other column moved — silent row misalignment on EVERY menu click, since all filters call `sort_nota()`. Introduced when the bond block was added; before that the data ended at `W`. Verified no damage had occurred yet (`15390/15390` recompute match). Now honours both parameters and sorts `getLastColumn()` wide.
 
-- [ ] **14. `filter_dp` passes `null`/`undefined` into `setHiddenValues`** and omits `0`, so funds with zero data points are never hidden.
+- [x] **14. `filter_dp` passes `null`/`undefined` into `setHiddenValues`.** DONE — hidden values are built from the string set `0..5` minus what is kept, plus `''`. `0` is included, and no `null`/`undefined` reaches the API.
 
 ---
 

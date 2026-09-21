@@ -9,28 +9,56 @@ let benchSheet;
 let rentabilidades;
 let cnpjs;
 let rentMonths;
+let rentByCnpj;
 
 function sortino() {
   init();
 
+  let processed = 0;
+
   for (let column = 1; column <= trackerSheet.getMaxColumns(); column++) {
-    let indexName = trackerSheet.getRange(1, column).getValue();
+    const indexName = trackerSheet.getRange(1, column).getValue();
 
     if (!indexName) {
       continue;
     }
 
-    let merged = trackerSheet.getRange(1, column).getMergedRanges();
+    const merged = trackerSheet.getRange(1, column).getMergedRanges();
 
     if (!merged.length) {
-      throw new Error(
-        `"${indexName}" em ${TRACKER_NAME}!R1C${column} nao esta mesclado; ` +
-          'o bloco precisa cobrir Nota + os periodos'
-      );
+      continue;
     }
 
-    calculateBlock(indexName, merged[0].getColumn() + 1, merged[0].getLastColumn());
+    const startCol = merged[0].getColumn() + 1;
+    const endCol = merged[0].getLastColumn();
+
+    if (isPeriodBlock(startCol, endCol)) {
+      calculateBlock(indexName, startCol, endCol);
+      processed++;
+    }
+
+    column = endCol;
   }
+
+  if (!processed) {
+    throw new Error(
+      `Nenhum bloco de periodos encontrado em ${TRACKER_NAME}!1:2`
+    );
+  }
+}
+
+function isPeriodBlock(startCol, endCol) {
+  if (endCol < startCol) {
+    return false;
+  }
+
+  for (let col = startCol; col <= endCol; col++) {
+    if (parseMonthCount(trackerSheet.getRange(2, col).getValue()) === undefined) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 function init() {
@@ -56,6 +84,15 @@ function init() {
 
   cnpjs = raw.map(p => p[0]).filter(p => !!p);
   rentabilidades = raw.map(p => p.slice(1, 123));
+
+  rentByCnpj = {};
+
+  raw.forEach(row => {
+    const cnpj = row[0] === null || row[0] === undefined ? '' : String(row[0]).trim();
+    if (cnpj && !rentByCnpj[cnpj]) {
+      rentByCnpj[cnpj] = row.slice(1, 123);
+    }
+  });
 }
 
 function monthKeyOf(value) {
@@ -117,12 +154,14 @@ function benchmarkSeries(indexName) {
 }
 
 function parseMonthCount(periodName) {
-  if (periodName.endsWith('m')) {
-    return +periodName.replace('m', '');
+  const text = periodName === null || periodName === undefined ? '' : String(periodName).trim();
+  if (text.endsWith('m')) {
+    return +text.replace('m', '');
   }
-  if (periodName.toUpperCase() === 'T') {
+  if (text.toUpperCase() === 'T') {
     return 122;
   }
+  return undefined;
 }
 
 function calcSortino(expectedReturns, riskFreeReturns, allowNonEmpty = false) {
@@ -166,35 +205,38 @@ function calcSortino(expectedReturns, riskFreeReturns, allowNonEmpty = false) {
 }
 
 function calculateBlock(indexName, startCol, endCol) {
-  let indices = benchmarkSeries(indexName);
+  const indices = benchmarkSeries(indexName);
 
-  let periods = [];
+  const periods = [];
 
   for (let col = startCol; col <= endCol; col++) {
-    let months = parseMonthCount(trackerSheet.getRange(2, col).getValue());
-    periods.push(months);
+    periods.push(parseMonthCount(trackerSheet.getRange(2, col).getValue()));
   }
 
-  let values = [];
+  const lastRow = trackerSheet.getLastRow();
 
-  for (const [idx, cnpj] of cnpjs.entries()) {
-    if (!cnpj) {
-      break;
-    }
-
-    values[idx] = [];
-
-    let rents = rentabilidades[idx];
-
-    for (let [periodIdx, periodo] of periods.entries()) {
-      const sortino = calcSortino(
-        rents.slice(0, periodo),
-        indices.slice(0, periodo),
-        periodo === 122
-      );
-      values[idx][periodIdx] = sortino;
-    }
+  if (lastRow < 3) {
+    return;
   }
+
+  const keys = trackerSheet
+    .getRange(3, 1, lastRow - 2, 1)
+    .getValues()
+    .map(row => (row[0] === null || row[0] === undefined ? '' : String(row[0]).trim()));
+
+  const values = keys.map(cnpj => {
+    const rents = cnpj ? rentByCnpj[cnpj] : undefined;
+
+    if (!rents) {
+      return periods.map(() => '');
+    }
+
+    return periods.map(periodo =>
+      periodo === undefined
+        ? ''
+        : calcSortino(rents.slice(0, periodo), indices.slice(0, periodo), periodo === 122)
+    );
+  });
 
   trackerSheet
     .getRange(3, startCol, values.length, endCol - startCol + 1)

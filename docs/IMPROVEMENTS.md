@@ -508,6 +508,39 @@ funds, which is what you would expect when a reference range stops growing.
 
 ## Destination — one table in `Principal` (agreed direction, not yet scheduled)
 
+### DONE 2026-09-21 — `Atualizar cálculos` (Apps Script `sortino()`) fixed for `Principal`
+
+Reported broken by Vitor after the collapse. TWO bugs, the second far worse than the first, and
+the first was masking it.
+
+**1. Bogus block.** `sortino()` scans row 1 for any non-empty merged label. `Principal` carries
+`I1 = "SORTINO >>>"` merged over `I:K`, which `Merge` never had, so it called
+`calculateBlock("SORTINO >>>", J, K)` and `loadBenchmarkColumn` threw
+`Aba Indices nao tem a coluna "SORTINO >>>"`. Fixed with `isPeriodBlock(startCol, endCol)`,
+which requires every period header in the span to parse — the same filter added to
+`src/fundos/sortino.ts`. Only `TRACKER_NAME` had been changed in the JS file; the filter was not
+ported, which is what left this broken.
+
+**2. Positional write — silent corruption.** `calculateBlock` ended with
+
+```js
+trackerSheet.getRange(3, startCol, values.length, ...).setValues(values);
+```
+
+writing values in **`Rentabilidade` row order**. That was correct on `Merge` only because
+`Merge!A3 = Rentabilidade!A2` made the two positionally aligned by construction. `Principal!A`
+is human-ordered (and now `Nota`-sorted), so a positional write puts every fund's Sortino on the
+WRONG ROW. Had only bug 1 been fixed, the menu item would have silently corrupted the sheet.
+`calculateBlock` now reads `Principal`'s own column A and looks each CNPJ up in a `rentByCnpj`
+index built in `init()` — the same keying `sortino.ts` uses.
+
+Also hardened `parseMonthCount` to coerce its argument, since `periodName.endsWith` throws on a
+numeric or blank header cell.
+
+**Lesson: a sheet rename in one implementation is not a port.** `sortino()` existed in both
+TypeScript and Apps Script; repointing only the TS version left a live, user-facing path aimed at
+the new sheet with the old sheet's assumptions baked in.
+
 ### DONE 2026-09-21 — spent Merge-era scripts deleted (part of item 21)
 
 Eleven one-shot scripts removed: they either read the now-deleted `Merge` sheet or were

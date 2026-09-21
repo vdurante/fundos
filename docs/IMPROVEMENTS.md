@@ -508,6 +508,40 @@ funds, which is what you would expect when a reference range stops growing.
 
 ## Destination — one table in `Principal` (agreed direction, not yet scheduled)
 
+### DONE 2026-09-21 — blank Vol explained and repaired; row headroom restored
+
+**"Real data but no volatility" was never a calculation gap.** All 7 funds HAD a volatility in
+`Fundos!C` the whole time:
+
+```
+57.976.053/0001-60  0.030654      58.481.477/0001-16  0.002039
+58.495.741/0001-70  0.198217      57.879.610/0001-24  0.035359
+57.976.525/0001-84  0.001540      58.804.815/0001-03  0.005044
+                                  58.943.835/0001-65  0.002824
+```
+
+Those 7 are 7 of the 18 funds `Merge` had NO ROW for, so `Principal!J` read `#N/A`, and the
+collapse's step-1 freeze blanked all 342 error cells (18 rows x 19 columns). The gap was `Merge`'s,
+not the volatility pipeline's. Restored from `docs/fundos-final-snapshot.json`, rounded to 2dp to
+match the column's convention. `Risco` then computed itself: **blank Vol 0, blank Risco 0**.
+
+`Risco` is healthy and discriminating: `00 ~ 05` 472 · `10 ~ 25` 340 · `05 ~ 10` 137 · `25~100` 77.
+
+**Observation, not fixed:** the old `=ROUND(Fundos!C;2)` is lossy. Unrounded volatility runs
+min 0.000898 / median 0.0609 / max 0.7273, and **109 of 1,040 funds round to 0.00**, collapsing
+into one indistinguishable `00 ~ 05` group. 2dp rounding can also flip a band at a boundary
+(0.0549 -> 0.05 reads as `00 ~ 05`). When `writePrincipal` is built, write unrounded volatility
+and let the number format handle display.
+
+**Row headroom restored: 1028 -> 2000** (974 spare rows for ~2x the current fund count). All 11
+conditional formats and the basic filter re-extended to 2000 in the SAME batch — `0` rules off
+grid height. The filter went out with `sortSpecs` omitted, so the row order survived
+(`1025/1025` pairs still Nota-descending).
+
+**No CNPJ denylist anywhere.** Vitor's lists were examples, not a rule to encode. The filter is
+computed from data on both tiers: `Tipo_Fundo in (FIP, FII)` from the registry, and `DP = 0` at
+write time. `docs/removed-no-data-funds.json` is an audit record of one removal, NOT an input.
+
 ### DONE 2026-09-21 — `Fundos` and `Missing` deleted; 6 sheets left
 
 ```

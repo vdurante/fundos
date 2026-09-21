@@ -1020,7 +1020,7 @@ make the collapsed table ~150 wide.
 - [x] **8. Two unguarded crashes in `sortino()`.** DONE — an unmerged row-1 label is skipped (`if (!merged.length) continue`), `isPeriodBlock()` rejects a non-period block, and `loadBenchmarkColumn` throws a named error listing the available columns.
   `merged[0]` is undefined if a row-1 label isn't merged (`SORTINO >>>` is merged on `Principal`/`Finalistas` as `I1:K1` — copy it into `Merge` row 1 and the loop dies). And `getRentabilidadesByName` does `.findNext().getRow()` with no null check, so a label with no matching `Indices` row throws. Fix: skip a column with no merged range, and report a missing index by name.
 
-- [ ] **9. The 122-month window is hardcoded in two places.**
+- [x] **9. The 122-month window is hardcoded in two places.** DONE on the Node side — `RENT_MONTHS = 122` in `fundos.ts` now drives the header set (`rentMonthKeys()`), the download range (`rentYearRange()`) and the column count. `appsscript/Sortino.js` still carries its own `122` for `parseMonthCount('T')`; the two agree by construction but are not shared, because Apps Script cannot import. Original text:
   `rentabilidades.map(p => p.slice(1, 123))` and `parseMonthCount('T') → 122`, whose comment says "10 anos - 1 mes" (which would be 119; 10 years is 120). Derive the width from `Rentabilidade`'s column count and fix the comment.
 ### The 122-month window, measured (item 9 context)
 
@@ -1054,6 +1054,42 @@ so the literal matches neither. Derive both from `Rentabilidade`'s column count.
 - [x] **14. `filter_dp` passes `null`/`undefined` into `setHiddenValues`.** DONE — hidden values are built from the string set `0..5` minus what is kept, plus `''`. `0` is included, and no `null`/`undefined` reaches the API.
 
 ---
+
+### DONE 2026-09-21 — `Rentabilidade` extracted to its own entry point
+
+`writeRentabilidades()` was reachable only through `run()` — bundled with the blocked cadastral
+crawl, and with no npm script pointing at it. Now:
+
+```
+npm run rentabilidade        # download quotas for the derived window and write the sheet
+npm run rentabilidade:dry    # download and report month coverage, write nothing
+```
+
+**One constant replaces three disagreeing spans.** `RENT_MONTHS = 122` drives all of them:
+
+| was | now |
+|---|---|
+| headers: a 12-year loop -> 134 columns | `rentMonthKeys()` -> exactly 122 months, 123 columns |
+| download: `range(cy, cy-11, -1)` -> **11 years** (stop is exclusive) | `rentYearRange()` -> every year the window touches |
+| read window: a separate literal `122` | the same `RENT_MONTHS` |
+
+**That off-by-one is why the live sheet carries 12 empty columns.** Proven:
+
+```
+range(2026, 2015, -1) = [2026..2016]     -> 11 years downloaded
+header loop 2026..2026-11 = [2026..2015] -> 12 years of headers
+years with headers but NO download: 2015
+```
+
+The March-2025 run generated headers for 2025..2014 but downloaded only 2025..2015, so all 12 of
+the 2014 columns got a header and no data — exactly what the sheet shows
+(`{"2014":0,"2015":12,...,"2025":2}`). Verified against the new code: `years missing from
+download: []`.
+
+**Not yet run, deliberately.** Today's window is `2016-07 .. 2026-08`, needing 11 years of CVM
+`INF_DIARIO` daily-NAV files. `.cache` holds only `cadastros`, so the first run downloads all of
+it (132 monthly CSVs, hundreds of MB). It also SHIFTS every column — the live sheet ends at
+2025-02 — which moves every Sortino value and therefore every `Nota`.
 
 ## P2 — the Node pipeline
 
@@ -1137,7 +1173,7 @@ so the literal matches neither. Derive both from `Rentabilidade`'s column count.
   without removing that call first.
 
 
-- [ ] **15. Reconcile `currentYear = 2022` with reality.**
+- [x] **15. Reconcile `currentYear = 2022` with reality.** DONE for `Rentabilidade` — `runRentabilidades()` derives its window from the current date, so no year constant can expire. `run()` still carries the 2022 pin for the cadastral path; that dies with item 16. Origin found: commit `eb14851` (2022-10-06) set it in the SAME change that uncommented the quota download — a debugging pin that was correct that day. It cannot have produced the live sheet, which holds 2025 data, so the code that actually ran had a different value. Original text:
   `fundos.ts` `run()` caps the quota download at 2022, yet `Rentabilidade` holds real returns through 2025-02. The committed code cannot have produced the live sheet — either the constant was edited locally and never committed, or a newer copy exists elsewhere. Running the repo as-is would blank the 2023-2025 columns. Settle this before the next run.
 
 ### Universe refresh — measured, and the key is `CNPJ_Fundo` NOT `CNPJ_Classe`

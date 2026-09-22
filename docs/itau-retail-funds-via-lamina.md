@@ -512,6 +512,54 @@ fund's CNPJ in body text. Treating "document found but no CNPJ" as a reason to k
 cascading is the fix; it was untestable at time of writing because the ASMX WAF was
 refusing this client, control included.
 
+### A master is never the answer, at any confidence
+
+A master (mestre) is the wholesale vehicle several feeders invest into. Two consequences,
+and the second is why excluding it is not cosmetic:
+
+- It **cannot identify one shelf product**, because by construction it is shared by every
+  feeder above it. `POLO LONG BIAS MASTER` sits under both a Polo feeder and, in the same
+  name family, `ITAÚ FOF MASTER LONG BIAS` sits under an Itaú one.
+- Its **quota series is gross of the feeder's administration fee**, so a shelf row keyed to
+  a master computes returns that are optimistic and still look plausible. This is exactly
+  the defect found in the sheet's 16 ONZE previdência rows.
+
+So a master is removed from the candidate pool outright rather than ranked low, including
+on the `class-label` path, and `loadOverrides` refuses one a human supplies. Ranking it low
+was not enough: `sole-registered-fund` sits above the old master demotion, so a document
+naming only its master produced a confident wrong answer — **2 funds were resolved that
+way** before this change:
+
+```
+56144  shelf "POLO NORTE I LONG SHORT FIC FI MM"
+       took  17.373.839/0001-78  POLO NORTE MASTER FIF MULTIMERCADO
+       real  07.013.315/0001-12  POLO NORTE I LONG SHORT FIC DE FIF MULTIMERCADO
+56790  shelf "Opportunity Global Equity Real Ações BDR Nível I"
+       took  46.372.615/0001-40  ... EM REAL MASTER FIF DE AÇÕES
+```
+
+Both now report `only-the-master-is-named`, which is a distinct outcome from "no registered
+CNPJ": the master is a strong LEAD, because the feeder above it is nearly always the
+obvious neighbour in the same name family. The suggester prints it as such.
+
+The count went 437 -> 435 on this change. **A drop is the fix working** — those two rows
+were wrong, not missing.
+
+### Certain automatically, uncertain by hand
+
+This crawl runs rarely, so a manual step for the residue is cheaper than a heuristic that
+guesses. The split:
+
+| | |
+|---|---|
+| certain | the document yields a registry-corroborated, non-master CNPJ -> used automatically |
+| uncertain | recorded unresolved, and `scripts/suggest-cnpj-candidates.js` proposes ranked registry candidates for a human to confirm into the overrides file |
+
+`--stub <file>` emits a fill-in-the-blanks override block with the top candidates inline, so
+confirming is a paste rather than a PDF hunt. Nothing is auto-filled: a guessed CNPJ
+computes wrong returns that nothing downstream can detect, whereas an unresolved fund is
+merely absent.
+
 ### A 200 application/pdf is NOT proof of a lâmina
 
 Of the 15 rescued, 7 are plainly a different document that `COMAG` falls back to. The PDF metadata

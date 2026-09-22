@@ -41,7 +41,7 @@ const LAMINA_MAX_BYTES = 220000;
  * Bump whenever resolveCnpj changes. Cached blobs are then re-parsed instead of keeping a
  * verdict the current rule would not produce.
  */
-const PARSER_VERSION = 4;
+const PARSER_VERSION = 5;
 
 const REPO = path.dirname(__dirname);
 const FUNDS = path.join(REPO, 'src', 'corretoras', 'itau-rentabilidade.json');
@@ -84,6 +84,20 @@ const OTHER_FUND_RE =
   /FUNDO\s+MASTER|inscrito\s+no\s+CNPJ|em\s+cotas\s+d[oa]|fundo[\s-]espelho|respectivo\s+Master|carteira\s+d[oa]|aloca\s+seus\s+recursos/i;
 /** A bare `CNPJ:` label immediately before the number. */
 const BARE_LABEL_RE = /CNPJ\s*[:nº°]*\s*$/i;
+
+/**
+ * A master (mestre) is the wholesale vehicle several feeders invest INTO, so it is never
+ * the thing a shelf sells and can never identify one shelf product — by construction it is
+ * shared by every feeder above it. It is also not merely the wrong label: the master's
+ * quota series is gross of the feeder's own administration fee, so keying a shelf row to
+ * it produces optimistically WRONG returns that still look plausible. That is precisely
+ * the defect found in the sheet's ONZE previdência rows.
+ *
+ * So a master is excluded from the candidate pool outright rather than ranked low. When
+ * every candidate in a document is a master the correct outcome is "unresolved, and here
+ * is the master as a lead", not a confident wrong answer.
+ */
+const isMaster = name => /\bMASTER\b/i.test(String(name));
 
 function validCnpj(formatted) {
   const d = formatted.replace(/\D/g, '');
@@ -128,7 +142,10 @@ function resolveCnpj(text, registry) {
     .filter(o => validCnpj(o.cnpj));
 
   const distinct = [...new Set(occurrences.map(o => o.cnpj))];
-  const resolving = distinct.filter(c => registry.has(c));
+  const registered = distinct.filter(c => registry.has(c));
+  // A master is never investable, so it is not a candidate at all.
+  const masters = registered.filter(c => isMaster(registry.lookup(c).name));
+  const resolving = registered.filter(c => !masters.includes(c));
   const note = c => {
     const r = registry.lookup(c);
     return {cnpj: c, nomeOficial: r.name, situacao: r.situacao, isClass: r.isClass};
@@ -138,13 +155,24 @@ function resolveCnpj(text, registry) {
 
   if (!distinct.length) return {cnpj: null, confidence: 'no-cnpj-in-document', distinct};
   if (!resolving.length) {
+    // Distinguish "only counterparties" from "only the master": the second is a LEAD,
+    // because the feeder sitting above a known master is findable in the registry.
+    if (masters.length) {
+      return {
+        cnpj: null,
+        confidence: 'only-the-master-is-named',
+        distinct,
+        masters,
+        masterNames: masters.map(c => registry.lookup(c).name),
+      };
+    }
     return {cnpj: null, confidence: 'no-cnpj-is-a-registered-fund', distinct};
   }
 
   // 0. a regulamento labels the investable class explicitly
   const labelled = CLASS_LABEL_RE.exec(text);
   const labelledCanon = labelled ? labelled[1].replace(/\s+/g, '') : null;
-  if (labelledCanon && registry.has(labelledCanon)) {
+  if (labelledCanon && registry.has(labelledCanon) && !isMaster(registry.lookup(labelledCanon).name)) {
     return {...note(labelledCanon), confidence: 'class-label', distinct, resolving};
   }
 
@@ -179,13 +207,11 @@ function resolveCnpj(text, registry) {
     return {...note(bare[0]), confidence: 'cnpj-label', distinct, resolving};
   }
 
-  // 6. narrow to the investable vehicle: a class, and not a master
+  // 6. narrow to the investable vehicle: a class rather than the fund registration
   const classes = pool.filter(c => registry.lookup(c).isClass);
   if (classes.length) pool = classes;
-  const nonMaster = pool.filter(c => !/\bMASTER\b/i.test(registry.lookup(c).name));
-  if (nonMaster.length) pool = nonMaster;
   if (pool.length === 1) {
-    return {...note(pool[0]), confidence: 'class-not-master', distinct, resolving};
+    return {...note(pool[0]), confidence: 'class-not-fund', distinct, resolving};
   }
 
   return {cnpj: null, confidence: 'ambiguous', distinct, resolving, narrowed: pool};
@@ -241,6 +267,14 @@ function loadOverrides(funds, registry) {
     const reg = registry.lookup(o.cnpj);
     if (!reg) {
       problems.push(`${id}: ${o.cnpj} is not a registered CNPJ in the CVM registry`);
+      continue;
+    }
+    if (isMaster(reg.name)) {
+      problems.push(
+        `${id}: ${o.cnpj} is "${reg.name}" — a MASTER, which no shelf sells. Several ` +
+          `feeders invest into it, so it cannot identify one product, and its quota ` +
+          `series is gross of the feeder's fee. Find the feeder above it.`
+      );
       continue;
     }
     const shelf = nameWords(fund.nomeComercial);

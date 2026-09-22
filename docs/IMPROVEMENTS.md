@@ -1238,6 +1238,49 @@ Vanguarda inflation funds — and must **reject `00000000000000`**, which the AP
 Itau previdência funds and Icatu funds are **disjoint** (overlap 0) — a FIE belongs to one insurer —
 so the two hosts together publish 635 previdência funds, of which only 8 are currently tracked.
 
+### DONE 2026-09-21 — the openness rule: "listed AND active", and why half of it is missing
+
+The original design intent (recalled by the author, confirmed against the code) was that a fund counts
+as **open for investment** when it is *listed by a corretora* AND *active in CVM*. The code only ever
+implemented the first half: `tracker.ts` builds `CNPJ_FUNDOS` as the union of `xp.json`, `btg.json` and
+`cnpj.json`, so "listed" is the universe itself, and `grep` finds **no status filter anywhere in the
+repo or the Apps Script**, now or in any commit (`git log -S SIT` is empty).
+
+Measured consequence, 1,026 tracked funds against today's `registro_fundo_classe`:
+
+```
+Em Funcionamento Normal    901
+Cancelado                  125      <- 12.2%
+not in the registry at all   0      (join CNPJ_Classe first, then CNPJ_Fundo)
+```
+
+**The rule is sound; the missing half is what makes it safe.** Those 125 are almost certainly not funds
+the brokers still list — the corretora JSONs are static files committed to the repo from an old crawl,
+so the staleness is in the snapshot. That is exactly why the conjunction matters: "listed" is only
+evidence of openness *as fresh as the crawl*, and the active check is the guard that keeps a stale
+snapshot from asserting a dead fund is purchasable. Implement it as
+`listed_in_a_fresh_crawl AND Situacao == 'Em Funcionamento Normal'`, and treat any `Cancelado` row that
+still appears in a fresh listing as a broker-data defect to report, not a fund to keep.
+
+`INF_DIARIO`'s `CAPTC_DIA > 0` remains available as an independent cross-check: it *proves* a fund took
+new money in a month, so it can validate the rule rather than replace it.
+
+### Checked and rejected: BCB open data (`dadosabertos.bcb.gov.br`)
+
+CKAN instance, 200, unauthenticated. It carries **no fund catalogue**, which follows from the
+regulatory split — BCB supervises institutions, CVM supervises funds and their distribution:
+
+```
+group economia-e-financas                          1,438 datasets
+q=fundo                    440 hits   balance-of-payments portfolio flows for the fund SECTOR (aggregate)
+q=cota                     164 hits   CONSORCIO quotas -- unrelated to investment funds
+q=cnpj                     596 hits   SFN institution register (banks, SCFIs), not funds
+```
+
+Nothing is keyed by fund CNPJ, so it answers neither the universe, the name, the status nor the
+distributor question. BCB remains useful to this project for exactly one thing, which is already wired:
+the CDI series (SGS 4391) behind the `Indices` sheet.
+
 ### DONE 2026-09-21 — CVM sources re-derived, and a SILENT DATA-LOSS bug found in the quota crawler
 
 Re-derived from today's live files rather than trusting the earlier write-up, after Vitor said the

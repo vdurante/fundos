@@ -41,7 +41,7 @@ const LAMINA_MAX_BYTES = 220000;
  * Bump whenever resolveCnpj changes. Cached blobs are then re-parsed instead of keeping a
  * verdict the current rule would not produce.
  */
-const PARSER_VERSION = 3;
+const PARSER_VERSION = 4;
 
 const REPO = path.dirname(__dirname);
 const FUNDS = path.join(REPO, 'src', 'corretoras', 'itau-rentabilidade.json');
@@ -56,11 +56,33 @@ const sha256 = buf => crypto.createHash('sha256').update(buf).digest('hex');
 
 /* ---------------------------------------------------------------- CNPJ ---- */
 
-const CNPJ_RE = /\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}/g;
+/**
+ * A CNPJ, tolerating whitespace around every separator.
+ *
+ * Third-party managers' lâminas render the number with stray spaces the strict form
+ * misses entirely: Occam writes `18.525.868/0001 -70` and M8 writes
+ * `39.958.460/0001 - 62`. A strict pattern reports "no CNPJ in document" for those,
+ * which is a false absence, not a missing value.
+ */
+const CNPJ_RE = /(\d{2})\s*\.\s*(\d{3})\s*\.\s*(\d{3})\s*\/\s*(\d{4})\s*-\s*(\d{2})/g;
+const canon = m => `${m[1]}.${m[2]}.${m[3]}/${m[4]}-${m[5]}`;
 /** A regulamento states the investable vehicle under this exact label. */
-const CLASS_LABEL_RE = /CNPJ\s+DA\s+CLASSE\s*[:nº°]*\s*(\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2})/i;
+const CLASS_LABEL_RE = /CNPJ\s+DA\s+CLASSE\s*[:nº°]*\s*(\d{2}\s*\.\s*\d{3}\s*\.\s*\d{3}\s*\/\s*\d{4}\s*-\s*\d{2})/i;
 /** How far into the text a page-header CNPJ can sit; beyond this it is body text. */
 const HEADER_WINDOW = 300;
+/** How much text before a match is read to classify what the number refers to. */
+const CONTEXT_WINDOW = 90;
+
+/**
+ * The beneficiary of the subscription wire transfer IS the fund being sold — a stronger
+ * signal than any name comparison, because it is where the customer's money lands.
+ */
+const BENEFICIARY_RE = /Favorecido\s*:/i;
+/** Language that introduces a DIFFERENT fund: the master, or a mirrored strategy. */
+const OTHER_FUND_RE =
+  /FUNDO\s+MASTER|inscrito\s+no\s+CNPJ|em\s+cotas\s+d[oa]|fundo[\s-]espelho|respectivo\s+Master|carteira\s+d[oa]|aloca\s+seus\s+recursos/i;
+/** A bare `CNPJ:` label immediately before the number. */
+const BARE_LABEL_RE = /CNPJ\s*[:nº°]*\s*$/i;
 
 function validCnpj(formatted) {
   const d = formatted.replace(/\D/g, '');
@@ -89,13 +111,29 @@ function validCnpj(formatted) {
  * only CNPJ is the administrator's.
  */
 function resolveCnpj(text, registry) {
-  const matches = [...text.matchAll(CNPJ_RE)];
-  const distinct = [...new Set(matches.map(m => m[0]))].filter(validCnpj);
+  const raw = [...text.matchAll(CNPJ_RE)];
+  // Every occurrence, annotated with what the surrounding prose says it refers to.
+  const occurrences = raw
+    .map(m => {
+      const before = text.slice(Math.max(0, m.index - CONTEXT_WINDOW), m.index);
+      return {
+        cnpj: canon(m),
+        index: m.index,
+        beneficiary: BENEFICIARY_RE.test(before),
+        otherFund: OTHER_FUND_RE.test(before),
+        labelled: BARE_LABEL_RE.test(before),
+      };
+    })
+    .filter(o => validCnpj(o.cnpj));
+
+  const distinct = [...new Set(occurrences.map(o => o.cnpj))];
   const resolving = distinct.filter(c => registry.has(c));
   const note = c => {
     const r = registry.lookup(c);
     return {cnpj: c, nomeOficial: r.name, situacao: r.situacao, isClass: r.isClass};
   };
+  /** Any occurrence of `c` satisfying `pred` — a CNPJ can appear more than once. */
+  const anyOcc = (c, pred) => occurrences.some(o => o.cnpj === c && pred(o));
 
   if (!distinct.length) return {cnpj: null, confidence: 'no-cnpj-in-document', distinct};
   if (!resolving.length) {
@@ -104,23 +142,43 @@ function resolveCnpj(text, registry) {
 
   // 0. a regulamento labels the investable class explicitly
   const labelled = CLASS_LABEL_RE.exec(text);
-  if (labelled && registry.has(labelled[1])) {
-    return {...note(labelled[1]), confidence: 'class-label', distinct, resolving};
+  const labelledCanon = labelled ? labelled[1].replace(/\s+/g, '') : null;
+  if (labelledCanon && registry.has(labelledCanon)) {
+    return {...note(labelledCanon), confidence: 'class-label', distinct, resolving};
   }
 
-  // 1. the repeated page header, which sits beside the fund's own name
-  const header = matches.find(m => m.index < HEADER_WINDOW);
-  if (header && resolving.includes(header[0])) {
-    return {...note(header[0]), confidence: 'page-header', distinct, resolving};
+  // 1. the beneficiary of the subscription transfer — the fund the money buys
+  const beneficiary = resolving.filter(c => anyOcc(c, o => o.beneficiary));
+  if (beneficiary.length === 1) {
+    return {...note(beneficiary[0]), confidence: 'wire-beneficiary', distinct, resolving};
   }
 
-  // 2. only one of the document's CNPJs is a registered fund at all
+  // 2. the repeated page header, which sits beside the fund's own name
+  const header = occurrences.find(o => o.index < HEADER_WINDOW);
+  if (header && resolving.includes(header.cnpj)) {
+    return {...note(header.cnpj), confidence: 'page-header', distinct, resolving};
+  }
+
+  // 3. only one of the document's CNPJs is a registered fund at all
   if (resolving.length === 1) {
     return {...note(resolving[0]), confidence: 'sole-registered-fund', distinct, resolving};
   }
 
-  // 3. narrow to the investable vehicle: a class, and not a master
+  // 4. drop numbers the prose introduces as a DIFFERENT fund (master, mirrored strategy)
   let pool = resolving;
+  const own = pool.filter(c => !anyOcc(c, o => o.otherFund) || anyOcc(c, o => o.beneficiary));
+  if (own.length) pool = own;
+  if (pool.length === 1) {
+    return {...note(pool[0]), confidence: 'not-named-as-other-fund', distinct, resolving};
+  }
+
+  // 5. a bare `CNPJ:` label, which the fund's own identification block carries
+  const bare = pool.filter(c => anyOcc(c, o => o.labelled));
+  if (bare.length === 1) {
+    return {...note(bare[0]), confidence: 'cnpj-label', distinct, resolving};
+  }
+
+  // 6. narrow to the investable vehicle: a class, and not a master
   const classes = pool.filter(c => registry.lookup(c).isClass);
   if (classes.length) pool = classes;
   const nonMaster = pool.filter(c => !/\bMASTER\b/i.test(registry.lookup(c).name));

@@ -440,6 +440,78 @@ blocking. Fixed in three places, and the shape generalises to any crawler with a
 The report now prints the two separately, so `no document, established` can never be misread as the
 count of funds Itaú has no document for.
 
+### A strict CNPJ pattern invents absences — third-party lâminas add stray spaces
+
+Third-party managers' documents render the number with whitespace the strict form
+`\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}` cannot match:
+
+```
+Occam  Favorecido: OCCAM BRASIL LONG BIASED FIC FIM  CNPJ: 18.525.868/0001 -70
+M8     M8 Capital Plus FIRF CP LP                    CNPJ: 39.958.460/0001 - 62
+```
+
+Those reported `no-cnpj-in-document`, which reads as "this document does not state a CNPJ"
+when the CNPJ is right there. Allowing `\s*` around every separator and normalising back to
+the canonical form recovered **12 funds** with zero change to the 423 that already resolved.
+
+The failure mode is worth naming because it is not a typo-tolerance nicety: the *diagnosis*
+built on top of it was wrong too. Grouping the misses by "has a `CNPJ` label but no strict
+match" produced a confident category called `label-present-value-missing`, and the
+conclusion that those documents' digits were not in the text layer at all. Nine of the
+twelve had the digits in plain text. **A negative from a pattern is evidence about the
+pattern until you read the text it rejected.**
+
+### Which CNPJ is the fund: the subscription wire beneficiary
+
+A lâmina names the fund, its administrator, its custodian, and for a feeder its master. The
+registry filter removes counterparties exactly (an administrator DTVM is not a registered
+fund), but it cannot separate a feeder from its own master — both are registered, operating
+classes. Resolution order, highest first:
+
+| rule | signal | n |
+|---|---|---|
+| `class-label` | `CNPJ DA CLASSE:` in a regulamento | 1 |
+| `wire-beneficiary` | follows `Favorecido:` — the account the money lands in | 27 |
+| `page-header` | within the first 300 chars, beside the fund's own name | 305 |
+| `sole-registered-fund` | only one candidate is a registered fund | 92 |
+| `not-named-as-other-fund` | survives dropping `FUNDO MASTER` / `em cotas do` / `fundo-espelho` prose | 6 |
+| `cnpj-label` | follows a bare `CNPJ:` | 1 |
+| `class-not-master` | a class, and not named MASTER | 3 |
+
+`Favorecido:` is the strongest available signal and it needs no name comparison: it is the
+beneficiary of the subscription transfer, so it is by construction the fund being sold.
+
+**One document contradicts itself, and the rule caught it.** `56955` AZ Quest Azimut Equity
+Allocation Trend names three CNPJs, all live registered classes:
+
+```
+48.038.196/0001-30  ...ALLOCATION TREND FIF DA CIC EM AÇÕES        <- "o fundo apresentado neste material"
+46.192.515/0001-31  ...ALLOCATION TREND MASTER FIF EM AÇÕES        <- "seu respectivo Master"
+40.102.910/0001-08  AZ QUEST AZIMUT EQUITY CHINA DÓLAR ...         <- a DIFFERENT fund, in the stats table
+```
+
+The third is in the statistics block labelled `Fundo` yet belongs to AZ Quest's China Dólar
+fund — a defect in the manager's own document. Registry names, not the document, settle it.
+
+### What is genuinely unreachable from a lâmina — 17 funds
+
+```
+no CNPJ anywhere in the text   15   incl. 10 with no `CNPJ` label at all
+no text layer at all            2   56426 Vinci TR (14 chars), 57393 Riza Travos (27 chars)
+only the administrator's CNPJ   2   55591 / 55911 STK, via BNY Mellon DTVM 02.201.501/0001-61
+```
+
+22 of the 29 original misses were third-party managers (Occam 7, Polo 4, Opportunity 4,
+Riza 4, AZ Quest 2, STK 2) against zero Itaú-issued documents, because Itaú's own template
+always carries the CNPJ in the page header. So the remaining gap is one document family
+Itaú does not control, not 17 unrelated problems.
+
+**Next lever for those:** the cascade currently stops at the first PDF it finds, so it
+accepted the S3 lâmina and never asked ASMX for `REGUL`. A regulamento must state the
+fund's CNPJ in body text. Treating "document found but no CNPJ" as a reason to keep
+cascading is the fix; it was untestable at time of writing because the ASMX WAF was
+refusing this client, control included.
+
 ### A 200 application/pdf is NOT proof of a lâmina
 
 Of the 15 rescued, 7 are plainly a different document that `COMAG` falls back to. The PDF metadata

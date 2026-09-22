@@ -1,0 +1,33 @@
+{
+  "_README": [
+    "Hand-supplied CNPJs for funds whose source document does not yield one.",
+    "",
+    "Keyed by \"<PLATFORM>#<id>\" — the platform's own stable id (codigoProduto for",
+    "ITAU, the catalogue uuid for ONZE, the CNPJ itself for ITAU_PREV).",
+    "",
+    "Consulted ONLY when the crawl resolved nothing. If a source later starts",
+    "publishing the CNPJ, the crawled value wins and the override is reported as no",
+    "longer needed — it never masks the source fixing itself.",
+    "",
+    "Every entry is validated on load and the run FAILS if one does not:",
+    "  1. pass the CNPJ check digits,",
+    "  2. resolve to a registered CNPJ in the CVM registry,",
+    "  3. name a non-MASTER vehicle, and",
+    "  4. share a significant word with the platform's own name for the fund.",
+    "",
+    "Rule 4 is what an unchecked override lacks. \"why\" and \"sourcedBy\" are required so",
+    "a stale entry can be re-checked rather than trusted forever."
+  ],
+  "overrides": {
+    "ITAU#56122": {
+      "cnpj": "26.587.503/0001-07",
+      "why": "lâmina never prints a CNPJ in any form",
+      "sourcedBy": "vcd 2026-09-22"
+    },
+    "ITAU#56966": {
+      "cnpj": "36.015.100/0001-39",
+      "why": "printed on page 2 of the lâmina as pixels; absent from the text layer of both pages",
+      "sourcedBy": "vcd 2026-09-22, read from the rendered PDF"
+    }
+  }
+}

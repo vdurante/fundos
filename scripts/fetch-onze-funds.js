@@ -20,6 +20,8 @@
  * in the document, 1 survivor.
  */
 'use strict';
+
+const {isMaster, validCnpj} = require('./lib/cnpj');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
@@ -31,26 +33,10 @@ const OUT = path.join(REPO, 'src', 'corretoras', 'onze-funds.json');
 const DEFAULT_INPUT = path.join(process.env.HOME, 'Downloads', 'onze.json');
 
 const CNPJ_RE = /(\d{2})\s*\.\s*(\d{3})\s*\.\s*(\d{3})\s*\/\s*(\d{4})\s*-\s*(\d{2})/g;
-const isMaster = n => /\bMASTER\b/i.test(String(n));
 /** Prose that introduces the master rather than the fund the document is FOR. */
 const OTHER_FUND_RE =
   /MASTER|inscrito\s+no\s+CNPJ\s+sob|em\s+cotas\s+do\s+fundo|aplica\s+seus\s+recursos/i;
 
-function validCnpj(formatted) {
-  const d = formatted.replace(/\D/g, '');
-  if (d.length !== 14 || /^(\d)\1{13}$/.test(d)) return false;
-  const check = len => {
-    let sum = 0;
-    let w = len - 7;
-    for (let i = 0; i < len; i++) {
-      sum += Number(d[i]) * w--;
-      if (w < 2) w = 9;
-    }
-    const r = sum % 11;
-    return r < 2 ? 0 : 11 - r;
-  };
-  return check(12) === Number(d[12]) && check(13) === Number(d[13]);
-}
 
 function readCatalogue(file) {
   const d = JSON.parse(fs.readFileSync(file, 'utf8'));

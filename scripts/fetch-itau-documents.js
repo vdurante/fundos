@@ -26,6 +26,8 @@
  *   node scripts/fetch-itau-documents.js --parse-only
  */
 'use strict';
+
+const {isMaster, validCnpj} = require('./lib/cnpj');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
@@ -49,7 +51,6 @@ const CACHE = path.join(REPO, '.cache', 'itau-documents');
 const BLOBS = path.join(CACHE, 'pdf');
 const MANIFEST = path.join(CACHE, 'manifest.json');
 const OUT = path.join(REPO, 'src', 'corretoras', 'itau-documents.json');
-const OVERRIDES = path.join(REPO, 'src', 'corretoras', 'itau-cnpj-overrides.json');
 const {OPERATING} = require('./lib/cvm-registry');
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -97,23 +98,7 @@ const BARE_LABEL_RE = /CNPJ\s*[:nº°]*\s*$/i;
  * every candidate in a document is a master the correct outcome is "unresolved, and here
  * is the master as a lead", not a confident wrong answer.
  */
-const isMaster = name => /\bMASTER\b/i.test(String(name));
 
-function validCnpj(formatted) {
-  const d = formatted.replace(/\D/g, '');
-  if (d.length !== 14 || /^(\d)\1{13}$/.test(d)) return false;
-  const check = len => {
-    let sum = 0;
-    let w = len - 7;
-    for (let i = 0; i < len; i++) {
-      sum += Number(d[i]) * w--;
-      if (w < 2) w = 9;
-    }
-    const r = sum % 11;
-    return r < 2 ? 0 : 11 - r;
-  };
-  return check(12) === Number(d[12]) && check(13) === Number(d[13]);
-}
 
 /**
  * Decide which CNPJ in a document is the fund's own.
@@ -215,85 +200,6 @@ function resolveCnpj(text, registry) {
   }
 
   return {cnpj: null, resolution: 'ambiguous', distinct, resolving, narrowed: pool};
-}
-
-/* ----------------------------------------------------------- overrides ---- */
-
-/** Words too generic to corroborate a name match. */
-const NAME_STOPWORDS = new Set([
-  'fundo', 'fundos', 'de', 'do', 'da', 'dos', 'das', 'em', 'e', 'investimento',
-  'investimentos', 'cotas', 'fi', 'fic', 'fim', 'fif', 'cic', 'rf', 'mm', 'cp',
-  'lp', 'ie', 'rl', 'resp', 'responsabilidade', 'limitada', 'a', 'o', 'the',
-  'multimercado', 'multimercados', 'acoes', 'ações', 'renda', 'fixa', 'credito',
-  'crédito', 'privado', 'longo', 'prazo', 'prev', 'subclasse', 'classe', 'i',
-  'ii', 'iii', 'financeiro',
-]);
-
-const nameWords = s =>
-  new Set(
-    String(s)
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .toLowerCase()
-      .split(/[^a-z0-9]+/)
-      .filter(w => w.length > 2 && !NAME_STOPWORDS.has(w))
-  );
-
-/**
- * Load hand-supplied CNPJs, refusing any the registry cannot corroborate.
- *
- * An override bypasses every automatic rule, so it is the one place a single typo
- * becomes permanent and self-consistent. Both checks below exist because of a real
- * case: a hand-typed name override kept 'QUANTAMENTAL GEMS FIA' pinned to Itaú Small
- * Cap II's CNPJ for years, and nothing in the pipeline could notice.
- */
-function loadOverrides(funds, registry) {
-  if (!fs.existsSync(OVERRIDES)) return {map: new Map(), problems: []};
-  const raw = JSON.parse(fs.readFileSync(OVERRIDES, 'utf8')).overrides || {};
-  const byId = new Map(funds.map(f => [String(f.codigoProduto), f]));
-  const map = new Map();
-  const problems = [];
-
-  for (const [id, o] of Object.entries(raw)) {
-    const fund = byId.get(id);
-    if (!fund) {
-      problems.push(`${id}: not a fund on the Itaú shelf`);
-      continue;
-    }
-    if (!validCnpj(o.cnpj)) {
-      problems.push(`${id}: ${o.cnpj} fails the CNPJ check digits`);
-      continue;
-    }
-    const reg = registry.lookup(o.cnpj);
-    if (!reg) {
-      problems.push(`${id}: ${o.cnpj} is not a registered CNPJ in the CVM registry`);
-      continue;
-    }
-    if (isMaster(reg.name)) {
-      problems.push(
-        `${id}: ${o.cnpj} is "${reg.name}" — a MASTER, which no shelf sells. Several ` +
-          `feeders invest into it, so it cannot identify one product, and its quota ` +
-          `series is gross of the feeder's fee. Find the feeder above it.`
-      );
-      continue;
-    }
-    const shelf = nameWords(fund.nomeComercial);
-    const official = nameWords(reg.name);
-    const shared = [...shelf].filter(w => official.has(w));
-    if (!shared.length) {
-      problems.push(
-        `${id}: ${o.cnpj} is registered as "${reg.name}" which shares no significant ` +
-          `word with the shelf name "${fund.nomeComercial}" — check the pairing`
-      );
-      continue;
-    }
-    if (!o.why || !o.sourcedBy) {
-      problems.push(`${id}: needs both "why" and "sourcedBy"`);
-      continue;
-    }
-    map.set(Number(id), {...o, corroboratedBy: shared});
-  }
-  return {map, problems};
 }
 
 /* --------------------------------------------------------------- fetch ---- */
@@ -586,44 +492,6 @@ async function main() {
     }
     saveJson(MANIFEST, manifest);
     console.log(`parse: ${parsed} parsed, ${parseSkipped} unchanged and skipped`);
-  }
-
-  /* ---- overrides: hand-supplied CNPJs, registry-corroborated ---- */
-  let overrideCount = 0;
-  if (registry) {
-    const {map, problems} = loadOverrides(funds, registry);
-    if (problems.length) {
-      console.error(`\nOVERRIDES REJECTED (${problems.length}):`);
-      for (const p of problems) console.error(`  ${p}`);
-      console.error(
-        'An override that the registry cannot corroborate is a typo waiting to become ' +
-          'permanent. Fix the file rather than removing the check.'
-      );
-      process.exit(1);
-    }
-    for (const [id, o] of map) {
-      const e = manifest[id];
-      if (!e) continue;
-      if (e.cnpj && e.cnpj !== o.cnpj) {
-        console.error(
-          `\nOVERRIDE CONFLICT ${id}: document yielded ${e.cnpj} ` +
-            `(${e.resolution}) but the override says ${o.cnpj}. ` +
-            `Resolve it deliberately; the override is not applied.`
-        );
-        process.exit(1);
-      }
-      const reg = registry.lookup(o.cnpj);
-      e.cnpj = o.cnpj;
-      e.nomeOficial = reg.name;
-      e.situacao = reg.situacao;
-      e.resolution = 'override';
-      e.cnpjOverride = {why: o.why, sourcedBy: o.sourcedBy};
-      overrideCount++;
-    }
-    if (overrideCount) {
-      saveJson(MANIFEST, manifest);
-      console.log(`overrides applied: ${overrideCount}`);
-    }
   }
 
   /* ---- derived output + assertions ---- */

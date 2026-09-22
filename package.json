@@ -26,6 +26,12 @@
     "sortino:dry": "node build/src/sortino.js --dry-run",
     "indices": "node build/src/indices.js",
     "test:writer": "npm run compile && node scripts/test-sheet-writer.js",
+    "crawl:itau": "node scripts/fetch-itau-rentabilidade.js && node scripts/fetch-itau-documents.js",
+    "crawl:itau-prev": "node scripts/fetch-opin-pension.js --host api.itau --platform ITAU_PREV",
+    "crawl:onze": "node scripts/fetch-onze-funds.js",
+    "universe": "node scripts/build-universe.js",
+    "universe:dry": "node scripts/build-universe.js --dry-run",
+    "test:universe": "node scripts/test-universe.js",
     "rentabilidade": "node build/src/rentabilidade.js",
     "rentabilidade:dry": "node build/src/rentabilidade.js --dry-run",
     "test:principal": "npm run compile && node scripts/test-principal-writer.js"

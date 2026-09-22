@@ -1,0 +1,7049 @@
+{
+  "generatedAt": "2026-09-22T19:35:21.938Z",
+  "counts": {
+    "byPlatform": {
+      "ITAU": {
+        "listed": 467,
+        "entered": 435,
+        "noCnpj": 32,
+        "offShelf": 0,
+        "master": 0,
+        "notOperating": 0
+      },
+      "ITAU_PREV": {
+        "listed": 268,
+        "entered": 165,
+        "noCnpj": 0,
+        "offShelf": 102,
+        "master": 1,
+        "notOperating": 0
+      },
+      "ONZE": {
+        "listed": 24,
+        "entered": 22,
+        "noCnpj": 2,
+        "offShelf": 0,
+        "master": 0,
+        "notOperating": 0
+      }
+    },
+    "distinct": 622,
+    "unresolved": 34
+  },
+  "unresolved": [
+    {
+      "key": "ITAU#59228",
+      "name": "Bocaina Infra 60 CDI Infraestrutura Renda Fixa",
+      "resolution": "fetch-blocked"
+    },
+    {
+      "key": "ITAU#59216",
+      "name": "Bocaina Infra 60 IPCA Infraestrutura Renda Fixa",
+      "resolution": "fetch-blocked"
+    },
+    {
+      "key": "ITAU#59392",
+      "name": "Itaú Ações Dunamis - Subclasse II",
+      "resolution": "fetch-blocked"
+    },
+    {
+      "key": "ITAU#58616",
+      "name": "Riza Évora Hedge Debêntures Incentivadas",
+      "resolution": "fetch-blocked"
+    },
+    {
+      "key": "ITAU#59060",
+      "name": "Vinland Plus Seleção SCC Multimercado",
+      "resolution": "fetch-blocked"
+    },
+    {
+      "key": "ITAU#59286",
+      "name": "Essential FIDC Subclasse I",
+      "resolution": "fetch-blocked"
+    },
+    {
+      "key": "ITAU#59232",
+      "name": "Subclasse Kad IMAB Master Renda Fixa Longo Prazo",
+      "resolution": "fetch-blocked"
+    },
+    {
+      "key": "ITAU#59041",
+      "name": "BTG Pactual Hedge Debêntures de Infra Subclasse II",
+      "resolution": "fetch-blocked"
+    },
+    {
+      "key": "ITAU#59047",
+      "name": "Ace Capital Action Seleção SCC Multimercado",
+      "resolution": "fetch-blocked"
+    },
+    {
+      "key": "ITAU#58826",
+      "name": "Kadima Long Short Plus FIA",
+      "resolution": "fetch-blocked"
+    },
+    {
+      "key": "ITAU#58872",
+      "name": "Mantaro Equity Hedge FI Multimercado",
+      "resolution": "fetch-blocked"
+    },
+    {
+      "key": "ITAU#58186",
+      "name": "Occam Renda Fixa Infraestrutura CDI 30",
+      "resolution": "fetch-blocked"
+    },
+    {
+      "key": "ITAU#58940",
+      "name": "Polo Crédito Corporativo Renda Fixa Longo Prazo",
+      "resolution": "no-cnpj-in-document"
+    },
+    {
+      "key": "ITAU#57394",
+      "name": "Riza Évora Debêntures Incentivadas Infra",
+      "resolution": "no-cnpj-in-document"
+    },
+    {
+      "key": "ITAU#57393",
+      "name": "Riza Travos Long Bias Multimercado",
+      "resolution": "no-cnpj-in-document"
+    },
+    {
+      "key": "ITAU#59056",
+      "name": "Subclasse II Kadima Master Multimercado",
+      "resolution": "fetch-blocked"
+    },
+    {
+      "key": "ITAU#56426",
+      "name": "Vinci TR FIC FIM",
+      "resolution": "no-cnpj-in-document"
+    },
+    {
+      "key": "ITAU#58533",
+      "name": "Riza Statheros Direitos Creditórios",
+      "resolution": "no-cnpj-in-document"
+    },
+    {
+      "key": "ITAU#56848",
+      "name": "Polo Crédito Plus Multimercado Crédito Privado",
+      "resolution": "no-cnpj-in-document"
+    },
+    {
+      "key": "ITAU#57534",
+      "name": "AZ Quest Small Mid Caps Ações",
+      "resolution": "no-cnpj-in-document"
+    },
+    {
+      "key": "ITAU#56143",
+      "name": "POLO LONG BIAS FIC FI MM",
+      "resolution": "no-cnpj-in-document"
+    },
+    {
+      "key": "ITAU#56144",
+      "name": "POLO NORTE I LONG SHORT FIC FI MM",
+      "resolution": "only-the-master-is-named"
+    },
+    {
+      "key": "ITAU#55911",
+      "name": "STK Long Biased Ações",
+      "resolution": "no-cnpj-is-a-registered-fund"
+    },
+    {
+      "key": "ITAU#55591",
+      "name": "STK Long Only Ações",
+      "resolution": "no-cnpj-is-a-registered-fund"
+    },
+    {
+      "key": "ITAU#56302",
+      "name": "Opportunity Market Multimercado",
+      "resolution": "no-cnpj-in-document"
+    },
+    {
+      "key": "ITAU#56145",
+      "name": "Polo Total Credit Multimercado Credito Privado",
+      "resolution": "no-cnpj-in-document"
+    },
+    {
+      "key": "ITAU#59123",
+      "name": "Itaú Seleção Verde AM TAU Multimercado",
+      "resolution": "fetch-blocked"
+    },
+    {
+      "key": "ITAU#56812",
+      "name": "Opportunity Global Equity Dolar Ações BDR Nível I",
+      "resolution": "no-cnpj-in-document"
+    },
+    {
+      "key": "ITAU#56790",
+      "name": "Opportunity Global Equity Real Ações BDR Nível I",
+      "resolution": "only-the-master-is-named"
+    },
+    {
+      "key": "ITAU#56301",
+      "name": "Opportunity Total Multimercado",
+      "resolution": "no-cnpj-in-document"
+    },
+    {
+      "key": "ITAU#56336",
+      "name": "Opportunity Total Evolution Multimercado",
+      "resolution": "no-cnpj-in-document"
+    },
+    {
+      "key": "ITAU#59050",
+      "name": "Neo Vitale I Seleção SCC Multimercado",
+      "resolution": "fetch-blocked"
+    },
+    {
+      "key": "ONZE#1f48bc5c-ac6f-44ef-9224-04d4c6bd6ea9",
+      "name": "ONZE ICATU PREV FIC RENDA FIXA",
+      "resolution": "no-regulation-url"
+    },
+    {
+      "key": "ONZE#6b389559-f6bf-40cf-a769-71907a963965",
+      "name": "ONZE ICATU PREV FIC RENDA FIXA CRÉDITO PRIVADO",
+      "resolution": "no-regulation-url"
+    }
+  ],
+  "funds": [
+    {
+      "cnpj": "01.063.897/0001-65",
+      "name": "ITAÚ SMALL CAP VALUATION FIF CIC EM AÇÕES RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#50106"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "02.290.280/0001-45",
+      "name": "ITAÚ FLEXPREV PLUS FIF CIC RF - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#02.290.280/0001-45"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "02.895.694/0001-06",
+      "name": "FRANKLIN VALOR E LIQUIDEZ FVL FUNDO DE INVESTIMENTO FINANCEIRO EM AÇÕES - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55595"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "03.119.883/0001-41",
+      "name": "JGP HEDGE FIC DE FUNDOS DE INVESTIMENTO FINANCEIRO MULTIMERCADO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56351"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "03.168.062/0001-03",
+      "name": "ARX INCOME FIC DE FUNDO DE INVESTIMENTO FINANCEIRO EM AÇÕES - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55344"
+      ],
+      "resolution": "wire-beneficiary"
+    },
+    {
+      "cnpj": "03.618.256/0001-55",
+      "name": "ITAÚ GLOBAL DINÂMICO BAIXA VOL MULTIMERCADO FIF CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#40369"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "04.228.716/0001-00",
+      "name": "ICATU VANGUARDA FUNDO DE INVESTIMENTO EM COTAS FIF RF INFLAÇÃO LONGA PREVIDENCIÁRIO - RESP LIMITADA",
+      "platforms": [
+        "ONZE"
+      ],
+      "keys": [
+        "ONZE#65235f13-4314-4ab2-a13c-dd77b798e25e"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "04.348.384/0001-99",
+      "name": "ITAÚ AÇÕES SELEÇÃO MULTIFUNDOS FUNDO DE INVESTIMENTO FINANCEIRO DA CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#51071"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "04.455.632/0001-09",
+      "name": "AZ QUEST MULTI FUNDO DE INVESTIMENTO EM COTAS DE FUNDO DE INVESTIMENTO FINANCEIRO MULTIMERCADO",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56154"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "04.621.721/0001-70",
+      "name": "XP CORPORATE TOP CRÉDITO PRIVADO FI FINANCEIRO EM RENDA FIXA LONGO PRAZO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56720"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "05.109.839/0001-86",
+      "name": "PRINCIPAL CLARITAS LONG SHORT FUNDO DE INVESTIMENTO FINANCEIRO EM COTAS DE FI MULTIMERCADO",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55932"
+      ],
+      "resolution": "wire-beneficiary"
+    },
+    {
+      "cnpj": "05.523.348/0001-87",
+      "name": "ITAÚ SELEÇÃO MULTIFUNDOS MULTIMERCADO FIF CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#41355"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "06.041.290/0001-06",
+      "name": "ARX EXTRA FIC DE FIF MULTIMERCADO - RESP LTDA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56067"
+      ],
+      "resolution": "wire-beneficiary"
+    },
+    {
+      "cnpj": "06.118.222/0001-90",
+      "name": "MÓDULO CORE FUNDO DE INVESTIMENTO FINANCEIRO EM AÇÕES RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56528"
+      ],
+      "resolution": "class-not-fund"
+    },
+    {
+      "cnpj": "06.258.544/0001-34",
+      "name": "ITAÚ ACE DIVIDENDOS AÇÕES FIF DA CLASSE DE INVESTIMENTO EM COTAS RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#41534"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "07.187.517/0001-80",
+      "name": "PORTO SFA FUNDO DE INVESTIMENTO FINANCEIRO EM COTAS DE FUNDOS DE INVESTIMENTO EM AÇÕES",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56446"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "07.187.591/0001-05",
+      "name": "MAPFRE INVERSION FUNDO DE INVESTIMENTO FINANCEIRO MULTIMERCADO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56193"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "07.190.735/0001-74",
+      "name": "ICATU VANGUARDA MINHA APOSENTADORIA 2040 FIF - CI MULTIMERCADO PREVIDENCIÁRIO - RESP LIMITADA",
+      "platforms": [
+        "ONZE"
+      ],
+      "keys": [
+        "ONZE#33cb6fa1-4e93-49cd-bc7e-8c7eba9d3286"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "07.190.746/0001-54",
+      "name": "ICATU VANGUARDA MINHA APOSENTADORIA 2030 FIF - CI MULTIMERCADO PREVIDENCIÁRIO - RESP LIMITADA",
+      "platforms": [
+        "ONZE"
+      ],
+      "keys": [
+        "ONZE#00dd98cc-791c-4a02-8f35-34be87c3a30e"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "07.317.588/0001-50",
+      "name": "HIX CAPITAL FUNDO DE INVESTIMENTO EM COTAS DE FUNDOS DE INVESTIMENTO EM AÇÕES",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55908"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "08.610.270/0001-26",
+      "name": "MAPFRE RENDA FIXA FUNDO DE INVESTIMENTO FINANCEIRO - RESP LTDA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56192"
+      ],
+      "resolution": "class-not-fund"
+    },
+    {
+      "cnpj": "08.830.947/0001-31",
+      "name": "GUEPARDO INSTITUCIONAL FUNDO DE INVESTIMENTO FINANCEIRO EM COTAS DE FUNDOS DE INVESTIMENTO EM AÇÕES",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56387"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "08.927.574/0001-11",
+      "name": "ITAÚ BTG PACTUAL HEDGE FIF CIC RENDA FIXA CRÉDITO PRIVADO RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#50246"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "09.120.774/0001-20",
+      "name": "BTG PACTUAL ABSOLUTO FUNDO DE INVESTIMENTO FINANCEIRO EM COTAS DE FUNDOS DE INVESTIMENTO EM ACOES",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56381"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "09.143.435/0001-60",
+      "name": "GTI DIMONA BRASIL FUNDO DE INVESTIMENTO FINANCEIRO EM AÇÕES - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56538"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "09.290.813/0001-38",
+      "name": "BTG PACTUAL DIVIDENDOS FUNDO DE INVESTIMENTO FINANCEIRO EM COTAS DE FUNDOS DE INVESTIMENTO EM AÇÕES",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56197"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "09.296.009/0001-66",
+      "name": "MAPFRE FUNDO DE INVESTIMENTO FINANCEIRO EM AÇÕES RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56194"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "09.296.022/0001-15",
+      "name": "MAPFRE FUNDO DE INVESTIMENTO FINANCEIRO EM AÇÕES SMALL RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56195"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "09.620.860/0001-00",
+      "name": "ANGÁ PORTFÓLIO FI FINANCEIRO MULTIMERCADO CRÉDITO PRIVADO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55998"
+      ],
+      "resolution": "wire-beneficiary"
+    },
+    {
+      "cnpj": "09.720.734/0001-10",
+      "name": "AF INVEST GERAES FUNDO DE INVESTIMENTO FINANCEIRO RENDA FIXA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56695"
+      ],
+      "resolution": "wire-beneficiary"
+    },
+    {
+      "cnpj": "10.237.480/0001-62",
+      "name": "ARX LONG TERM FIC FIF EM AÇÕES - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55592"
+      ],
+      "resolution": "wire-beneficiary"
+    },
+    {
+      "cnpj": "10.320.151/0001-80",
+      "name": "LEBLON AÇÕES FUNDO DE INVESTIMENTO EM COTAS DE FUNDOS DE INVESTIMENTO EM AÇÕES",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55942"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "10.326.625/0001-00",
+      "name": "VALORA ABSOLUTE FIF RENDA FIXA CRÉD PRIV LONGO PRAZO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55968"
+      ],
+      "resolution": "wire-beneficiary"
+    },
+    {
+      "cnpj": "10.500.884/0001-05",
+      "name": "REAL INVESTOR FIC DE FUNDOS DE INVESTIMENTO FINANCEIRO EM AÇÕES - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55999"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "11.046.179/0001-34",
+      "name": "XP CORPORATE LIGHT FIC DE FIF RENDA FIXA CRÉDITO PRIVADO LONGO PRAZO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56721"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "11.098.129/0001-09",
+      "name": "LEBLON ICATU PREVIDÊNCIA FUNDO DE INVESTIMENTO FINANCEIRO",
+      "platforms": [
+        "ONZE"
+      ],
+      "keys": [
+        "ONZE#a9568359-80f7-4fef-b305-b2eb8369b395"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "11.209.172/0001-96",
+      "name": "AF INVEST MINAS FUNDO DE INVESTIMENTO FINANCEIRO EM AÇÕES",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57358"
+      ],
+      "resolution": "wire-beneficiary"
+    },
+    {
+      "cnpj": "11.389.134/0001-62",
+      "name": "ITAÚ FLEXPREV PREMIUM FASES DA VIDA 2030 FIF CIC MULT - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#11.389.134/0001-62"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "11.389.136/0001-51",
+      "name": "ITAU FLEXPREV PREMIUM FASES DA VIDA 2040 FIF CIC MULT- RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#11.389.136/0001-51"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "11.403.956/0001-50",
+      "name": "OCCAM EQUITY HEDGE FIC DE FI FINANCEIRO MULTIMERCADO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56069"
+      ],
+      "resolution": "wire-beneficiary"
+    },
+    {
+      "cnpj": "11.977.794/0001-64",
+      "name": "BTG PACTUAL ABSOLUTO INSTITUCIONAL FUNDO DE INVESTIMENTO FINANCEIRO EM COTAS DE FI  EM AÇÕES",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56382"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "12.053.727/0001-16",
+      "name": "ICATU SEG BRASIL TOTAL FUNDO DE INVESTIMENTO EM COTAS FIF MULT - RESP LIMITADA",
+      "platforms": [
+        "ONZE"
+      ],
+      "keys": [
+        "ONZE#a8536719-19e2-4f21-8892-6f79c6f5f926"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "12.082.452/0001-49",
+      "name": "IP PARTICIPAÇÕES IPG FIC DE FIF EM AÇÕES - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55345"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "12.823.627/0001-21",
+      "name": "ICATU VANGUARDA FC FIF RENDA FIXA INFLAÇÃO CURTA PREVIDENCIÁRIO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ONZE"
+      ],
+      "keys": [
+        "ONZE#ff111ff3-57ad-4450-9f9c-8ed096c01d11"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "12.845.796/0001-62",
+      "name": "KADIMA EQUITIES FUNDO DE INVESTIMENTO FINANCEIRO EM ACOES",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56383"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "13.054.728/0001-48",
+      "name": "SOLIS CAPITAL ANTARES FIC DE FUNDOS DE INVESTIMENTO EM DIREITOS CREDITÓRIOS",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58377"
+      ],
+      "resolution": "not-named-as-other-fund"
+    },
+    {
+      "cnpj": "13.615.411/0001-33",
+      "name": "CAPITÂNIA TOP CRÉDITO PRIVADO FIC DE FI FINANCEIRO RENDA FIXA - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55945"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "13.974.750/0001-06",
+      "name": "AZ QUEST TOP LONG BIASED FI EM COTAS DE FUNDOS DE INVESTIMENTO FINANCEIRO DE AÇÕES",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55594"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "14.083.797/0001-42",
+      "name": "MANTARO AÇÕES FUNDO DE INVESTIMENTO FINANCEIRO EM COTAS DE FUNDOS DE INVESTIMENTO EM AÇÕES",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56424"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "14.096.240/0001-46",
+      "name": "ITAÚ FLEXPREV PLATINUM III FIF CIC RF - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#14.096.240/0001-46"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "14.188.162/0001-00",
+      "name": "SPARTA TOP FIC DE FIF RENDA FIXA CRÉDITO PRIVADO LONGO PRAZO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56130"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "14.799.785/0001-19",
+      "name": "BTG PACTUAL ABSOLUTO LS FUNDO DE INVESTIMENTO FINANCEIRO EM COTAS DE FUNDOS DE INVESTIMENTO EM AÇÕES",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56384"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "15.578.417/0001-03",
+      "name": "OCCAM INSTITUCIONAL FIC DE FI FINANCEIRO MULTIMERCADO II - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56070"
+      ],
+      "resolution": "wire-beneficiary"
+    },
+    {
+      "cnpj": "16.718.302/0001-30",
+      "name": "ITAÚ AÇÕES MOMENTO 30 FIF DA CLASSE DE INVESTIMENTO EM COTAS RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#52201"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "17.164.789/0001-19",
+      "name": "OCCAM LONG & SHORT PLUS FI EM COTAS DE FIF MULTIMERCADO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56296"
+      ],
+      "resolution": "wire-beneficiary"
+    },
+    {
+      "cnpj": "17.301.119/0001-05",
+      "name": "STUDIO 30 FIC DE FUNDO DE INVESTIMENTO FINANCEIRO EM AÇÕES - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55949"
+      ],
+      "resolution": "wire-beneficiary"
+    },
+    {
+      "cnpj": "17.313.316/0001-36",
+      "name": "VALORA HORIZON HIGH YIELD FUNDO DE INVESTIMENTO EM DIREITOS CREDITÓRIOS",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57956"
+      ],
+      "resolution": "wire-beneficiary"
+    },
+    {
+      "cnpj": "17.329.627/0001-93",
+      "name": "ITAÚ SELEÇÃO MULTIFUNDOS PLUS MULTIMERCADO FIF CIC RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#52292"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "17.397.804/0001-79",
+      "name": "APEX INFINITY 8 LONG-BIASED FI EM COTAS DE FI FINANCEIRO EM AÇÕES - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56298"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "17.414.721/0001-40",
+      "name": "ARX MACRO FIC DE FIF MULTIMERCADO - RESP LTDA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56068"
+      ],
+      "resolution": "wire-beneficiary"
+    },
+    {
+      "cnpj": "17.420.054/0001-09",
+      "name": "VERDE AM PATRIMÔNIO SELEÇÃO MULTIMERCADO FIF DA CLASSE DE INVESTIMENTO EM COTAS RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#52384"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "17.420.064/0001-44",
+      "name": "ITAÚ MULTIMERCADO LONG AND SHORT 30 FIF CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#52385"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "17.420.140/0001-11",
+      "name": "JGP MAX SELEÇÃO MULTIMERCADO FIF DA CLASSE DE INVESTIMENTO EM COTAS RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#52369"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "17.627.210/0001-07",
+      "name": "ATENA TAPYR FUNDO DE INVESTIMENTO FINANCEIRO EM COTAS DE FUNDOS DE INVESTIMENTO RENDA FIXA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56842"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "17.703.320/0001-00",
+      "name": "NEXTEP GLOBAL EQUITIES LONG ONLY FIF EM AÇÕES INVEST NO EXT - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56167"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "17.899.612/0001-60",
+      "name": "MAG CASH FUNDO DE INVESTIMENTO FINANCEIRO RENDA FIXA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56952"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "18.138.748/0001-10",
+      "name": "KINEA PREV MULTIMERCADO FUNDO DE INVESTIMENTO FINANCEIRO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#18.138.748/0001-10"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "18.525.868/0001-70",
+      "name": "OCCAM LONG BIASED FI EM COTAS DE FI MULTIMERCADO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55943"
+      ],
+      "resolution": "wire-beneficiary"
+    },
+    {
+      "cnpj": "18.719.154/0001-01",
+      "name": "PORTO SEGURO FUNDO DE INVESTIMENTO FINANCEIRO RENDA FIXA REFERENCIADO DI CRED PRIV RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57599"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "19.186.860/0001-90",
+      "name": "MÓDULO I FUNDO DE INVESTIMENTO EM COTAS DE FUNDOS DE INVESTIMENTO FINANCEIRO EM AÇÕES RESP LTDA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56152"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "19.657.463/0001-59",
+      "name": "XP DEB INCENT IMAB CRÉD PRIV FUNDO INCENTIVADO DE INV FINANCEIRO EM INFRA RENDA FIXA - RESP LTDA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56738"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "19.782.311/0001-88",
+      "name": "AZ QUEST VALORE FUNDO DE INVESTIMENTO FINANCEIRO RENDA FIXA CRÉDITO PRIVADO",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56156"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "20.146.294/0001-71",
+      "name": "CAPITÂNIA PREMIUM 45 FIC DE FIF RENDA FIXA CRÉDITO PRIVADO LONGO PRAZO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56300"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "20.194.039/0001-02",
+      "name": "ITAÚ PRIVATE PREV NTN-B 2030 FIF DA CLASSE DE INVESTIMENTO EM COTAS RENDA FIXA - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#20.194.039/0001-02"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "20.335.176/0001-01",
+      "name": "ITAÚ ACTIVE FIX 5 RENDA FIXA CRED PRIV FIF DA CLASSE DE INVESTIMENTO EM COTAS - RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#52663"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "20.335.522/0001-51",
+      "name": "ITAÚ RENDA FIXA DIFERENCIADO CRÉDITO PRIVADO FUNDO DE INVESTIMENTO FINANCEIRO DA CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#52678"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "20.468.028/0001-65",
+      "name": "REACH FUNDO DE INVESTIMENTO EM AÇÕES",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56856"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "21.407.385/0001-86",
+      "name": "ITAÚ GLOBAL DINÂMICO MULTIMERCADO FIF DA CLASSE DE INVESTIMENTO EM COTAS RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#52865"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "21.983.042/0001-60",
+      "name": "ABSOLUTE ALPHA GLOBAL FIC DE FI FINANCEIRO MULTIMERCADO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58379"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "22.100.009/0001-07",
+      "name": "AZ QUEST ALTRO FIC DE FUNDOS DE INVESTIMENTO FINANCEIRO MULTIMERCADO CRÉDITO PRIVADO",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55952"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "22.428.762/0001-26",
+      "name": "IBIUNA HEDGE SELEÇÃO MULTIMERCADO FUNDO DE INVESTIMENTO FINANCEIRO DA CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#52928"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "22.662.135/0001-55",
+      "name": "HIX CAPITAL INSTITUCIONAL FI FINANCEIRO EM COTAS DE FUNDOS DE INVESTIMENTO EM AÇÕES",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56213"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "22.681.798/0001-17",
+      "name": "AZ QUEST TERMO FUNDO DE INVESTIMENTO FINANCEIRO RENDA FIXA LONGO PRAZO",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56565"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "23.066.595/0001-83",
+      "name": "ITAÚ SELEÇÃO MULTIFUNDOS GLOBAL ALLOCATION MULTIMERCADO IE FIF CIC RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#52955"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "23.272.391/0001-07",
+      "name": "CAPITÂNIA RADAR 90 FIF MULTIMERCADO CRÉDITO PRIVADO LONGO PRAZO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56140"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "23.339.936/0001-47",
+      "name": "VERDE AM ICATU PREVIDÊNCIA FIF CIC MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ONZE"
+      ],
+      "keys": [
+        "ONZE#844d7485-21ac-472b-8c3b-d41d474c7aa0"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "23.565.840/0001-05",
+      "name": "RB CAPITAL FIC DE FUNDO INCENTIVADO DE INVESTIMENTO FINANCEIRO EM INFRA RENDA FIXA - RESP LTDA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57386"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "23.729.525/0001-68",
+      "name": "VALORA GUARDIAN II FUNDO DE INVESTIMENTO EM DIREITOS CREDITÓRIOS RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57847"
+      ],
+      "resolution": "wire-beneficiary"
+    },
+    {
+      "cnpj": "23.731.351/0001-78",
+      "name": "ITAÚ FINANCIAL BONDS CRÉDITO PRIVADO MULTIMERCADO INVESTIMENTO NO EXTERIOR FIF DA CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#51516"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "23.731.781/0001-90",
+      "name": "ITAÚ PERSONNALITÉ KINEA CHRONOS FIF DA CLASSE DE INVESTIMENTO EM COTAS MULTIMERCADO RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#51544"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "23.999.611/0001-90",
+      "name": "XP CORPORATE PLUS FIC DE FI FINANCEIRO MULTIMERCADO CRÉDITO PRIVADO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56735"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "24.196.072/0001-14",
+      "name": "ITAÚ PREV VERDE AM FUNDO DE INVESTIMENTO FINANCEIRO MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#24.196.072/0001-14"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "24.325.422/0001-03",
+      "name": "LIS VALUE FUNDO DE INVESTIMENTO FINANCEIRO EM AÇÕES - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56117"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "24.623.392/0001-03",
+      "name": "GUEPARDO LONG BIAS RV FUNDO DE INVESTIMENTO MULTIMERCADO",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57641"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "25.213.366/0001-70",
+      "name": "KIRON FIC DE FUNDOS DE INVESTIMENTO FINANCEIRO EM AÇÕES - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56894"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "25.306.783/0001-67",
+      "name": "TRUXT MACRO SELEÇÃO FIF DA CLASSE DE INVESTIMENTO EM COTAS MULTIMERCADO RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#53181"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "25.306.800/0001-66",
+      "name": "TRUXT VALOR SELEÇÃO FIF CIC EM AÇÕES RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#53182"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "25.340.953/0001-20",
+      "name": "ITAÚ FLEXPREV PRÉ FIXADO IDKA FIF CIC RENDA FIXA RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#25.340.953/0001-20"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "25.382.586/0001-27",
+      "name": "ADAM MACRO SELEÇÃO MULTIMERCADO FUNDO DE INVESTIMENTO FINANCEIRO DA CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#53010"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "25.681.955/0001-82",
+      "name": "ADAM ICATU PREVIDENCIÁRIO FIF DA CLASSE DE INVESTIMENTO EM COTAS MULTIMERCADO RESP LIMITADA",
+      "platforms": [
+        "ONZE"
+      ],
+      "keys": [
+        "ONZE#26e82270-5774-41b2-b9cb-08322047a1a0"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "26.199.519/0001-34",
+      "name": "ITAÚ PRIVILÈGE RENDA FIXA REFERENCIADO DI FIF DA CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#51679"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "26.218.447/0001-25",
+      "name": "KINEA PREV RENDA FIXA ATIVO FIF DA CLASSE DE INVESTIMENTO EM COTAS RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#26.218.447/0001-25"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "26.269.983/0001-50",
+      "name": "ITAÚ GLOBAL DINÂMICO PLUS MULTIMERCADO FIF CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#53034"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "26.277.746/0001-30",
+      "name": "JGP EQUITY EXPLORER 30 SELEÇÃO FIF CIC EM AÇÕES RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#53072"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "26.324.086/0001-00",
+      "name": "ADAM EXCLUSIVO SELEÇÃO MULTIMERCADO FUNDO DE INVESTIMENTO FINANCEIRO DA CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#53047"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "26.362.460/0001-53",
+      "name": "REACH TOTAL RETURN FUNDO DE INVESTIMENTO EM COTAS DE FUNDOS DE INVESTIMENTO EM ACOES",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56867"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "26.386.658/0001-77",
+      "name": "KAPITALO KAPPA SELEÇÃO FIF CIC MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#53092"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "26.407.073/0001-96",
+      "name": "ITAÚ FLEXPREV VISION FIF CIC MULT - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#26.407.073/0001-96"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "26.470.473/0001-46",
+      "name": "PIMCO INCOME SELEÇÃO FIF CIC MULTIMERCADO INVESTIMENTO NO EXTERIOR RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#53115"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "26.491.419/0001-87",
+      "name": "KINEA CRÉDITO PRIVADO PREV RENDA FIXA FUNDO DE INVESTIMENTO FINANCEIRO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#26.491.419/0001-87"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "26.587.503/0001-07",
+      "name": "NEST FUNDO DE INVESTIMENTO FINANCEIRO EM AÇÕES - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56122"
+      ],
+      "resolution": "override"
+    },
+    {
+      "cnpj": "26.605.199/0001-75",
+      "name": "CAPITÂNIA INFRA 30 IPCA FUNDO DE INVESTIMENTO FINANCEIRO RENDA FIXA INVESTIMENTO EM INFRAESTRUTURA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55946"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "26.768.800/0001-40",
+      "name": "LEBLON AÇÕES II INSTITUCIONAL FIC DE FUNDOS DE INVESTIMENTO FINANCEIRO",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56211"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "26.803.233/0001-16",
+      "name": "XP DEB INCENT CDI CRÉD PRIV FIF INCENTIVADO DE INVESTIMENTO EM INFRAESTRUTURA RENDA FIXA - RESP LTDA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56759"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "26.978.438/0001-32",
+      "name": "IRIDIUM APOLLO FIF RENDA FIXA CRÉDITO PRIVADO LONGO PRAZO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55972"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "27.580.503/0001-30",
+      "name": "ITAÚ SELEÇÃO MULTIFUNDOS LONG BIAS AÇÕES FIF DA CLASSE DE INVESTIMENTO EM COTAS RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#53150"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "27.580.533/0001-46",
+      "name": "BAHIA AM MARAÚ SELEÇÃO FIF DA CIC MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#53153"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "27.580.556/0001-50",
+      "name": "ITAÚ FLEXPREV JURO REAL TARGET 2035 FIF CIC RENDA FIXA - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#27.580.556/0001-50"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "27.591.107/0001-08",
+      "name": "ITAÚ SELEÇÃO MULTIFUNDOS DISCOVERY MULTIMERCADO FIF DA CIC RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#53147"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "28.046.819/0001-09",
+      "name": "ITAÚ FLEXPREV PRIVATE JURO REAL TARGET 2030 II FIF CIC RF - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#28.046.819/0001-09"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "28.075.078/0001-94",
+      "name": "ADAM MACRO STRATEGY SELEÇÃO MULTIMERCADO FUNDO DE INVESTIMENTO FINANCEIRO DA CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#53417"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "28.075.532/0001-07",
+      "name": "GEO EMPRESAS GLOBAIS EM DOLARES FI FINANCEIRO EM COTAS DE FUNDOS DE INVESTIMENTO",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55936"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "28.077.900/0001-56",
+      "name": "IBIUNA LONG SHORT STLS SELEÇÃO MULTIMERCADO FUNDO DE INVESTIMENTO FINANCEIRO DA CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#53443"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "28.080.450/0001-50",
+      "name": "ADAM PREV I FIF CIC MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#28.080.450/0001-50"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "28.259.415/0001-01",
+      "name": "IRIDIUM PIONEER DEB INCENTIVADAS FUNDO INCENT DE INVEST FINANCEIRO EM INFRA RENDA FIXA - RESP LTDA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55973"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "28.280.864/0001-23",
+      "name": "ITAÚ SELEÇÃO MULTIFUNDOS GLOBAL ALPHA MULTIMERCADO IE FIF CIC RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#53541"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "28.280.961/0001-16",
+      "name": "ABSOLUTE HEDGE SELEÇÃO FIF DA CLASSE DE INVESTIMENTO EM COTAS MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#53515"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "28.280.995/0001-00",
+      "name": "ITAÚ FLEXPREV VISION PLUS FIF CIC RF - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#28.280.995/0001-00"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "28.653.832/0001-26",
+      "name": "SPX LANCER ICATU PREVIDÊNCIA FIF CIC MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ONZE"
+      ],
+      "keys": [
+        "ONZE#5db6c583-af29-4902-a124-11dc42b0c28e"
+      ],
+      "resolution": "not-named-as-other-fund"
+    },
+    {
+      "cnpj": "28.840.420/0001-03",
+      "name": "ITAÚ MULTIMERCADO CRÉDITO PRIVADO HIGH YIELD FIF CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#53558"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "28.851.710/0001-44",
+      "name": "ITAÚ KINEA RENDA FIXA ABSOLUTO LONGO PRAZO FIF DA CLASSE DE INVESTIMENTO EM COTAS RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#53565"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "28.851.728/0001-46",
+      "name": "SPX NIMITZ SELEÇÃO FIF DA CLASSE DE INVESTIMENTO EM COTAS MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#53568"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "28.851.732/0001-04",
+      "name": "NEO MULTI ESTRATÉGIA 30 SELEÇÃO FUNDO DE INVESTIMENTO FINANCEIRO DA CIC MULTIMERCADO RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#53569"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "28.866.524/0001-89",
+      "name": "GHT4 VECTOR FUNDO DE INVESTIMENTO FINANCEIRO EM COTAS DE FUNDOS DE INVESTIMENTO MULTIMERCADO",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57156"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "28.911.549/0001-57",
+      "name": "REAL INVESTOR FIC DE FUNDO DE INVESTIMENTO FINANCEIRO MULTIMERCADO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56001"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "29.044.189/0001-04",
+      "name": "AF INVEST GERAES 30 FUNDO DE INVESTIMENTO FINANCEIRO RENDA FIXA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56700"
+      ],
+      "resolution": "wire-beneficiary"
+    },
+    {
+      "cnpj": "29.197.055/0001-15",
+      "name": "ITAÚ LEGEND RENDA FIXA LONGO PRAZO FIF DA CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#53821"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "29.242.441/0001-81",
+      "name": "ABSOLUTE ICATU I PREV FIC DE FIF MULTIMERCADO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ONZE"
+      ],
+      "keys": [
+        "ONZE#df117151-70b7-4094-a31b-f82f4b93c709"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "29.275.240/0001-80",
+      "name": "ITAÚ PREV TRUXT VALOR AÇÕES FIF CIC EM AÇÕES RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#29.275.240/0001-80"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "29.942.223/0001-50",
+      "name": "ITAÚ SELEÇÃO PREV MULTIFUNDOS FUNDO DE INVESTIMENTO FINANCEIRO DA CIC MULT - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#29.942.223/0001-50"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "30.178.912/0001-19",
+      "name": "CONSTELLATION ICATU 70 PREVIDÊNCIA FUNDO DE INVESTIMENTO FINANCEIRO MULTIMERCADO",
+      "platforms": [
+        "ONZE"
+      ],
+      "keys": [
+        "ONZE#389d7299-5199-4d50-b16b-74a1e3230c89"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "30.593.233/0001-06",
+      "name": "ITAÚ FLEXPREV LUMINA PLATINUM FIF CIC RF CRED PRIV - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#30.593.233/0001-06"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "30.830.188/0001-66",
+      "name": "KINEA PREV II XTR FIF CIC MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#30.830.188/0001-66"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "30.910.199/0001-56",
+      "name": "ARX ELBRUS FIC DE FUNDO INCENTIVADO DE INVESTIMENTO FINANCEIRO EM INFRA RENDA FIXA - RESP LTDA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55974"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "31.008.653/0001-40",
+      "name": "AZ QUEST TOTAL RETURN SELEÇÃO FUNDO DE INVESTIMENTO FINANCEIRO DA CIC MULTIMERCADO RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#53892"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "31.024.283/0001-35",
+      "name": "VERDE 60 MULTIMERCADO SELEÇÃO FIF DA CLASSE DE INVESTIMENTO EM COTAS RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#53887"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "31.024.343/0001-10",
+      "name": "ABSOLUTE VERTEX SELEÇÃO FIF DA CLASSE DE INVESTIMENTO EM COTAS MULTIMERCADO",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#53890"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "31.238.370/0001-95",
+      "name": "ITAÚ KINEA ATLAS FIF CIC MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#53942"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "31.340.838/0001-58",
+      "name": "ATENA YIELD D30 FUNDO DE INVESTIMENTO EM COTAS DE FUNDOS DE INVESTIMENTO FINANCEIRO RENDA FIXA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56843"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "31.341.469/0001-18",
+      "name": "LEGACY CAPITAL SELEÇÃO FIF DA CLASSE DE INVESTIMENTO EM COTAS MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#53953"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "31.391.191/0001-93",
+      "name": "ITAÚ SELEÇÃO MULTIFUNDOS GENESIS FIF CIC EM AÇÕES RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#53979"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "31.416.575/0001-13",
+      "name": "PRINCIPAL CLARITAS QUANT FI FINANCEIRO EM COTAS DE FUNDOS DE INVESTIMENTO MULTIMERCADO",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55980"
+      ],
+      "resolution": "wire-beneficiary"
+    },
+    {
+      "cnpj": "31.594.537/0001-50",
+      "name": "PARCITAS HEDGE FI FINANCEIRO EM COTAS DE FUNDO DE INVESTIMENTO FINANCEIRO MULTIMERCADO",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56232"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "31.820.924/0001-68",
+      "name": "JGP STRATEGY SELEÇÃO MULTIMERCADO FUNDO DE INVESTIMENTO FINANCEIRO DA CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54007"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "31.933.918/0001-17",
+      "name": "ITAÚ SELEÇÃO BRASIL CAPITAL 30 FUNDO DE INVESTIMENTO FINANCEIRO DA CIC EM AÇÕES RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54114"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "32.041.623/0001-07",
+      "name": "RPS LONG BIAS SELECTION D30 FI FINANCEIRO EM COTAS DE FUNDOS DE INVESTIMENTO EM AÇÕES",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56468"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "32.102.131/0001-76",
+      "name": "ARX EVEREST FIC FIF RENDA FIXA CRÉDITO PRIVADO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55976"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "32.102.192/0001-33",
+      "name": "GEO EMPRESAS GLOBAIS EM REAIS FUNDO DE INVESTIMENTO FINANCEIRO EM COTAS DE FI EM ACOES",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55937"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "32.139.841/0001-70",
+      "name": "BAHIA AM VALUATION SELEÇÃO AÇÕES FIF CIC RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54043"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "32.162.772/0001-16",
+      "name": "ABSOLUTE I PREVIDENCIÁRIO ITAÚ FIF CIC MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#32.162.772/0001-16"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "32.245.930/0001-00",
+      "name": "ITAÚ SELEÇÃO MULTIFUNDOS RENDA FIXA LONGO PRAZO FIF DA CLASSE DE INVESTIMENTO EM COTAS RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54099"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "32.246.546/0001-13",
+      "name": "ITAÚ OLIMPO FIF DA CLASSE DE INVESTIMENTO EM COTAS EM AÇÕES RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54107"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "32.265.518/0001-43",
+      "name": "MOAT CAPITAL SELEÇÃO FIF DA CLASSE DE INVESTIMENTO EM COTAS EM AÇÕES RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54097"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "32.265.543/0001-27",
+      "name": "ITAÚ FLEXPREV DUNAMIS V70 FIF CIC MULT - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#32.265.543/0001-27"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "32.292.528/0001-78",
+      "name": "ITAÚ PRECISION ADVANCED PRIVATE MARKETS FIF MULTIMERCADO CRÉDITO PRIVADO RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54079"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "32.292.537/0001-69",
+      "name": "NEO NAVITAS SELEÇÃO FIF DA CLASSE DE INVESTIMENTO EM COTAS EM AÇÕES RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54086"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "32.319.996/0001-99",
+      "name": "KINEA PREV AÇÕES FUNDO DE INVESTIMENTO FINANCEIRO DA CLASSE DE INVESTIMENTO EM COTAS RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#32.319.996/0001-99"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "32.665.773/0001-83",
+      "name": "EQUITAS SELECTION SELEÇÃO FIF DA CLASSE DE INVESTIMENTO EM COTAS EM AÇÕES RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54126"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "32.892.264/0001-93",
+      "name": "JGP CORPORATE PLUS FUNDO DE INVESTIMENTO FINANCEIRO DA CIC MULTIMERCADO CRÉD PRIV IU RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54169"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "32.892.615/0001-66",
+      "name": "JGP SELECT FUNDO DE INVESTIMENTO FINANCEIRO DA CIC MULTIMERCADO CRÉDITO PRIVADO IU RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54170"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "32.903.873/0001-09",
+      "name": "KINEA PREV APOLO ITAÚ MULTIMERCADO FIF CIC RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#32.903.873/0001-09"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "32.905.802/0001-37",
+      "name": "KAPITALO TARKUS SELEÇÃO FIF CIC EM AÇÕES RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54175"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "32.906.045/0001-16",
+      "name": "ITAÚ PRIVATE PREV MULTI FIF CIC AÇÕES - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#32.906.045/0001-16"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "32.906.784/0001-08",
+      "name": "ITAÚ SELEÇÃO PREV MULTIFUNDOS V70 FIF DA CIC MULTIMERCADO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#32.906.784/0001-08"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "32.907.013/0001-35",
+      "name": "ITAÚ FLEXPREV OLIMPO 70 FUNDO DE INVESTIMENTO FINANCEIRO DA CIC MULT - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#32.907.013/0001-35"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "32.921.848/0001-40",
+      "name": "BAHIA AM SELEÇÃO FIF DA CLASSE DE INVESTIMENTO EM COTAS MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54185"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "32.971.916/0001-85",
+      "name": "ITAÚ FLEXPREV VISION PLUS PERFORMANCE FUNDO DE INVESTIMENTO FINANCEIRO DA CIC MULT - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#32.971.916/0001-85"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "32.972.925/0001-90",
+      "name": "ITAÚ GLOBAL DINÂMICO RENDA FIXA LONGO PRAZO FUNDO DE INVESTIMENTO FINANCEIRO DA CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54198"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "33.378.392/0001-86",
+      "name": "KADIMA LONG BIAS FUNDO DE INVESTIMENTO FINANCEIRO MULTIMERCADO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56168"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "33.499.634/0001-90",
+      "name": "ICATU SEG FUNDO DE INVESTIMENTO EM COTAS FIF CORPORATE RF - RESP LIMITADA",
+      "platforms": [
+        "ONZE"
+      ],
+      "keys": [
+        "ONZE#45a74c36-0025-485f-b0f3-9192440bb0a0"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "33.736.845/0001-07",
+      "name": "HASHDEX 100 NASDAQ CRYPTO INDEX FUNDO DE INVESTIMENTO MULTIMERCADO",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57754"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "33.736.873/0001-16",
+      "name": "HASHDEX 20 NASDAQ CRYPTO INDEX FUNDO DE INVESTIMENTO FINANCEIRO EM COTAS DE FIM",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56821"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "34.096.196/0001-81",
+      "name": "TAVOLA ABSOLUTO II FUNDO DE INVESTIMENTO FINANCEIRO EM COTAS DE FUNDOS DE INVESTIMENTO MULTIMERCADO",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56522"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "34.143.959/0001-06",
+      "name": "KINEA PREV XTR II PLANOS ICATU FIF CIC MULTIMERCADO RESP LIMITADA",
+      "platforms": [
+        "ONZE"
+      ],
+      "keys": [
+        "ONZE#b6269577-a482-415d-a388-9de5cfd61018"
+      ],
+      "resolution": "not-named-as-other-fund"
+    },
+    {
+      "cnpj": "34.172.497/0001-47",
+      "name": "ARMOR AXE FUNDO DE INVESTIMENTO FINANCEIRO EM COTAS DE FUNDOS DE INVESTIMENTO MULTIMERCADO",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56653"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "34.431.415/0001-31",
+      "name": "ROOT CAPITAL HIGH YIELD FIC DE FIF MULTIMERCADO CRÉDITO PRIVADO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55960"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "34.568.421/0001-35",
+      "name": "ITAÚ PREV JURO REAL TARGET 2050 FIF CIC RF - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#34.568.421/0001-35"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "34.568.536/0001-20",
+      "name": "ITAÚ PRIVATE PREV NTN-B 2035 FIF CIC RF RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#34.568.536/0001-20"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "34.774.288/0001-73",
+      "name": "DAHLIA TOTAL RETURN SELEÇÃO FIF DA CLASSE DE INVESTIMENTO EM COTAS MULTIMERCADO RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54311"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "34.780.531/0001-66",
+      "name": "SOLIS CAPITAL ANTARES LIGHT FI EM COTAS DE FUNDOS DE INVESTIMENTO EM DIREITOS CREDITORIOS",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58179"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "34.803.891/0001-36",
+      "name": "ITAÚ SELEÇÃO MULTIFUNDOS GENESIS MULTIMERCADO FIF DA CIC RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54340"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "34.839.385/0001-05",
+      "name": "ALPHAKEY AÇÕES FUNDO DE INVESTIMENTO FINANCEIRO EM COTAS DE FUNDOS DE INVESTIMENTO EM AÇÕES",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56113"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "35.088.108/0001-62",
+      "name": "HASHDEX 40 NASDAQ CRYPTO INDEX FUNDO DE INVESTIMENTO FINANCEIRO EM COTAS DE FI MULTIMERCADO",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56822"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "35.110.510/0001-04",
+      "name": "ITAÚ SMART AÇÕES BRASIL 50 FUNDO DE INVESTIMENTO FINANCEIRO DA CIC EM AÇÕES RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54355"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "35.191.056/0001-55",
+      "name": "ITAÚ SMART AÇÕES LOW VOL FIF DA CLASSE DE INVESTIMENTO EM COTAS EM AÇÕES RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54356"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "35.363.737/0001-53",
+      "name": "MANTARO CAPITAL AÇÕES SELEÇÃO FIF DA CIC EM AÇÕES RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54412"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "35.364.125/0001-85",
+      "name": "ITAÚ KINEA APOLO FUNDO DE INVESTIMENTO FINANCEIRO DA CIC MULTIMERCADO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54430"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "35.408.329/0001-70",
+      "name": "COMPASS CREDIT SELECTION FUNDO DE INVESTIMENTO FINANCEIRO EM COTAS DE FUNDOS DE INVEST RENDA FIXA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55979"
+      ],
+      "resolution": "wire-beneficiary"
+    },
+    {
+      "cnpj": "35.412.094/0001-90",
+      "name": "ITAÚ INDEX CRÉDITO HIGH YIELD AMERICANO RF USD INVESTIMENTO NO EXTERIOR FIF DA CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54708"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "35.415.852/0001-24",
+      "name": "ITAÚ SELEÇÃO MULTIFUNDOS GLOBAL EQUITIES USD IE FIF DA CIC EM AÇÕES RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57984"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "35.488.313/0001-15",
+      "name": "ITAÚ SELEÇÃO MULTIFUNDOS PLUS AÇÕES FIF DA CIC RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54451"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "35.492.154/0001-22",
+      "name": "ITAÚ INDEX GOLD MULTIMERCADO FIF DA CLASSE DE INVESTIMENTO EM COTAS RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54460"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "35.492.361/0001-87",
+      "name": "ITAÚ AÇÕES ASGARD FUNDO DE INVESTIMENTO FINANCEIRO DA CLASSE DE INVESTIMENTO EM COTAS RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54713"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "35.495.418/0001-00",
+      "name": "KINEA GAMA FIF DA CLASSE DE INVESTIMENTO EM COTAS EM AÇÕES RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54452"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "35.505.781/0001-50",
+      "name": "JGP PREVIDENCIÁRIO 100 ITAÚ 1 FUNDO DE INVESTIMENTO FINANCEIRO DA CIC EM AÇÕES RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#35.505.781/0001-50"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "35.636.610/0001-60",
+      "name": "ICATU VANGUARDA MINHA APOSENTADORIA 2050 FIF - CIC MULTIMERCADO PREVIDENCIÁRIO - RESP LIMITADA",
+      "platforms": [
+        "ONZE"
+      ],
+      "keys": [
+        "ONZE#0d6a1cc8-299f-4a7f-a5f7-2fc7194e3f69"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "35.650.636/0001-63",
+      "name": "CARTEIRA ITAÚ ASSET DE INVESTIMENTO FIF CIC MULTIMERCADO RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54488"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "35.717.650/0001-37",
+      "name": "GTI NIMROD FUNDO DE INVESTIMENTO FINANCEIRO EM AÇÕES - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56233"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "35.726.300/0001-37",
+      "name": "BRAVE 90 FUNDO DE INVESTIMENTO EM COTAS DE FUNDOS DE INVESTIMENTO EM DIREITOS CREDITÓRIOS",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57801"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "35.727.535/0001-43",
+      "name": "NAVI CRUISE SELEÇÃO FUNDO DE INVESTIMENTO FINANCEIRO DA CIC EM AÇÕES RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54521"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "35.816.850/0001-47",
+      "name": "V8 CASH PLATINUM 2 FIC DE FI FINANCEIRO RENDA FIXA CRÉDITO PRIVADO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58304"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "35.822.770/0001-02",
+      "name": "OCCAM RETORNO ABSOLUTO SELEÇÃO FUNDO DE INVESTIMENTO FINANCEIRO DA CIC MULTIMERCADO RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54559"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "35.939.779/0001-90",
+      "name": "IP ATLAS BRL FUNDO DE INVESTIMENTO EM COTAS DE FIA - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58709"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "35.939.847/0001-10",
+      "name": "IP ATLAS USD FI EM COTAS DE FUNDOS DE INVESTIMENTO FINANCEIRO EM AÇÕES - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55944"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "36.015.100/0001-39",
+      "name": "RIZA DAIKON FUNDO DE INVESTIMENTO FINANCEIRO EM COTAS DE FUNDOS DE INVESTIMENTO MULTIMERCADO",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56966"
+      ],
+      "resolution": "override"
+    },
+    {
+      "cnpj": "36.046.327/0001-41",
+      "name": "PÁTRIA MONEDA LATAM CORPORATE CREDIT FI EM COTAS DE FI MULTIMERCADO CRED PRIV RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58263"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "36.246.557/0001-54",
+      "name": "AZ QUEST MULTI MAX ITAU PREVIDÊNCIA I FIF CIC MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#36.246.557/0001-54"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "36.249.200/0001-20",
+      "name": "ITAÚ KINEA OPORTUNIDADE RENDA FIXA CRÉDITO PRIVADO FIF CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54660"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "36.249.245/0001-02",
+      "name": "VINLAND MACRO SELEÇÃO FUNDO DE INVESTIMENTO FINANCEIRO DA CIC MULTIMERCADO RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54658"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "36.249.269/0001-53",
+      "name": "SHARP EQUITY VALUE SELEÇÃO FIF DA CLASSE DE INVESTIMENTO EM COTAS EM AÇÕES RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54638"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "36.249.291/0001-01",
+      "name": "ITAÚ INDEX AÇÕES JAPÃO JPY INVEST NO EXTERIOR FIF DA CLASSE DE INVESTIMENTO EM COTAS RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54635"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "36.249.300/0001-56",
+      "name": "ITAÚ INDEX AÇÕES EUROPA EUR INVESTIMENTO NO EXTERIOR FIF CIC RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54634"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "36.249.317/0001-03",
+      "name": "ITAÚ INDEX US TECH FIF CIC EM AÇÕES RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54651"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "36.249.328/0001-93",
+      "name": "ITAÚ INDEX AÇÕES GLOBAIS FX FIF CLASSE DE INVEST EM COTAS EM AÇÕES INVEST NO EXTERIOR RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54649"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "36.249.375/0001-37",
+      "name": "ITAÚ INDEX AÇÕES EMERGENTES FX INVESTIMENTO NO EXTERIOR FIF DA CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54633"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "36.249.379/0001-15",
+      "name": "ITAÚ INDEX MULTIMERCADO ESTRATÉGIA SP 500 USD FIF DA CLASSE DE INVESTIMENTO EM COTAS RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54632"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "36.318.479/0001-56",
+      "name": "COMPASS YIELD 30 FUNDO DE INVESTIMENTO FINANCEIRO RENDA FIXA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56445"
+      ],
+      "resolution": "wire-beneficiary"
+    },
+    {
+      "cnpj": "36.346.391/0001-48",
+      "name": "CARTEIRA ITAÚ ASSET INTERNACIONAL DE INVESTIMENTO FIF DA CIC MULTIMERCADO IE RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54702"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "36.347.678/0001-92",
+      "name": "ITAÚ INDEX ITAÚ UNIBANCO AÇÕES FIF DA CLASSE DE INVESTIMENTO EM COTAS RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54688"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "36.347.721/0001-10",
+      "name": "ITAÚ INDEX SIMPLES SELIC RENDA FIXA FUNDO DE INVESTIMENTO FINANCEIRO DA CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54689"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "36.347.890/0001-50",
+      "name": "CARTEIRA ITAÚ ASSET DE PREVIDÊNCIA FIF CIC MULT - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#36.347.890/0001-50"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "36.348.109/0001-61",
+      "name": "ITAÚ AÇÕES SMALL CAP INDEX FIF CIC RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54694"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "36.348.138/0001-23",
+      "name": "ITAÚ TESOURO AMERICANO USD 10 ANOS FIF DA CLASSE DE INVESTIMENTO EM COTAS MULT RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54684"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "36.348.176/0001-86",
+      "name": "ITAÚ INDEX AÇÕES IBOVESPA FIF DA CLASSE DE INVESTIMENTO EM COTAS RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54683"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "36.348.219/0001-23",
+      "name": "ITAÚ FLEXPREV OLIMPO V100 FIF CIC AÇÕES - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#36.348.219/0001-23"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "36.348.392/0001-21",
+      "name": "ITAÚ SELEÇÃO MULTFUNDOS AQUILA AÇÕES FIF DA CLASSE DE INVESTIMENTO EM COTAS RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54675"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "36.348.543/0001-41",
+      "name": "ADAM ADVANCED PVT FIF CIC MULTIMERCADO CRÉDITO PRIVADO INVESTIMENTO NO EXTERIOR RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54671"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "36.350.655/0001-37",
+      "name": "ITAÚ INDEX VALE AÇÕES FIF DA CLASSE DE INVESTIMENTO EM COTAS RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54669"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "36.350.666/0001-17",
+      "name": "TRUXT LONG BIAS SELEÇÃO FUNDO DE INVESTIMENTO FINANCEIRO DA CIC MULTIMERCADO RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54668"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "36.352.498/0001-07",
+      "name": "AZ QUEST SUPRA FI EM COTAS DE FUNDO DE INVESTIMENTO FINANCEIRO MULTIMERCADO CRÉDITO PRIVADO",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55953"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "36.352.721/0001-08",
+      "name": "ALPHAKEY INSTITUCIONAL FUNDO DE INVESTIMENTO FINANCEIRO EM COTAS DE FUNDOS DE INVESTIMENTO EM AÇÕES",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56114"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "36.440.431/0001-16",
+      "name": "GALAPAGOS EVOLUTION FUNDO DE INVESTIMENTO FINANCEIRO EM COTAS DE FUNDOS DE INVESTIMENTO MULTIMERCADO",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57793"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "36.499.625/0001-97",
+      "name": "AZ QUEST BAYES LONG BIASED SISTEMATICO FUNDO DE INVESTIMENTO MULTIMERCADO",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56776"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "36.729.755/0001-79",
+      "name": "GALÁPAGOS DRAGON FUNDO DE INVESTIMENTO EM DIREITOS CREDITÓRIOS",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58506"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "37.013.129/0001-44",
+      "name": "VERDE AM MUNDI AÇÕES GLOBAIS BRL FIF CLASSE DE INVESTIMENTO EM COTAS DE AÇÕES RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57714"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "37.110.110/0001-16",
+      "name": "KAPITALO K10 PREVIDÊNCIA I FIF DA CIC MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#37.110.110/0001-16"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "37.231.262/0001-77",
+      "name": "ITAÚ FOUNDERS MULTIFUNDOS GLOBAL ALPHA USD MULTIMERCADO IE FIF CIC RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54732"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "37.231.455/0001-28",
+      "name": "ITAÚ INDEX INFLAÇÃO AMERICANA RENDA FIXA USD INVESTIMENTO NO EXTERIOR FIF CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54730"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "37.306.507/0001-88",
+      "name": "ITAÚ BDR NÍVEL 1 AÇÕES FIF DA CLASSE DE INVESTIMENTO EM COTAS RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54735"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "37.306.536/0001-40",
+      "name": "ITAÚ INDEX AÇÕES ESTRATÉGIA S&P500 ® FIF DA CLASSE DE INVESTIMENTO EM COTAS RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54736"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "37.306.612/0001-17",
+      "name": "ITAÚ INDEX CAMBIAL DÓLAR FIF DA CLASSE DE INVESTIMENTO EM COTAS RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54737"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "37.307.077/0001-19",
+      "name": "ITAÚ INDEX JUROS REAIS B5+ RENDA FIXA FUNDO DE INVESTIMENTO FINANCEIRO DA CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54741"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "37.307.475/0001-35",
+      "name": "ITAÚ INDEX JUROS REAIS RENDA FIXA FIF DA CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54742"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "37.307.534/0001-75",
+      "name": "ITAÚ INDEX PRÉ LONGO PRAZO RENDA FIXA FUNDO DE INVESTIMENTO FINANCEIRO DA CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54743"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "37.319.911/0001-96",
+      "name": "LEGACY CAPITAL PREVIDENCIÁRIO ITAÚ I FIF CIC MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#37.319.911/0001-96"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "37.347.946/0001-39",
+      "name": "ITAÚ HUNTER TOTAL RETURN MULTIMERCADO FIF CIC RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54753"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "37.348.037/0001-15",
+      "name": "GENOA CAPITAL RADAR SELEÇÃO FIF DA CIC MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54750"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "37.348.061/0001-54",
+      "name": "OCEANA LONG BIASED SELEÇÃO FUNDO DE INVESTIMENTO FIF CIC MULT RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54752"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "37.348.103/0001-57",
+      "name": "A1 HEDGE SELEÇÃO FIF CIC MULTIMERCADO RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54748"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "37.367.841/0001-41",
+      "name": "LEGACY CAPITAL PREVIDENCIÁRIO ICATU FI FINANCEIRO EM COTAS DE FI MULTIMERCADO",
+      "platforms": [
+        "ONZE"
+      ],
+      "keys": [
+        "ONZE#794b4cf7-cc5a-4a3b-9771-d0a18d4581fc"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "37.368.116/0001-98",
+      "name": "ARX ELBRUS PRO FIC DE FUNDOS INCENTIVADOS DE INVEST FINANCEIRO EM INFRA RENDA FIXA - RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55975"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "37.483.133/0001-76",
+      "name": "ITAÚ FLEXPREV MOMENTO FIF CIC DE AÇÕES - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#37.483.133/0001-76"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "37.483.144/0001-56",
+      "name": "ITAÚ FLEXPREV MOMENTO V70 FUNDO DE INVESTIMENTO FINANCEIRO DA CIC MULT - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#37.483.144/0001-56"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "37.555.088/0001-18",
+      "name": "ITAÚ INDEX GOLD USD MULTIMERCADO INVESTIMENTO NO EXTERIOR FIF DA CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54782"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "37.555.105/0001-17",
+      "name": "JGP LONG ONLY SELEÇÃO FUNDO DE INVESTIMENTO FINANCEIRO DA CIC EM AÇÕES RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54783"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "37.555.151/0001-16",
+      "name": "KADIMA SELEÇÃO FUNDO DE INVESTIMENTO FINANCEIRO DA CIC MULTIMERCADO RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54785"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "37.555.170/0001-42",
+      "name": "ITAÚ FLEXPREV HUNTER TOTAL RETURN FIF CIC MULT - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#37.555.170/0001-42"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "37.555.214/0001-34",
+      "name": "ITAÚ FLEXPREV ASGARD V70 FIF CIC MULT - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#37.555.214/0001-34"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "37.555.290/0001-40",
+      "name": "ITAÚ FLEXPREV ASGARD FIF CIC DE AÇÕES - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#37.555.290/0001-40"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "37.663.456/0001-41",
+      "name": "ITAÚ SELEÇÃO MORGAN STANLEY US ADVANTAGE EQUITY USD MULT IE FIF DA CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54806"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "37.730.471/0001-65",
+      "name": "KINEA PREV ATLAS FIF CIC MULTIMERCADO RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#37.730.471/0001-65"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "37.760.167/0001-60",
+      "name": "PIMCO INCOME USD SELEÇÃO FIF CIC MULTIMERCADO INVESTIMENTO NO EXTERIOR RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54860"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "38.000.771/0001-51",
+      "name": "ITAÚ ACTIVE FIX ALL RENDA FIXA CRÉDITO PRIVADO LONGO PRAZO FIF DA CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54901"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "38.015.773/0001-14",
+      "name": "JGP PREVIDENCIÁRIO MULTIMERCADO ICATU SEGUROS FIC DE FI FINANCEIRO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ONZE"
+      ],
+      "keys": [
+        "ONZE#4db0422d-2315-4129-9ad2-f516a1d479ba"
+      ],
+      "resolution": "not-named-as-other-fund"
+    },
+    {
+      "cnpj": "38.026.926/0001-29",
+      "name": "SPARTA TOP INFLAÇÃO FIC DE FIF RENDA FIXA CRÉD PRIV LONGO PRAZO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55978"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "38.068.926/0001-91",
+      "name": "KINEA PREV IPCA DINÂMICO FUNDO DE INVESTIMENTO FINANCEIRO DA CIC RENDA FIXA RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#38.068.926/0001-91"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "38.267.929/0001-54",
+      "name": "ITAÚ INDEX PETROBRÁS AÇÕES FIF CIC RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54977"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "38.267.982/0001-55",
+      "name": "RÉGIA ESG SELEÇÃO FIF DA CIC EM AÇÕES INVESTIMENTO SUSTENTÁVEL RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#54979"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "38.287.187/0001-29",
+      "name": "KADIMA IVP I FUNDO DE INVESTIMENTO FINANCEIRO DA CLASSE DE INVESTIMENTO EM COTAS MULT RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#38.287.187/0001-29"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "38.954.217/0001-03",
+      "name": "PATRIA LONG BIASED FUNDO DE INVESTIMENTO FINANCEIRO EM COTAS DE FUNDOS DE INVESTIMENTO MULTIMERCADO",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56498"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "39.240.267/0001-91",
+      "name": "JGP MULTIMERCADO PREVIDENCIÁRIO ITAÚ 1 FIF DA CLASSE DE INVESTIMENTO EM COTAS RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#39.240.267/0001-91"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "39.303.192/0001-40",
+      "name": "VINCI MOSAICO SELEÇÃO FIF CIC EM AÇÕES RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55046"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "39.303.195/0001-84",
+      "name": "ITAÚ KINEA IPCA DINÂMICO II RENDA FIXA FIF DA CIC RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55047"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "39.322.485/0001-75",
+      "name": "ITAÚ SELEÇÃO PREV MULTIFUNDOS FIF CIC RF LP RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#39.322.485/0001-75"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "39.322.561/0001-42",
+      "name": "APEX AÇÕES SELEÇÃO FIF DA CLASSE DE INVESTIMENTO EM COTAS RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55050"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "39.354.762/0001-21",
+      "name": "V8 SPEEDWAY LONG SHORT FIC FIF MULTIMERCADO",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58270"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "39.401.219/0001-38",
+      "name": "ITAÚ INDEX PRÉ IRFM 1+ RF FUNDO DE INVESTIMENTO FINANCEIRO DA CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55067"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "39.401.308/0001-84",
+      "name": "ITAÚ FLEXPREV INDEX SIMPLES SELIC FIF CIC RF - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#39.401.308/0001-84"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "39.413.178/0001-08",
+      "name": "IP VALUE HEDGE BDR NÍVEL I SELEÇÃO FIF DA CIC EM AÇÕES RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55061"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "39.518.636/0001-65",
+      "name": "VERDE AM MUNDI AÇÕES GLOBAIS SELEÇÃO FIF DA CIC EM AÇÕES INVESTIMENTO NO EXTERIOR RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55088"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "39.566.676/0001-82",
+      "name": "ITAÚ FLEXPREV GLOBAL DINÂMICO RF LONGO PRAZO FIF DA CLASSE DE INVESTIMENTO EM COTAS RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#39.566.676/0001-82"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "39.642.728/0001-52",
+      "name": "VERDE AM LONG BIAS SELEÇÃO FIF DA CLASSE DE INVESTIMENTO EM COTAS EM AÇÕES RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55118"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "39.642.895/0001-01",
+      "name": "ITAÚ FLEXPREV JURO REAL TARGET 2026 II FIF CIC RF - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#39.642.895/0001-01"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "39.642.925/0001-71",
+      "name": "ITAÚ FLEXPREV GLOBAL DINÂMICO MULTIMERCADO FIF DA CIC RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#39.642.925/0001-71"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "39.643.450/0001-38",
+      "name": "ITAÚ FLEXPREV GLOBAL DINÂMICO PLUS MULTIMERCADO FIF DA CLASSE DE INVESTIMENTO EM COTAS RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#39.643.450/0001-38"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "39.794.739/0001-58",
+      "name": "DAHLIA A PREVIDENCIÁRIO 2 FUNDO DE INVESTIMENTO FINANCEIRO DA CIC EM AÇÕES RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#39.794.739/0001-58"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "39.958.460/0001-62",
+      "name": "M8 CAPITAL PLUS FUNDO DE INVESTIMENTO FINANCEIRO RENDA FIXA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56913"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "39.959.025/0001-52",
+      "name": "SPARTA DEB INC INFLAÇÃO FIC DE FUNDOS INCENT DE INVEST FINANCEIRO EM INFRAEST RENDA FIXA RESP LTDA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55977"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "40.023.588/0001-13",
+      "name": "ITAÚ ABSOLUTE VERTEX PREV I FIF CIC MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#40.023.588/0001-13"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "40.140.986/0001-10",
+      "name": "ITAÚ FLEXPREV INDEX PRÉ FIF CIC RENDA FIXA - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#40.140.986/0001-10"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "40.141.002/0001-15",
+      "name": "ITAÚ FLEXPREV INDEX JUROS REAIS B5+ FIF CIC RENDA FIXA - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#40.141.002/0001-15"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "40.156.258/0001-04",
+      "name": "NAVI A PREVIDÊNCIA I FIF CIC EM AÇÕES RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#40.156.258/0001-04"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "40.171.073/0001-60",
+      "name": "ITAÚ FLEXPREV INDEX JUROS REAIS B5 FIF CIC RF - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#40.171.073/0001-60"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "40.171.101/0001-40",
+      "name": "ITAÚ FLEXPREV INDEX JUROS REAIS FIF CIC RF - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#40.171.101/0001-40"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "40.209.117/0001-02",
+      "name": "ITAÚ FLEXPREV INDEX DIVIDENDOS FIF CIC AÇÕES - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#40.209.117/0001-02"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "40.209.167/0001-81",
+      "name": "SHARP LONG BIASED SELEÇÃO FIF DA CLASSE DE INVESTIMENTO EM COTAS EM AÇÕES RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55174"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "40.209.279/0001-32",
+      "name": "ITAÚ FLEXPREV INDEX IBOVESPA FIF CIC AÇÕES - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#40.209.279/0001-32"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "40.209.313/0001-79",
+      "name": "ITAÚ FLEXPREV INDEX IRF-M 1+ FIF CIC RF - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#40.209.313/0001-79"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "40.209.339/0001-17",
+      "name": "ITAÚ FLEXPREV DIVIDENDOS V70 FIF CIC MULT - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#40.209.339/0001-17"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "40.209.362/0001-01",
+      "name": "ITAÚ FLEXPREV IBOVESPA V70 FIF CIC MULTIMERCADO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#40.209.362/0001-01"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "40.212.940/0001-69",
+      "name": "HASHDEX CRYPTO TOP PERFORMERS FIF MULTIMERCADO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56164"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "40.226.121/0001-70",
+      "name": "PERFIN INFRA EQUITY ALOCADORES FUNDO DE INVESTIMENTO FINANCEIRO EM COTAS DE FI EM ACOES",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57148"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "40.345.772/0001-80",
+      "name": "BRASIL CAPITAL PREVIDENCIÁRIO ITAÚ IQ FIF DA CLASSE DE INVESTIMENTO EM COTAS EM AÇÕES RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#40.345.772/0001-80"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "40.345.907/0001-07",
+      "name": "ITAÚ PREV MULTI HEDGE FIF CIC MULT - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#40.345.907/0001-07"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "40.345.929/0001-77",
+      "name": "ITAÚ PREV MULTIGESTOR PLUS FIF CIC DE AÇÕES - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#40.345.929/0001-77"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "40.345.964/0001-96",
+      "name": "ITAÚ PREV MULTIGESTOR AQUILA FUNDO DE INVESTIMENTO FINANCEIRO DE AÇÕES - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#40.345.964/0001-96"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "40.413.765/0001-78",
+      "name": "ITAÚ FLEXPREV PRIVILÈGE FIF CIC RF REFERENCIADO DI - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#40.413.765/0001-78"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "40.498.539/0001-37",
+      "name": "ITAÚ OPTIMUS RENDA FIXA LONGO PRAZO FIF DA CLASSE DE INVESTIMENTO EM COTAS RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55220"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "40.526.664/0001-03",
+      "name": "ITAÚ INDEX CHINA TECH AÇÕES CNY HKD INVESTIMENTO NO EXTERIOR FIF DA CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55209"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "40.575.693/0001-65",
+      "name": "TÁVOLA EQUITY HEDGE 15 FUNDO DE INVESTIMENTO FINANCEIRO MULTIMERCADO",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56517"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "40.616.111/0001-41",
+      "name": "ITAÚ FLEXPREV OPTIMUS FIF CIC RF LP - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#40.616.111/0001-41"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "40.616.180/0001-55",
+      "name": "ITAÚ FLEXPREV OPTIMUS TITAN FUNDO DE INVESTIMENTO FINANCEIRO DA CIC MULT - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#40.616.180/0001-55"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "40.653.167/0001-76",
+      "name": "ITAÚ OPTIMUS TITAN MULT FIF DA CLASSE DE INVESTIMENTO EM COTAS RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55228"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "40.692.052/0001-90",
+      "name": "KAPITALO K10 SELEÇÃO MULTIMERCADO FIF CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55237"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "40.694.524/0001-44",
+      "name": "CONSTELLATION IQ SELEÇÃO FIF DA CLASSE DE INVESTIMENTO EM COTAS EM AÇÕES RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55238"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "40.815.071/0001-67",
+      "name": "ITAÚ IPCA ACTION RENDA FIXA LONGO PRAZO FIF DA CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55263"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "40.881.814/0001-05",
+      "name": "ITAÚ OPTIMUS EXTREME MULTIMERCADO FIF CIC RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55271"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "40.978.416/0001-01",
+      "name": "ITAÚ INDEX BLOCKCHAIN AÇÕES FX INVESTIMENTO NO EXTERIOR FIF DA CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55292"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "41.088.640/0001-82",
+      "name": "COMPASS NINETY ONE GLOBAL FRANCHISE BRL FI FINANCEIRO EM COTAS DE FUNDOS DE INVESTIMENTO EM ACOES",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56977"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "41.124.628/0001-86",
+      "name": "ITAÚ MEGATRENDS FX FIF DA CLASSE DE INVESTIMENTO EM COTAS MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55315"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "41.163.524/0001-80",
+      "name": "VALORA ICATU PREV FI EM COTAS DE FUNDOS DE INVESTIMENTO RENDA FIXA CRÉDITO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ONZE"
+      ],
+      "keys": [
+        "ONZE#2f9074c9-cef0-49ad-bfce-fc366f1fae2b"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "41.163.578/0001-46",
+      "name": "KAPITALO ZETA SELEÇÃO MULTIMERCADO FIF DA CLASSE DE INVESTIMENTO EM COTAS RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55328"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "41.235.137/0001-02",
+      "name": "ITAÚ INDEX COMMODITIES FX MULTIMERCADO INVEST NO EXTERIOR FIF CLASSE INVEST EM COTAS RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55363"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "41.249.600/0001-75",
+      "name": "ITAÚ SELEÇÃO BLACKROCK GLOBAL UNCONSTRAINED AÇÕES USD IE FIF DA CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55375"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "41.272.854/0001-04",
+      "name": "ITAÚ SELEÇÃO M GLOBAL FRANCHISE AÇÕES USD INVESTIMENTO NO EXTERIOR FIF CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55379"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "41.287.719/0001-32",
+      "name": "DAHLIA GLOBAL ALLOCATION MULTIMERCADO SELEÇÃO FIF DA CLASSE DE INVESTIMENTO EM COTAS RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55383"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "41.301.133/0001-85",
+      "name": "ITAÚ FLEXPREV ACTIVE FIX FIF CIC RF CRED PRIV - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#41.301.133/0001-85"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "41.326.314/0001-66",
+      "name": "ITAÚ SELEÇÃO J CHINA AÇÕES USD INVESTIMENTO NO EXTERIOR FIF CIC RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55390"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "41.326.338/0001-15",
+      "name": "MOAT CAPITAL TOTAL RETURN MULT SELEÇÃO FIF DA CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55391"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "41.326.350/0001-20",
+      "name": "J GLOBAL MACRO OPPORTUNITIES USD SELEÇÃO MULTIMERCADO IE FIF DA CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55392"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "41.326.368/0001-21",
+      "name": "J GLOBAL MACRO OPPORTUNITIES BRL SELEÇÃO MULT IE FIF DA CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55393"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "41.342.624/0001-74",
+      "name": "VISTA HEDGE MULTIMERCADO SELEÇÃO FIF DA CLASSE DE INVESTIMENTO EM COTAS RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55394"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "41.360.184/0001-88",
+      "name": "VERDE AM LONG BIAS 70 ITAÚ VP PREV FIF CIC MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#41.360.184/0001-88"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "41.409.964/0001-75",
+      "name": "SPX PREV LANCER PLUS ITAÚ FIF CIC MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#41.409.964/0001-75"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "41.514.301/0001-10",
+      "name": "RYO LONG BIASED FUNDO DE INVESTIMENTO FINANCEIRO EM COTAS DE FUNDOS DE INVESTIMENTO MULTIMERCADO",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56581"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "41.574.597/0001-65",
+      "name": "RYO SELECTION FUNDO DE INVESTIMENTO FINANCEIRO EM COTAS DE FUNDOS DE INVESTIMENTO DE ACOES",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58753"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "41.575.611/0001-45",
+      "name": "ARX PREVIDENCIÁRIO FIF DA CLASSE DE INVESTIMENTO EM COTAS RENDA FIXA CRÉDITO PRIVADO RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#41.575.611/0001-45"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "41.709.507/0001-04",
+      "name": "CAPITÂNIA PREV ITAÚ FIE FIF CIC MULTIMERCADO CRÉDITO PRIVADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#41.709.507/0001-04"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "41.710.451/0001-08",
+      "name": "LEBLON ITAÚ PREV I FIE FIF CIC EM AÇÕES RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#41.710.451/0001-08"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "41.734.805/0001-46",
+      "name": "VINLAND MACRO PLUS MULTIMERCADO SELEÇÃO FUNDO DE INVESTIMENTO FINANCEIRO DA CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55422"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "41.734.846/0001-32",
+      "name": "ITAÚ ACTIVE FIX ESG CRÉDITO PRIVADO MULTIMERCADO INVESTIMENTO SUSTENTÁVEL FIF DA CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55416"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "41.735.237/0001-06",
+      "name": "ITAÚ BTG PACTUAL CORPORATIVO PLUS PREV FIF DA CIC MULTIMERCADO CRÉDITO PRIVADO RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#41.735.237/0001-06"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "41.736.738/0001-07",
+      "name": "ALPHAKEY PREV ITAÚ 100 FIF CIC EM AÇÕES RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#41.736.738/0001-07"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "41.867.248/0001-31",
+      "name": "ICATU VANGUARDA ABSOLUTO PLUS QUALIFICADO IU FIF CIC RF CRED PRIV PREVIDENCIÁRIO RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#41.867.248/0001-31"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "41.867.265/0001-79",
+      "name": "ICATU VANGUARDA ABSOLUTO PLUS INFLAÇÃO QUALIFICADO IU FIF DA CIC RF CRED PRIV PREV - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#41.867.265/0001-79"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "41.884.595/0001-72",
+      "name": "PORTFÓLIO ITAÚ FIF DA CLASSE DE INVESTIMENTO EM COTAS MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55765"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "41.907.811/0001-58",
+      "name": "PORTFOLIO ITAÚ BRASIL FIF CIC DE FUNDO DE INVESTIMENTO MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55766"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "41.955.494/0001-45",
+      "name": "LETO PREVIDENCIÁRIO ITAÚ RENDA FIXA FIF CIC CP RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#41.955.494/0001-45"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "41.994.525/0001-77",
+      "name": "SCHRODER CT TECH LONG & SHORT BRL SELEÇÃO FIF DA CIC MULT INVESTIMENTO NO EXTERIOR RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55463"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "42.014.260/0001-66",
+      "name": "SPX SEAHAWK PLUS PREVIDENCIÁRIO ITAÚ FIF CIC MULTIMERCADO CRÉDITO PRIVADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#42.014.260/0001-66"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "42.046.924/0001-79",
+      "name": "SHARP EQUITY VALUE 100 ITAÚ PREVIDÊNCIA FIF CIC EM AÇÕES RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#42.046.924/0001-79"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "42.263.927/0001-64",
+      "name": "ITAÚ HIGH YIELD ALL MULTIMERCADO CRÉDITO PRIVADO FIF CIC RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55517"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "42.282.089/0001-76",
+      "name": "IBIUNA HEDGE STR MULTIMERCADO SELEÇÃO FIF CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55532"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "42.299.229/0001-19",
+      "name": "ITAÚ GLOBAL DINÂMICO ULTRA MULTIMERCADO FIF CIC RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55536"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "42.336.900/0001-54",
+      "name": "ITAÚ ACTION DEB INCENTIVADAS FIF INCENTIVADO INFRA CIC RF CRED PRIV LP - RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55873"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "42.337.008/0001-98",
+      "name": "ITAÚ SELEÇÃO MULTIFUNDOS MULTIMERCADO CRÉDITO PRIVADO FIF CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55869"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "42.379.037/0001-12",
+      "name": "ITAÚ FLEXPREV JUROS PRÉ TARGET 2025 FIF CIC RF - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#42.379.037/0001-12"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "42.379.878/0001-20",
+      "name": "ACE CAPITAL MULTIMERCADO SELEÇÃO FIF DA CLASSE DE INVESTIMENTO EM COTAS RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55881"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "42.380.882/0001-08",
+      "name": "ITAÚ FLEXPREV SINFONIA FIF CIC MULT CRED PRIV - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#42.380.882/0001-08"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "42.389.980/0001-06",
+      "name": "ACE CAPITAL PREVIDENCIÁRIO ITAÚ I FUNDO DE INVESTIMENTO FINANCEIRO CIC MULT RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#42.389.980/0001-06"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "42.399.185/0001-07",
+      "name": "OAKTREE GLOBAL CREDIT BRL SELEÇÃO FIF CIC MULTIMERCADO CRÉD PRIV IE RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55847"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "42.405.028/0001-59",
+      "name": "ROOT CAPITAL CRÉDITO HG PLUS FIC DE FIF MULTIMERCADO CRÉDITO PRIVADO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55958"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "42.431.509/0001-39",
+      "name": "ITAÚ FLEXPREV DIFERENCIADO FIF CIC RF CRED PRIV RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#42.431.509/0001-39"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "42.431.531/0001-89",
+      "name": "SPX SEAHAWK RENDA FIXA CRÉDITO PRIVADO LONGO PRAZO SELEÇÃO FIF CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55580"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "42.501.967/0001-05",
+      "name": "ICATU VANGUARDA CRÉDITO PRIVADO PG MULTIMERCADO SELEÇÃO FIF CIC RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55626"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "42.519.896/0001-60",
+      "name": "ITAÚ ELETROBRAS AÇÕES FIF DA CLASSE DE INVESTIMENTO EM COTAS RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55642"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "42.535.150/0001-40",
+      "name": "TIVIO PREVIDENCIA TOP CREDIT ITAÚ I FIF CIC RENDA FIXA CRÉDITO PRIVADO RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#42.535.150/0001-40"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "42.535.184/0001-34",
+      "name": "GENOA CAPITAL CRUISE PREV A FIF DA CLASSE DE INVESTIMENTO EM COTAS MULTIMERCADO RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#42.535.184/0001-34"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "42.698.112/0001-08",
+      "name": "ITAÚ SELEÇÃO BLACKROCK NEXT GENERATION TECHNOLOGY AÇÕES USD IE FIF CIC RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55788"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "42.698.158/0001-27",
+      "name": "ITAÚ KINEA ANDES RENDA FIXA CRÉDITO PRIVADO FUNDO DE INVESTIMENTO FINANCEIRO DA CIC LP RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55789"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "42.698.327/0001-29",
+      "name": "ARX VINSON RENDA FIXA CRÉDITO PRIVADO IU FIF DA CLASSE DE INVESTIMENTO EM COTAS RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55790"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "42.698.907/0001-16",
+      "name": "LEGACY RENDA FIXA SELEÇÃO FIF CIC LONGO PRAZO RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55752"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "42.699.005/0001-02",
+      "name": "TENAX TOTAL RETURN SELEÇÃO FIF DA CIC MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55773"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "42.699.578/0001-28",
+      "name": "NEO NAVITAS ITAÚ PREV FIE 1 FIF CIC EM AÇÕES RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#42.699.578/0001-28"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "42.717.960/0001-17",
+      "name": "ITAÚ SINFONIA MULTIMERCADO CRÉDITO PRIVADO FUNDO DE INVESTIMENTO FINANCEIRO DA CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55717"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "42.754.302/0001-03",
+      "name": "TENAX AÇÕES SELEÇÃO FIF DA CLASSE DE INVESTIMENTO EM COTAS RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55997"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "42.754.313/0001-85",
+      "name": "NEO PROVECTUS I SELEÇÃO FIF CIC MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55825"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "42.767.750/0001-33",
+      "name": "LETO CORPORATE FIC DE FIF RENDA FIXA CRÉDITO PRIVADO LONGO PRAZO - FEEDER VII - RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55988"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "42.777.251/0001-27",
+      "name": "TRUXT LONG BIAS ITAÚ PREV FIF DA CIC MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#42.777.251/0001-27"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "42.777.350/0001-09",
+      "name": "ITAÚ PREV VINCI VALOREM A FEEDER FIF CIC MULTIMERCADO RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#42.777.350/0001-09"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "42.814.885/0001-02",
+      "name": "ABSOLUTE HIKER RENDA FIXA SELEÇÃO FIF DA CLASSE DE INVESTIMENTO EM COTAS LP RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55753"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "42.826.980/0001-26",
+      "name": "KAPITALO KAPPA PREVIDÊNCIA IVP FIF DA CIC MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#42.826.980/0001-26"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "42.827.247/0001-26",
+      "name": "ITAÚ BTG PACTUAL CRÉDITO CORPORATIVO PREVIDÊNCIA FIF DA CIC RF CRED PRIV LONGO PRAZO RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#42.827.247/0001-26"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "42.827.631/0001-29",
+      "name": "CAPITÂNIA PREVIDENCE ITAÚ FIE I FIF DA CIC RENDA FIXA CRÉDITO PRIVADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#42.827.631/0001-29"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "42.859.251/0001-76",
+      "name": "ITAÚ FLEXPREV INFLATION EQUITY OPPORTUNITIES FIF CIC MULT - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#42.859.251/0001-76"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "42.860.483/0001-44",
+      "name": "ITAÚ FLEXPREV HIGH YIELD II FIF CIC MULT CRED PRIV - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#42.860.483/0001-44"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "42.860.588/0001-01",
+      "name": "ITAÚ KINEA ÁRTEMIS FIF CIC MULT IE RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58226"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "42.860.617/0001-27",
+      "name": "ITAÚ FLEXPREV S&P500 V40 USD FIF CIC MULT - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#42.860.617/0001-27"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "42.860.699/0001-00",
+      "name": "ARX DENALI RENDA FIXA CRÉDITO PRIVADO IU FIF DA CIC RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#55859"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "42.934.005/0001-31",
+      "name": "CAPITÂNIA REIT PREV ITAÚ FIE I FIF DA CIC MULTIMERCADO CRÉDITO PRIVADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#42.934.005/0001-31"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "43.565.306/0001-06",
+      "name": "KINEA ANDES PREV IVP RENDA FIXA CRÉDITO PRIVADO FIF CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#43.565.306/0001-06"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "43.597.245/0001-50",
+      "name": "OCEANA SELECTION PREVIDENCIÁRIO A IQ FIF CIC EM AÇÕES RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#43.597.245/0001-50"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "43.737.649/0001-00",
+      "name": "SPARTA PREVIDÊNCIA INFLAÇÃO IU FIF DA CIC RENDA FIXA CRÉDITO PRIVADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#43.737.649/0001-00"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "43.759.772/0001-14",
+      "name": "ABSOLUTE HIKER PREV FIE I FIF CIC RENDA FIXA LONGO PRAZO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#43.759.772/0001-14"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "43.761.750/0001-99",
+      "name": "PRINCIPAL CLARITAS LIQUIDEZ FI FINANCEIRO EM COTAS DE FUNDOS DE INVESTIMENTO MULTIMERCADO",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56066"
+      ],
+      "resolution": "wire-beneficiary"
+    },
+    {
+      "cnpj": "43.794.279/0001-35",
+      "name": "VINLAND MACRO A V PREVIDENCIÁRIO FIF DA CLASSE DE INVESTIMENTO EM COTAS MULTIMERCADO RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#43.794.279/0001-35"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "44.025.131/0001-07",
+      "name": "AF HORIZONTE FUNDO DE INVESTIMENTO FINANCEIRO MULTIMERCADO",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56694"
+      ],
+      "resolution": "wire-beneficiary"
+    },
+    {
+      "cnpj": "44.157.044/0001-03",
+      "name": "STUDIO LONG BIAS FUNDO DE INVESTIMENTO FINANCEIRO MULTIMERCADO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56435"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "44.613.740/0001-79",
+      "name": "ARMOR SWORD FUNDO DE INVESTIMENTO FINANCEIRO EM COTAS DE FUNDOS DE INVESTIMENTO MULTIMERCADO",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56666"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "44.643.192/0001-20",
+      "name": "SPARTA MAX 60 FIC DE FI FINANCEIRO RENDA FIXA CRÉDITO PRIV LONGO PRAZO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56134"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "44.870.150/0001-21",
+      "name": "RIZA HIGH GRADE VINTAGE A FIF CIC RF CRED PRIV RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56136"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "44.977.584/0001-25",
+      "name": "VOX DESENVOLVIMENTO SUSTENTÁVEL IS FUNDO DE INVESTIMENTO FINANCEIRO RENDA FIXA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57647"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "45.444.101/0001-90",
+      "name": "ICATU VANGUARDA ABSOLUTO PLUS QUALIFICADO FIF RENDA FIXA CRED PRIV PREVIDENCIÁRIO - RESP LIMITADA",
+      "platforms": [
+        "ONZE"
+      ],
+      "keys": [
+        "ONZE#378f2e7f-5b6e-4f1c-a650-26a706c03f08"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "45.494.393/0001-75",
+      "name": "AZ QUEST ITAÚ SMALL MID CAPS PREV FIE I FIF DA CIC EM AÇÕES RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#45.494.393/0001-75"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "45.511.041/0001-80",
+      "name": "IBIUNA ST PREV ICATU FIF - CI MULTIMERCADO CRÉDITO PRIVADO - RESP LIMITADA",
+      "platforms": [
+        "ONZE"
+      ],
+      "keys": [
+        "ONZE#b676a530-42eb-4a0c-b174-bd3eeb0340a0"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "45.512.215/0001-20",
+      "name": "TIVIO PREVIDÊNCIA LOW VOL ITAÚ I FIF CIC MULTIMERCADO RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#45.512.215/0001-20"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "45.615.765/0001-74",
+      "name": "AZ QUEST ITAU LUCE PREV FIE I FIF DA CIC RENDA FIXA CRÉDITO PRIVADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#45.615.765/0001-74"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "45.615.787/0001-34",
+      "name": "SULAMÉRICA PREV CRÉDITO ESG ITAÚ IS FIF CIC RENDA FIXA CRÉDITO PRIVADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#45.615.787/0001-34"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "45.644.076/0001-98",
+      "name": "IBIUNA I CREDIT PREV ITAÚ FIE FUNDO DE INVESTIMENTO FINANCEIRO DA CIC MULT CRÉD PRIV RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#45.644.076/0001-98"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "45.656.850/0001-80",
+      "name": "IBIUNA I ST PREV ITAÚ FIE FIF CIC MULTIMERCADO CRÉDITO PRIVADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#45.656.850/0001-80"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "45.664.286/0001-48",
+      "name": "HIX PREV IV FIF DA CLASSE DE INVESTIMENTO EM COTAS EM AÇÕES RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#45.664.286/0001-48"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "45.664.343/0001-99",
+      "name": "ABSOLUTE ENDURANCE IVP FIF DA CLASSE DE INVESTIMENTO EM COTAS EM AÇÕES RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#45.664.343/0001-99"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "45.682.579/0001-58",
+      "name": "FRANKLIN LONG BIAS PREV FUNDO DE INVESTIMENTO FINANCEIRO DA CIC MULT RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#45.682.579/0001-58"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "45.682.685/0001-31",
+      "name": "FRANKLIN FVL 70 PREV FIF CIC MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#45.682.685/0001-31"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "45.688.086/0001-25",
+      "name": "VINLAND RENDA FIXA A SEGUROS PREV FIF CIC LONGO PRAZO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#45.688.086/0001-25"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "45.725.974/0001-70",
+      "name": "ITAÚ BTG PACTUAL CRÉDITO CORPORATIVO IPCA PREV FIF DA CIC RENDA FIXA CRÉDITO PRIVADO RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#45.725.974/0001-70"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "45.726.730/0001-02",
+      "name": "SUL AMÉRICA PRESTIGE STRATEGIE ITAÚ FIF CIC RENDA FIXA CRÉDITO PRIVADO RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#45.726.730/0001-02"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "46.098.897/0001-39",
+      "name": "OCCAM LIQUIDEZ FIC DE FI FINANCEIRO RENDA FIXA CRÉDITO PRIV - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56855"
+      ],
+      "resolution": "wire-beneficiary"
+    },
+    {
+      "cnpj": "46.192.463/0001-01",
+      "name": "ICATU VANGUARDA IGARATÉ FC DE FIF MULTIMERCADO PREVIDENCIÁRIO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ONZE"
+      ],
+      "keys": [
+        "ONZE#f3290bf8-744f-4250-9b65-5825cadcb1dc"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "46.438.904/0001-02",
+      "name": "ITAÚ INFLAÇÃO MULTIESTRATÉGIA MULTIMERCADO FIF DA CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56071"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "46.467.208/0001-16",
+      "name": "ICATU VANGUARDA SELEÇÃO FIC DE FUNDOS INCENTIVADOS DE INVESTIMENTO EM INFRA RF LP RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56081"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "46.467.241/0001-46",
+      "name": "ITAÚ FLEXPREV IPCA ACTION II FIF CIC RF LP - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#46.467.241/0001-46"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "46.467.303/0001-10",
+      "name": "ITAÚ FLEXPREV LUMINA PLUS FIF CIC RF LP - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#46.467.303/0001-10"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "46.467.316/0001-99",
+      "name": "ITAÚ LUMINA PLUS RENDA FIXA LONGO PRAZO FUNDO DE INVESTIMENTO FINANCEIRO DA CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56089"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "46.467.345/0001-50",
+      "name": "CARTEIRA ITAÚ ASSET DE INVESTIMENTO MODERADO FIF DA CIC MULTIMERCADO RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56091"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "46.479.577/0001-29",
+      "name": "ITAÚ OPTIMUS LONG BIAS MULTIMERCADO FIF DA CLASSE DE INVESTIMENTO EM COTAS RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56095"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "46.685.502/0001-02",
+      "name": "ICATU VANGUARDA ABSOLUTO II FIF RENDA FIXA CRED PRIV PREVIDENCIÁRIO - RESP LIMITADA",
+      "platforms": [
+        "ONZE"
+      ],
+      "keys": [
+        "ONZE#15444fce-ceaa-4dae-8c64-8d7c66feb9f3"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "46.762.380/0001-00",
+      "name": "ICATU VANGUARDA ABSOLUTO INFLAÇÃO FIF RF CRED PRIV PREVIDENCIÁRIO - RESP LIMITADA",
+      "platforms": [
+        "ONZE"
+      ],
+      "keys": [
+        "ONZE#f696a659-44fa-4239-a9a8-9974fb878fff"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "46.929.688/0001-90",
+      "name": "AZ QUEST BAYES LONG SHORT SISTEMÁTICO FI EM COTAS DE FUNDOS DE INVESTIMENTO MULTIMERCADO",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56781"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "46.997.356/0001-42",
+      "name": "ARX K2 IVP PREVIDENCIÁRIO INFLAÇÃO CURTA FIF CIC RENDA FIXA CRÉD PRIV RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#46.997.356/0001-42"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "46.997.384/0001-60",
+      "name": "SPARTA PREVIDÊNCIA IU FIF DA CIC RENDA FIXA CRÉDITO PRIVADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#46.997.384/0001-60"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "46.997.415/0001-82",
+      "name": "OCEANA LONG BIASED PREV A IQ FIF CIC MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#46.997.415/0001-82"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "47.212.351/0001-20",
+      "name": "ITAÚ PREV VINCI EQUILÍBRIO A FEEDER FIF DA CIC MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#47.212.351/0001-20"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "47.212.424/0001-83",
+      "name": "LEGACY CAPITAL PREVIDENCIÁRIO ITAÚ I FIF DA CIC RENDA FIXA LONGO PRAZO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#47.212.424/0001-83"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "47.212.476/0001-50",
+      "name": "ICATU VANGUARDA ABSOLUTO II IU FIF CIC RF CRÉD PRIV LONGO PRAZO PREVIDENCIÁRIO - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#47.212.476/0001-50"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "47.541.046/0001-81",
+      "name": "VINLAND RENDA FIXA SELEÇÃO FIF CIC LONGO PRAZO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56183"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "47.586.648/0001-55",
+      "name": "OCCAM CRÉDITO CORPORATIVO 30 FIC DE FI FINANCEIRO RENDA FIXA - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56883"
+      ],
+      "resolution": "wire-beneficiary"
+    },
+    {
+      "cnpj": "47.610.970/0001-72",
+      "name": "GALAPAGOS ALBATROZ FUNDO DE INVESTIMENTO FINANCEIRO RENDA FIXA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56950"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "47.611.958/0001-82",
+      "name": "ITAÚ KINEA DAKAR RENDA FIXA FIF CIC LONGO PRAZO RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56206"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "47.612.274/0001-03",
+      "name": "HASHDEX CRYPTO DINÂMICO LONG-BIASED FIC DE FIF MULTIMERCADO LONGO PRAZO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56337"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "47.640.954/0001-22",
+      "name": "VINLAND CRÉDITO ESTRUTURADO FUNDO DE INVESTIMENTO EM DIREITOS CREDITÓRIOS RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58367"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "47.675.857/0001-75",
+      "name": "KINEA PREV DAKAR IVP RENDA FIXA FIF CIC LONGO PRAZO RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#47.675.857/0001-75"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "48.038.196/0001-30",
+      "name": "AZ QUEST AZIMUT EQUITY ALLOCATION TREND FIF DA CIC EM AÇÕES RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56955"
+      ],
+      "resolution": "cnpj-label"
+    },
+    {
+      "cnpj": "48.053.570/0001-76",
+      "name": "BAHIA AM MUTÁ SELEÇÃO FIF CIC MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56250"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "48.068.979/0001-66",
+      "name": "KAPITALO ZETA MERÍDIA SELEÇÃO FIF DA CLASSE DE INVESTIMENTO EM COTAS MULTIMERCADO RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56263"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "48.069.005/0001-05",
+      "name": "ICATU VANGUARDA CRÉDITO PRIVADO LIQUIDEZ SELEÇÃO FIF CIC RENDA FIXA LONGO PRAZO RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56265"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "48.084.411/0001-39",
+      "name": "ABSOLUTE ATENAS SELEÇÃO FIF DA CIC RENDA FIXA CRÉDITO PRIVADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56281"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "48.094.354/0001-79",
+      "name": "ABSOLUTE CRETA SELEÇÃO FIF CIC RENDA FIXA CRÉDITO PRIVADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56283"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "48.094.425/0001-33",
+      "name": "IBIUNA CREDIT SELEÇÃO FIF CIC MULTIMERCADO CRÉDITO PRIVADO RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56285"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "48.107.032/0001-17",
+      "name": "ACE CAPITAL ABSOLUTO SELEÇÃO FIF DA CLASSE DE INVESTIMENTO EM COTAS EM AÇÕES RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56289"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "48.107.062/0001-23",
+      "name": "ACE CAPITAL VANTAGE SELEÇÃO FIF DA CIC RENDA FIXA LONGO PRAZO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56291"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "48.107.119/0001-94",
+      "name": "BTG PACTUAL EXPLORER RENDA FIXA ATIVA SELEÇÃO FIF CIC LONGO PRAZO RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56294"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "48.133.182/0001-03",
+      "name": "KADIMA HIGH VOL SELEÇÃO FIF DA CLASSE DE INVESTIMENTO EM COTAS MULTIMERCADO RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56316"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "48.258.944/0001-90",
+      "name": "DAHLIA PREV TOTAL RETURN 70 A FUNDO DE INVESTIMENTO FINANCEIRO DA CIC MULTIMERCADO RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#48.258.944/0001-90"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "48.359.891/0001-01",
+      "name": "IRIDIUM TITAN FIC DE FI FINANCEIRO RENDA FIXA CRÉDITO PRIVADO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56406"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "49.456.416/0001-08",
+      "name": "VINLAND CRÉDITO A PREV T1 FIF CIC MULT CRÉD PRIV RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#49.456.416/0001-08"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "49.508.091/0001-60",
+      "name": "VENTOR PREVIDÊNCIA ITAÚ FIE I FIF DA CIC MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#49.508.091/0001-60"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "49.559.798/0001-03",
+      "name": "MAR ABSOLUTO SELEÇÃO FIF DA CLASSE DE INVESTIMENTO EM COTAS MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56443"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "49.618.018/0001-40",
+      "name": "IBIUNA EQUITIES SELEÇÃO FIF CIC EM AÇÕES RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56444"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "49.618.243/0001-87",
+      "name": "IBIUNA LONG BIASED SELEÇÃO FUNDO DE INVESTIMENTO FINANCEIRO DA CIC MULTIMERCADO RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56453"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "49.645.368/0001-04",
+      "name": "ABSOLUTE ATENAS PREV ITAÚ FEEDER FIF DA CIC RENDA FIXA CRÉDITO PRIVADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#49.645.368/0001-04"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "49.645.692/0001-14",
+      "name": "ABSOLUTE DELFOS PREV ITAÚ FEEDER FIF CIC RENDA FIXA CRÉDITO PRIVADO RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#49.645.692/0001-14"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "49.706.433/0001-56",
+      "name": "ABSOLUTE HIDRA SELEÇÃO CDI FIF DA CIC INCENTIVADOS DE INV EM INFRA RF CRÉDITO PRIVADO",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56450"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "49.802.985/0001-68",
+      "name": "ITAÚ PRIVATE PREV NTN-B 2028 FIF CIC RENDA FIXA - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#49.802.985/0001-68"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "49.920.157/0001-24",
+      "name": "ITAÚ INDEX BITCOIN USD FIF DA CLASSE DE INVESTIMENTO EM COTAS MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56467"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "49.972.274/0001-31",
+      "name": "PORTO SEGURO IPÊ RF SELEÇÃO FUNDO DE INVESTIMENTO FINANCEIRO DA CIC CRÉD PRIV LP RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56469"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "49.984.812/0001-08",
+      "name": "ORGANON INSTITUCIONAL FUNDO DE INVESTIMENTO FINANCEIRO EM COTAS DE FUNDOS DE INVESTIMENTO EM AÇÕES",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56679"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "50.037.999/0001-11",
+      "name": "PORTO BAOBÁ FI EM COTAS DE FUNDOS INCENTIVADOS DE INVESTIMENTO EM INFRAESTRUTURA RENDA FIXA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57615"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "50.038.992/0001-14",
+      "name": "SPARTA DEB INC ESTRAT FUNDOS INCENTIVADOS DE INVEST FINANCEIRO EM INFRA RENDA FIXA - RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57101"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "50.449.829/0001-44",
+      "name": "KINEA PREV IVP RENDA FIXA ATIVO FIF DA CIC RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#50.449.829/0001-44"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "50.697.486/0001-37",
+      "name": "MAG HIGH GRADE PLUS 30 FIF RENDA FIXA CRÉDITO PRIVADO LONGO PRAZO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57603"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "50.837.591/0001-24",
+      "name": "ITAÚ FLEXPREV JUROS PRÉ TARGET 2027 FIF CIC RF - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#50.837.591/0001-24"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "50.980.211/0001-06",
+      "name": "VINLAND CRÉDITO SELEÇÃO FIF DA CIC MULTIMERCADO CRÉDITO PRIVADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56575"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "51.101.184/0001-17",
+      "name": "NORDEA ALPHA 15 BRL SELEÇÃO MULTIMERCADO INVESTIMENTO NO EXTERIOR FIF CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56585"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "51.225.288/0001-33",
+      "name": "VINLAND RENDA FIXA INFRA SELEÇÃO FC DE FIF INCENTIVADO EM DEB DE INFRA CRÉD PRIV LP RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56604"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "51.250.345/0001-34",
+      "name": "LEGACY CAPITAL RENDA FIXA INFRA SELEÇÃO FC DE FII EM DEB DE INFRA CRÉD PRIV LP RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56610"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "51.252.839/0001-58",
+      "name": "ACE CAPITAL DRIVE SELEÇÃO MULTIMERCADO FIF DA CIC RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56611"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "51.323.039/0001-80",
+      "name": "ABSOLUTE HIKER RENDA FIXA INFRA SELEÇÃO FIF INCENTIVADO EM DEBÊNTURES DE INFRA DA CIC CRED PRIV LP",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56617"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "51.512.988/0001-09",
+      "name": "BTG EXPLORER PREV ITAÚ FUNDO DE INVESTIMENTO FINANCEIRO DA CIC RENDA FIXA LONGO PRAZO RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#51.512.988/0001-09"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "51.752.331/0001-19",
+      "name": "QUANTITAS MALLORCA SELEÇAO FIF DA CLASSE DE INVESTIMENTO EM COTAS MULTIMERCADO RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56676"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "51.820.237/0001-50",
+      "name": "ITAÚ MULTIFUNDOS ORION ÍON SELEÇÃO FIF CIC MULTIMERCADO CRÉDITO PRIVADO - RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56696"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "51.837.280/0001-28",
+      "name": "ITAÚ FLEXPREV GLOBAL DINÂMICO BAIXA VOL MULTIMERCADO FIF DA CIC RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#51.837.280/0001-28"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "51.910.513/0001-70",
+      "name": "ITAÚ FLEXPREV OPTIMUS LONG BIAS FIF CIC MULT - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#51.910.513/0001-70"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "51.926.360/0001-50",
+      "name": "TB SELEÇÃO FIF CIC EM AÇÕES RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56710"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "51.927.928/0001-57",
+      "name": "BAHIA AM A PREVIDENCIARIO ATIVO FIF CIC RF LP - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#51.927.928/0001-57"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "51.973.414/0001-38",
+      "name": "ITAÚ INDEX PRÉ IDKA 3A ALAVANCADO MULTIMERCADO FIF DA CLASSE DE INVESTIMENTO EM COTAS RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56730"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "51.974.284/0001-58",
+      "name": "ITAÚ FLEXPREV LUMINA SOBERANO FIF DA CLASSE DE INVESTIMENTO EM COTAS RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#51.974.284/0001-58"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "51.974.730/0001-24",
+      "name": "ITAÚ LUMINA PLUS DEB INCENTIVADAS FIIF CIC RF CRED PRIV LP RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56731"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "51.983.867/0001-45",
+      "name": "TB PREV A FUNDO DE INVESTIMENTO FINANCEIRO DA CLASSE DE INVESTIMENTO EM COTAS MULT RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#51.983.867/0001-45"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "51.998.694/0001-39",
+      "name": "ITAÚ CRÉDITO BANCÁRIO RENDA FIXA CRÉDITO PRIVADO FIF DA CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56732"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "52.147.657/0001-80",
+      "name": "ITAÚ PREV IMAB + S&P500 BRL FIF CIC MULT - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#52.147.657/0001-80"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "52.151.906/0001-00",
+      "name": "ITAÚ LUMINA SOBERANO RENDA FIXA LONGO PRAZO FUNDO DE INVESTIMENTO FINANCEIRO DA CIC RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56767"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "52.237.908/0001-17",
+      "name": "GENOA CAPITAL ARPA SELEÇÃO FIF DA CLASSE DE INVESTIMENTO EM COTAS MULTIMERCADO RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56784"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "52.273.393/0001-00",
+      "name": "LEGACY CAPITAL CREDIT SELEÇÃO FIF CIC MULTIMERCADO CRÉDITO PRIVADO RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56789"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "52.304.477/0001-64",
+      "name": "ALPHAKEY LONG SHORT FUNDO DE INVESTIMENTO FINANCEIRO EM COTAS DE FUNDOS DE INVESTIMENTO MULTIMERCADO",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57335"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "52.798.293/0001-06",
+      "name": "ITAÚ HUNTER LONG ONLY FIF CIC DE AÇÕES - RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56864"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "53.090.914/0001-57",
+      "name": "REACH ITAÚ PREVIDÊNCIA FIF - CIC AÇÕES - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#53.090.914/0001-57"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "53.273.544/0001-93",
+      "name": "ITAÚ KINEA NEPAL FUNDO DE INVESTIMENTO FINANCEIRO DA CIC MULT CRÉD PRIV - RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56988"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "53.304.657/0001-09",
+      "name": "ITAÚ LUMINA PLATINUM FIF CIC RENDA FIXA LONGO PRAZO - RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#56994"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "53.313.123/0001-49",
+      "name": "ITAÚ PREV MULTIFUNDOS ORION FIF DA CLASSE DE INV EM COTAS MULT - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#53.313.123/0001-49"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "53.390.661/0001-37",
+      "name": "DRYS SHELTER SELEÇÃO FIF CIC RENDA FIXA CRÉDITO PRIVADO LONGO PRAZO RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57019"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "53.643.941/0001-00",
+      "name": "JUBARTE MIGRATION II FUNDO DE INVESTIMENTO EM COTAS DE FUNDOS DE INVESTIMENTO MULTIMERCADO",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57688"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "53.678.015/0001-70",
+      "name": "VINLAND CRÉDITO 10 FUNDO DE INVESTIMENTO EM COTAS DE FUNDOS DE INVESTIMENTO RENDA FIXA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58043"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "53.738.716/0001-57",
+      "name": "ICATU VANGUARDA SELEÇÃO IGARATÉ IU LONG BIASED FIF DA CIC MULTIMERCADO RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57055"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "53.935.306/0001-04",
+      "name": "ITAÚ INFLATION EQUITY OPPORTUNITIES FIF DA CLASSE DE INVESTIMENTO EM COTAS MULT - RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57081"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "54.048.344/0001-08",
+      "name": "KADIMA INTERNATIONAL ALPHA FUNDO DE INVESTIMENTO FINANCEIRO MULTIMERCADO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58520"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "54.090.484/0001-36",
+      "name": "TENAX INFRA SELEÇÃO FUNDO INC INVEST FINAN EM DEB INFRA CIC RF CRED PRIV LP - RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57121"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "54.094.978/0001-99",
+      "name": "SPX SEAHAWK SELEÇÃO FIF INCENTIVADO DEB INFRA CIC RF CRED PRIV LP - RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57122"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "54.200.136/0001-74",
+      "name": "MAR ABSOLUTO PREV FUNDO DE INVESTIMENTO FINANCEIRO CIC MULTIMERCADO -  RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#54.200.136/0001-74"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "54.237.051/0001-60",
+      "name": "JGP DEBÊNTURES INCENTIVADAS JUROS REAIS 60 FIF RENDA FIXA INVEST EM INFRA CRED PRIV RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57343"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "54.278.393/0001-29",
+      "name": "ITAÚ SINFONIA ALL FIF CIC MULT CRÉD PRIV - RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57157"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "54.344.616/0001-09",
+      "name": "OCCAM ATIVO 30 FIC DE FIF RENDA FIXA INVEST EM INFRA CRÉDITO PRIVADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57481"
+      ],
+      "resolution": "wire-beneficiary"
+    },
+    {
+      "cnpj": "54.383.407/0001-74",
+      "name": "ITAÚ KINEA DEBÊNTURES INCENTIVADAS FIF INCENTIVADO INFRA CIC RF CRED PRIV LP - RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57181"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "54.485.055/0001-68",
+      "name": "BRAVE IRON FUNDO DE INVESTIMENTO RENDA FIXA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#59037"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "54.519.122/0001-18",
+      "name": "CLAVE FLEX PREV ITAÚ FIE I FIF CIC MULT - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#54.519.122/0001-18"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "54.715.720/0001-62",
+      "name": "SPX RANGER PREV ITAÚ FIF - CLASSE DE INVESTIMENTO EM COTAS MULT - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#54.715.720/0001-62"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "54.784.279/0001-70",
+      "name": "BB AGRO SELEÇÃO FIF DA CLASSE DE INVESTIMENTO EM COTAS AÇÕES - RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57278"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "54.790.351/0001-72",
+      "name": "ITAÚ FLEXPREV LEGEND FIF CIC RENDA FIXA LONGO PRAZO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#54.790.351/0001-72"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "54.851.094/0001-31",
+      "name": "VERDE AM IPÊ FUNDO DE INVESTIMENTO EM DIREITOS CREDITÓRIOS RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57765"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "54.953.009/0001-46",
+      "name": "LEGACY CAPITAL V10 SELEÇÃO FIF DA CLASSE DE INVESTIMENTO EM COTAS MULTIMERCADO - RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57334"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "54.974.029/0001-01",
+      "name": "PORTO CRÉDITO ITAÚ PREVIDENCIÁRO FIF CLASSE DE INV EM COTAS RENDA FIXA CRED PRIVADO - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#54.974.029/0001-01"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "55.036.882/0001-37",
+      "name": "ITAÚ ALVORADA FIF DA CLASSE DE INVESTIMENTO EM COTAS MULTIMERCADO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57352"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "55.038.873/0001-85",
+      "name": "IBIUNA TOTAL RETURN FIF - CLASSE DE INVESTIMENTO EM AÇÕES - RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#59013"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "55.227.365/0001-45",
+      "name": "DRYS DEBENTURES DE INF SELECAO FUNDO DE INV FIN DA CLASSE DE INV EM COTAS RF CRED PRIV RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57409"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "55.228.297/0001-39",
+      "name": "LEGACY CAPITAL SELEÇÃO FIF INCENTIVADO DEB INFRA CIC RF CRED PRIV - RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57408"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "55.318.040/0001-78",
+      "name": "SOLIS CAPITAL ANTARES PIONEIRO FUNDO DE INVESTIMENTO EM COTAS DE FUNDOS DE INVESTIMENTO EM DIREITOS",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57713"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "55.390.412/0001-77",
+      "name": "ITAÚ SABESP FUNDO DE INVESTIMENTO FINANCEIRO EM AÇÕES RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57432"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "55.686.350/0001-45",
+      "name": "ABSOLUTE DELFOS SELEÇÃO FUNDO DE INVESTIMENTO FINANCEIRO DA CIC MULT CRÉD PRIV LP RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57504"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "55.945.272/0001-56",
+      "name": "MAG FIF RENDA FIXA INVESTIMENTO EM INFRAESTRUTURA CRÉDITO PRIVADO - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58910"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "55.947.668/0001-32",
+      "name": "ITAÚ FLEXPREV BITCOIN V40 FUNDO DE INVESTIMENTO FINANCEIRO DA CIC MULT - RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#55.947.668/0001-32"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "56.070.131/0001-08",
+      "name": "BTG PACTUAL CRÉDITO CORPORATIVO DINÂMICO SELEÇÃO FIF CIC RF CRÉD PRIV RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57559"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "56.093.011/0001-18",
+      "name": "ITAÚ GLOBAL EQUITY SOLUTION HEDGED FIF CIC EM AÇÕES INVESTIMENTO NO EXTERIOR RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57566"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "56.109.203/0001-75",
+      "name": "ITAÚ FLEXPREV SMART AÇÕES BRASIL FIF DA CLASSE DE INVESTIMENTO EM COTAS RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#56.109.203/0001-75"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "56.431.064/0001-00",
+      "name": "REAL INVESTOR ITAÚ VIDA E PREVIDÊNCIA FUNDO DE INVESTIMENTO FINANCEIRO CIC AÇÕES RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#56.431.064/0001-00"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "56.954.817/0001-53",
+      "name": "ITAÚ INDEX US TECH USD FIF CIC EM AÇÕES RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57640"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "57.065.462/0001-04",
+      "name": "ABSOLUTE HIDRA IPCA SELEÇÃO FIF INCENTIVADO EM INFRAESTRUTURA DA CIC RENDA FIXA CRÉD PRIV",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57650"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "57.075.698/0001-21",
+      "name": "VINLAND FIF FUNDO INCENTIVADO EM INVESTIMENTO EM DEB DE INFRA IPCA RF CRED PRIV LP RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58006"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "57.301.287/0001-07",
+      "name": "ITAÚ FUSION HARPIA FIF CIC MULTIMERCADO RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57693"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "57.305.986/0001-25",
+      "name": "PORTOLAN EQUITY BRL SELEÇÃO FIF DA CLASSE DE INVESTIMENTO EM COTAS EM AÇÕES RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57692"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "57.335.243/0001-06",
+      "name": "ITAÚ OMNI FUNDO DE INVESTIMENTO FINANCEIRO DA CLASSE DE INVESTIMENTO EM COTAS MULT RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57708"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "57.566.553/0001-23",
+      "name": "ITAÚ ACTIVE FIX ESG HORIZONTE IS FIF DA CIC MULTIMERCADO CRÉDITO PRIVADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57748"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "57.644.743/0001-11",
+      "name": "ITAÚ FUSION EAGLE FUNDO DE INVESTIMENTO FINANCEIRO CIC MULTIMERCADO RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57764"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "57.653.905/0001-88",
+      "name": "ITAÚ SOLUTIONS RÍGEL FUNDO DE INVESTIMENTO FINANCEIRO DA CIC MULT RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57767"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "57.753.153/0001-27",
+      "name": "ARX HEDGE II CDI SELEÇÃO FIF INCENTIVADO EM INFRA DA CIC RF CRÉD PRIV RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57794"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "58.038.938/0001-80",
+      "name": "TIVIO ALT CREDITO HIGH YIELD 180 FI EM DIREITOS CREDITÓRIOS - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58794"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "58.159.080/0001-02",
+      "name": "ITAÚ SOLUTIONS VEGA FIF DA CLASSE DE INVESTIMENTO EM COTAS MULT RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57858"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "58.242.925/0001-29",
+      "name": "MOAT CAPITAL TOTAL RETURN PREV FIE FIF CIC MULTIMERCADO RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#58.242.925/0001-29"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "58.398.452/0001-53",
+      "name": "V8 MERCURY FUNDO DE INVESTIMENTO FINANCEIRO RENDA FIXA CRÉDITO PRIVADO LONGO PRAZO - RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58752"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "58.456.642/0001-80",
+      "name": "ITAÚ FLEXPREV PRÉ 2029 FIF DA CLASSE DE INVESTIMENTO EM COTAS RENDA FIXA RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#58.456.642/0001-80"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "58.516.787/0001-29",
+      "name": "ABSOLUTE HIDRA CDI PLUS SELEÇÃO FIF INCENTIVADO EM INFRA DA CIC RF CRÉD PRIV RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57922"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "58.528.770/0001-91",
+      "name": "SPX PATRIOT SELEÇÃO FIF DA CLASSE DE INVESTIMENTO EM COTAS EM AÇÕES RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57930"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "58.666.203/0001-00",
+      "name": "ITAÚ DEBÊNTURES INCENTIVADAS IMAB 5 MIX FIF INCENTIVADO DA CIC EM INFRA RF CRED PRIV RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57950"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "58.755.276/0001-60",
+      "name": "ITAÚ DEB INCENTIVADA CDI MIX FIF INCENTIVADO CLASSE INVEST EM COTAS INFRA RF CRÉD PRIV RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#57971"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "58.770.366/0001-20",
+      "name": "ATENA INFRA 45 HEDGE ATIVO FUNDO INCENTIVADO DE INVESTIMENTO FINANCEIRO EM  INFRA RENDA FIXA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58593"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "59.150.192/0001-65",
+      "name": "VISTA MACRO ABSOLUTO SELEÇÃO FIF DA CLASSE DE INVESTIMENTO EM COTAS MULTIMERCADO RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58007"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "59.261.413/0001-72",
+      "name": "ITAÚ FLEXPREV INDEX S&P500® BRL FIF DA CIC MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#59.261.413/0001-72"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "59.645.144/0001-48",
+      "name": "ACE CAPITAL INFRA SELEÇÃO FIF INCENTIVADO EM DEBÊNTURES DE INFRA DA CIC RF CRÉD PRIV RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58060"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "59.779.613/0001-11",
+      "name": "SANTA FÉ AQUARIUS SELEÇÃO FUNDO DE INVESTIMENTO FINANCEIRO DA CLASSE DE INVESTIMENTO EM COTAS MULT",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58068"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "59.825.832/0001-90",
+      "name": "ITAÚ SANTORINI PRIVATE MARKETS FUNDO DE INVESTIMENTO FINANCEIRO MULTIMERCADO RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58082"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "60.228.650/0001-10",
+      "name": "VALORA CDI FIF EM COTAS DE FIF RENDA FIXA INVESTIMENTO EM INFRAESTRUTURA - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58887"
+      ],
+      "resolution": "wire-beneficiary"
+    },
+    {
+      "cnpj": "60.851.421/0001-58",
+      "name": "ARTESANAL CP 90 ION FUNDO DE INVESTIMENTO EM DIREITOS CREDITÓRIOS - RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58766"
+      ],
+      "resolution": "wire-beneficiary"
+    },
+    {
+      "cnpj": "60.916.614/0001-40",
+      "name": "SPX RAPTOR SELEÇÃO FIF CIC MULTIMERCADO CRÉDITO PRIVADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58234"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "61.020.441/0001-40",
+      "name": "TIVIO ALT 90 FUNDO DE INVESTIMENTO EM DIREITOS CREDITÓRIOS RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58793"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "61.169.265/0001-02",
+      "name": "ACE CAPITAL SELEÇÃO MULTICENÁRIOS FEEDER FIF CIC MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#59191"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "61.272.096/0001-31",
+      "name": "GUEPARDO ITAÚ PREVIDÊNCIA FIE I FIF DA CIC MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#61.272.096/0001-31"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "61.425.858/0001-92",
+      "name": "MAG GLOBAL BONDS II FIC DE FI FINANCEIRO MULTIMERCADO INVESTIMENTO NO EXTERIOR - RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58933"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "61.452.703/0001-45",
+      "name": "ITAÚ CASH ENHANCED USD FIF DA CIC MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58298"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "61.735.868/0001-24",
+      "name": "VINLAND CRÉDITO PREV IQ FIF DA CIC MULT CRÉDITO PRIVADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#61.735.868/0001-24"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "61.749.013/0001-52",
+      "name": "SPX CRÉDITO PRIVADO PREV ITAÚ FIE 1 FIF CIC RENDA FIXA RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#61.749.013/0001-52"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "61.806.555/0001-10",
+      "name": "VINLAND RENDA FIXA ATIVO I SELEÇÃO FIF CIC RENDA FIXA LONGO PRAZO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58343"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "61.883.434/0001-71",
+      "name": "ITAÚ DEBENTURES INCENTIVADAS PÓS-FIXADO II FIF INCENTIVADO INFRA DA CIC RF CRED PRIV RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58360"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "61.964.220/0001-20",
+      "name": "ITAÚ DEBÊNTURES INCENTIVADAS IMA-B II FIF INCENTIVADO EM INFRA DA CIC RF CRED PRIV RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58368"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "62.003.988/0001-08",
+      "name": "VINLAND 2 SELEÇÃO FIF INCENTIVADO EM DEBÊNTURES DE INFRA ATIVO DA CIC RF CRED PRIV LP RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58372"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "62.466.700/0001-23",
+      "name": "SULAMÉRICA CRÉDITO ESG ITAÚ SELEÇÃO FIF DA CIC RF CRED PRIV LP INVEST SUSTENTÁVEL RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58488"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "62.475.051/0001-27",
+      "name": "PORTO PAINEIRA CDI SELEÇÃO FIF INCENTIVADO EM DEB DE INFRA DA CIC RF CRED PRIV RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58474"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "62.917.953/0001-76",
+      "name": "ITAÚ DUAL GLOBAL PRIVATE MARKETS FIF MULTIMERCADO CRÉDITO PRIVADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58573"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "62.966.751/0001-14",
+      "name": "ICATU VANGUARDA SELEÇÃO CDI IU FIF INCENTIVADO EM INFRA DA CIC RF LP RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58590"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "62.993.168/0001-00",
+      "name": "SPX SUMMIT MACRO LONG SHORT SELEÇÃO FIF DA CIC MULTIMERCADO CRÉDITO PRIVADO RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58579"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "63.310.241/0001-57",
+      "name": "GENOA CAPITAL SAGRES SELEÇÃO FIF CIC MULTIMERCADO RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58647"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "63.340.876/0001-05",
+      "name": "ITAÚ OPTIMUS LONG SHORT FIF MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58658"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "63.360.433/0001-78",
+      "name": "MAGNUS VALOR SELEÇÃO FIF DA CLASSE DE INVESTIMENTO EM COTAS EM AÇÕES RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58659"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "63.417.954/0001-14",
+      "name": "KINEA ANDES II PREV IVP FIF CIC RENDA FIXA CRÉDITO PRIVADO RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#63.417.954/0001-14"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "63.418.374/0001-41",
+      "name": "VALORA ITAU FIE TIPO I FIF CIC RENDA FIXA CRÉDITO PRIVADO LONGO PRAZO RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#63.418.374/0001-41"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "63.458.367/0001-73",
+      "name": "VINLAND LONG SHORT SELEÇÃO FIF DA CIC MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58676"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "63.678.891/0001-50",
+      "name": "VINLAND LONG SHORT PREV FUNDO DE INVESTIMENTO FINANCEIRO MULTIMERCADO RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#63.678.891/0001-50"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "63.733.556/0001-07",
+      "name": "VERDE AM BETA 60 II FIF CIC EM AÇÕES RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58795"
+      ],
+      "resolution": "sole-registered-fund"
+    },
+    {
+      "cnpj": "63.758.732/0001-65",
+      "name": "ITAÚ PARAGON SELEÇÃO FIF DA CIC MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58720"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "63.804.055/0001-74",
+      "name": "ITAÚ RIZA LOTUS PREV FIF DA CIC RENDA FIXA CRÉDITO PRIVADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#63.804.055/0001-74"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "64.110.504/0001-47",
+      "name": "ICATU VANGUARDA DINÂMICO CDI IU FIF DA CIC MULT CRED PRIV PREV RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#64.110.504/0001-47"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "64.110.837/0001-76",
+      "name": "ICATU VANGUARDA IGARATÉ IU FIF DA CIC MULTIMERCADO PREVIDENCIÁRIO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#64.110.837/0001-76"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "64.111.132/0001-73",
+      "name": "SPX SEAHAWK SELEÇÃO DEBÊNTURES INCENTIVADAS IPCA FIF EM INFRA DA CIC RF CRED PRIV LP RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58810"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "64.201.867/0001-98",
+      "name": "GENOA CAPITAL SAGRES PREV A FIF DA CIC MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#64.201.867/0001-98"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "64.514.056/0001-47",
+      "name": "BTG SYNERGY EQUITY HEDGE SELEÇÃO FIF CIC MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58859"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "64.611.046/0001-20",
+      "name": "BTG SYNERGY LONG BIAS SELEÇÃO FIF DA CLASSE DE INVESTIMENTO EM COTAS AÇÕES RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58880"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "64.632.080/0001-80",
+      "name": "OCEANA SELECTION SELEÇÃO FUNDO DE INVESTIMENTO FINANCEIRO DA CIC EM AÇÕES RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58878"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "64.963.538/0001-84",
+      "name": "ABSOLUTE HIDRA PRÉ 2 ANOS SELEÇÃO FIIF EM INFRA DA CIC RF CRED PRIV RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58915"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "64.969.833/0001-48",
+      "name": "ATIT PREV FIE I FIF CIC EM AÇÕES RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#64.969.833/0001-48"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "65.789.619/0001-72",
+      "name": "ITAÚ SELEÇÃO IBIUNA RF ATIVO FIIF EM INFRAESTRUTURA DA CIC RF RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#58989"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "66.416.698/0001-39",
+      "name": "ITAÚ FLEXPREV CRÉDITO BANCÁRIO FIF CIC RENDA FIXA CRÉDITO PRIVADO RESP LIMITADA",
+      "platforms": [
+        "ITAU_PREV"
+      ],
+      "keys": [
+        "ITAU_PREV#66.416.698/0001-39"
+      ],
+      "resolution": "opin-published"
+    },
+    {
+      "cnpj": "66.427.257/0001-32",
+      "name": "ITAÚ SELEÇÃO ACE CAPITAL ALPHASYS FIF CIC MULTIMERCADO RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#59082"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "66.917.820/0001-50",
+      "name": "KINEA URANO SELEÇÃO SCC FIF CIC MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#59137"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "66.918.548/0001-23",
+      "name": "ITAÚ SELEÇÃO KINEA ATACAMA FIF CIC RENDA FIXA LONGO PRAZO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#59138"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "67.041.805/0001-54",
+      "name": "ITAÚ OPTIMUS HYPERION FIF CIC MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#59142"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "67.250.971/0001-60",
+      "name": "ITAÚ INDEX DIVO11 FIF CIC EM AÇÕES RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#59180"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "67.317.886/0001-72",
+      "name": "ICATU VANGUARDA SELEÇÃO DINÂMICO CDI IU FIF CIC MULTIMERCADO RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#59187"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "67.318.392/0001-02",
+      "name": "SULAMERICA INFRA CDI ATIVO SELEÇÃO FIF INCENTIVADO EM DEBS DE INFRA CIC RF CRED PRIV RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#59190"
+      ],
+      "resolution": "class-label"
+    },
+    {
+      "cnpj": "67.623.586/0001-11",
+      "name": "ITAÚ SELEÇÃO KAPITALO NW3 PLUS FIF CIC MULTIMERCADO RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#59205"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "67.623.600/0001-87",
+      "name": "JGP EQUITY HEDGE SELEÇÃO FIF CIC MULT RESPONSABILIDADE LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#59200"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "67.749.975/0001-98",
+      "name": "ITAÚ SELEÇÃO TENAX GLOBAL EQUITIES MULTISTRATEGY FIF CIC MULTIMERCADO RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#59219"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "67.750.488/0001-45",
+      "name": "ITAÚ SELEÇÃO KAPITALO STRATA LOW VOL FIF CIC MULTIMERCADO RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#59218"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "68.358.170/0001-86",
+      "name": "CAPITÂNIA INFRA 30 CDI SELEÇÃO FIF INCENTIVADO EM INFRAESTRUTURA DA CIC RENDA FIXA RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#59278"
+      ],
+      "resolution": "page-header"
+    },
+    {
+      "cnpj": "68.725.675/0001-31",
+      "name": "ITAÚ DEBÊNTURES INCENTIVADAS PRÉ IDKA 3A FIF CIC INFRA RF LP CRED PRIV RESP LIMITADA",
+      "platforms": [
+        "ITAU"
+      ],
+      "keys": [
+        "ITAU#59340"
+      ],
+      "resolution": "page-header"
+    }
+  ]
+}

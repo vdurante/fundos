@@ -1,139 +1,521 @@
 #!/usr/bin/env node
 /**
- * Fetch an Itau retail fund's commercial document, trying every known source.
+ * Resolve every Itau retail fund's commercial document, cache it, and extract its CNPJ.
  *
- * Sources, in order:
- *   1. S3   laminascomerciais-qh9.cloud.itau.com.br/<id>_agencia.pdf  (follows redirects)
- *   2. ASMX ww16.itau.com.br/ws/consultalaminageral.asmx/ConsultaDocumentosFundo
- *           DOCFDO=COMAG (lamina) -> REGUL (regulamento) -> PROSP (prospecto)
+ * Two independently cached stages, so a replay costs nothing:
+ *   fetch  cascade S3 -> ASMX COMAG -> REGUL -> PROSP, blob to .cache, metadata to manifest
+ *   parse  pdf-parse text -> CNPJ, keyed by the blob's sha256 so an unchanged PDF is skipped
  *
- * Three findings this encodes, each of which cost a wrong measurement:
- *   - S3 answers 200 text/html when a fund has no lamina, so the content type
- *     must be checked. Status alone reports all 467 as present.
- *   - ASMX is behind an F5 WAF that rejects Python's TLS fingerprint with 403
- *     regardless of headers. Node passes with no headers at all; curl passes only
- *     with User-Agent AND Accept-Encoding. That is why this script is not Python.
- *   - A 200 application/pdf from COMAG is NOT proof of a lamina: for some funds it
- *     returns a monthly report or a presentation. Only the CNPJ parse can confirm.
+ * Findings this encodes, each of which cost a wrong measurement:
+ *   - S3 answers 200 text/html when a fund has no lamina, so the content type must be
+ *     checked. Status alone reports all 467 as present.
+ *   - ASMX sits behind an F5 WAF that rejects Python's TLS fingerprint with 403 regardless
+ *     of headers. Node passes with no headers at all. That is why this is not Python, and
+ *     why a 403 is checked against a known-good control before being recorded as absence.
+ *   - A 200 application/pdf from COMAG is NOT proof of a lamina: for some funds it serves a
+ *     monthly report or a presentation. Only the CNPJ parse decides.
+ *   - The PDFs are rebuilt daily, so the cache carries last-modified and --max-age rather
+ *     than assuming a blob stays current.
  *
- * Usage: node scripts/fetch-itau-documents.js [--ids 1,2,3] [--all] [--out DIR]
+ * Usage:
+ *   node scripts/fetch-itau-documents.js                  # all 467, cache-first
+ *   node scripts/fetch-itau-documents.js --ids 52678
+ *   node scripts/fetch-itau-documents.js --retry-missing  # re-probe only the unresolved
+ *   node scripts/fetch-itau-documents.js --max-age 30     # refetch blobs older than N days
+ *   node scripts/fetch-itau-documents.js --refresh        # ignore the cache entirely
+ *   node scripts/fetch-itau-documents.js --parse-only
  */
+'use strict';
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 const S3 = 'https://laminascomerciais-qh9.cloud.itau.com.br';
 const ASMX =
   'https://ww16.itau.com.br/ws/consultalaminageral.asmx/ConsultaDocumentosFundo';
-const DOC_TYPES = ['COMAG', 'REGUL', 'PROSP'];
+const ASMX_DOC_TYPES = ['COMAG', 'REGUL', 'PROSP'];
+const CONTROL_ID = 52678;
+const CONTROL_COOLDOWN_MS = 30000;
 const LAMINA_MAX_BYTES = 220000;
+/**
+ * Bump whenever resolveCnpj changes. Cached blobs are then re-parsed instead of keeping a
+ * verdict the current rule would not produce.
+ */
+const PARSER_VERSION = 3;
 
 const REPO = path.dirname(__dirname);
-const DATA = path.join(REPO, 'src', 'corretoras', 'itau-rentabilidade.json');
-const MISSING = path.join(REPO, 'src', 'corretoras', 'itau-lamina-missing.json');
+const FUNDS = path.join(REPO, 'src', 'corretoras', 'itau-rentabilidade.json');
+const CACHE = path.join(REPO, '.cache', 'itau-documents');
+const BLOBS = path.join(CACHE, 'pdf');
+const MANIFEST = path.join(CACHE, 'manifest.json');
+const OUT = path.join(REPO, 'src', 'corretoras', 'itau-documents.json');
+const {OPERATING} = require('./lib/cvm-registry');
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+const sha256 = buf => crypto.createHash('sha256').update(buf).digest('hex');
+
+/* ---------------------------------------------------------------- CNPJ ---- */
+
+const CNPJ_RE = /\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}/g;
+/** A regulamento states the investable vehicle under this exact label. */
+const CLASS_LABEL_RE = /CNPJ\s+DA\s+CLASSE\s*[:nº°]*\s*(\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2})/i;
+/** How far into the text a page-header CNPJ can sit; beyond this it is body text. */
+const HEADER_WINDOW = 300;
+
+function validCnpj(formatted) {
+  const d = formatted.replace(/\D/g, '');
+  if (d.length !== 14 || /^(\d)\1{13}$/.test(d)) return false;
+  const check = len => {
+    let sum = 0;
+    let w = len - 7;
+    for (let i = 0; i < len; i++) {
+      sum += Number(d[i]) * w--;
+      if (w < 2) w = 9;
+    }
+    const r = sum % 11;
+    return r < 2 ? 0 : 11 - r;
+  };
+  return check(12) === Number(d[12]) && check(13) === Number(d[13]);
+}
+
+/**
+ * Decide which CNPJ in a document is the fund's own.
+ *
+ * A document names several: the fund, its administrator, its custodian, its manager, and
+ * for a feeder its master. Excluding counterparties by name was tried and is unbounded —
+ * the CVM registry does it exactly instead, because an administrator DTVM is not a
+ * registered fund. Measured on 452 documents: the page-header CNPJ resolves in the
+ * registry 312 of 314 times, and the two that do not are precisely the two documents whose
+ * only CNPJ is the administrator's.
+ */
+function resolveCnpj(text, registry) {
+  const matches = [...text.matchAll(CNPJ_RE)];
+  const distinct = [...new Set(matches.map(m => m[0]))].filter(validCnpj);
+  const resolving = distinct.filter(c => registry.has(c));
+  const note = c => {
+    const r = registry.lookup(c);
+    return {cnpj: c, nomeOficial: r.name, situacao: r.situacao, isClass: r.isClass};
+  };
+
+  if (!distinct.length) return {cnpj: null, confidence: 'no-cnpj-in-document', distinct};
+  if (!resolving.length) {
+    return {cnpj: null, confidence: 'no-cnpj-is-a-registered-fund', distinct};
+  }
+
+  // 0. a regulamento labels the investable class explicitly
+  const labelled = CLASS_LABEL_RE.exec(text);
+  if (labelled && registry.has(labelled[1])) {
+    return {...note(labelled[1]), confidence: 'class-label', distinct, resolving};
+  }
+
+  // 1. the repeated page header, which sits beside the fund's own name
+  const header = matches.find(m => m.index < HEADER_WINDOW);
+  if (header && resolving.includes(header[0])) {
+    return {...note(header[0]), confidence: 'page-header', distinct, resolving};
+  }
+
+  // 2. only one of the document's CNPJs is a registered fund at all
+  if (resolving.length === 1) {
+    return {...note(resolving[0]), confidence: 'sole-registered-fund', distinct, resolving};
+  }
+
+  // 3. narrow to the investable vehicle: a class, and not a master
+  let pool = resolving;
+  const classes = pool.filter(c => registry.lookup(c).isClass);
+  if (classes.length) pool = classes;
+  const nonMaster = pool.filter(c => !/\bMASTER\b/i.test(registry.lookup(c).name));
+  if (nonMaster.length) pool = nonMaster;
+  if (pool.length === 1) {
+    return {...note(pool[0]), confidence: 'class-not-master', distinct, resolving};
+  }
+
+  return {cnpj: null, confidence: 'ambiguous', distinct, resolving, narrowed: pool};
+}
+
+/* --------------------------------------------------------------- fetch ---- */
 
 async function get(url) {
   try {
     const res = await fetch(url, {redirect: 'follow'});
-    const buf = Buffer.from(await res.arrayBuffer());
+    const body = Buffer.from(await res.arrayBuffer());
     return {
       status: res.status,
       contentType: (res.headers.get('content-type') || '').split(';')[0],
-      body: buf,
+      lastModified: res.headers.get('last-modified') || null,
+      redirects: res.redirected ? 1 : 0,
+      body,
     };
   } catch (e) {
-    return {status: 0, contentType: e.message, body: Buffer.alloc(0)};
+    return {status: 0, contentType: `error: ${e.message}`, body: Buffer.alloc(0)};
   }
 }
 
 const isPdf = r =>
   r.status === 200 &&
   r.contentType === 'application/pdf' &&
-  r.body.subarray(0, 5).toString() === '%PDF-';
+  r.body.subarray(0, 5).toString('latin1') === '%PDF-';
 
-function shape(body) {
-  const head = body.subarray(0, Math.min(body.length, 4096)).toString('latin1');
-  const title = /\/Title\s*\(([^)]{0,60})\)/.exec(head);
-  return {
-    bytes: body.length,
-    smallEnoughForLamina: body.length < LAMINA_MAX_BYTES,
-    title: title ? title[1] : null,
-  };
+/** A rejection of this client, which says nothing about whether the document exists. */
+const isRejection = a => a.status === 403 || a.status === 429 || a.status >= 500;
+
+/** True when the WAF is rejecting this client rather than the fund being absent. */
+async function controlIsBlocked() {
+  const r = await get(`${ASMX}?canal=01&CDFDO=${CONTROL_ID}&DOCFDO=COMAG`);
+  return !isPdf(r);
 }
 
-async function resolve(id) {
-  let r = await get(`${S3}/${id}_agencia.pdf`);
-  if (isPdf(r)) return {source: 's3', docType: 'COMAG', ...shape(r.body), body: r.body};
-  for (const doc of DOC_TYPES) {
-    r = await get(`${ASMX}?canal=01&CDFDO=${id}&DOCFDO=${doc}`);
-    if (isPdf(r)) {
-      return {source: 'asmx', docType: doc, ...shape(r.body), body: r.body};
-    }
-    await sleep(400);
+async function resolveOne(id, delayMs) {
+  const attempts = [];
+
+  const s3Url = `${S3}/${id}_agencia.pdf`;
+  let r = await get(s3Url);
+  attempts.push({url: s3Url, status: r.status, contentType: r.contentType});
+  if (isPdf(r)) return {source: 's3', docType: 'COMAG', url: s3Url, res: r, attempts};
+
+  for (const doc of ASMX_DOC_TYPES) {
+    await sleep(delayMs);
+    const url = `${ASMX}?canal=01&CDFDO=${id}&DOCFDO=${doc}`;
+    r = await get(url);
+    attempts.push({url, status: r.status, contentType: r.contentType});
+    if (isPdf(r)) return {source: 'asmx', docType: doc, url, res: r, attempts};
   }
-  return {source: null, docType: null, bytes: 0, body: Buffer.alloc(0)};
+  return {source: null, docType: null, url: null, res: null, attempts};
 }
+
+/**
+ * absent  every probe gave a definitive answer and none was a document
+ * blocked at least one probe was refused, so absence is NOT established
+ */
+const classify = attempts =>
+  attempts.some(isRejection) ? 'blocked' : 'absent';
+
+/** Backfill `absence` onto entries written before it was recorded. */
+function backfillAbsence(manifest) {
+  let n = 0;
+  for (const e of Object.values(manifest)) {
+    if (!e.source && !e.absence && Array.isArray(e.attempts)) {
+      e.absence = classify(e.attempts);
+      n++;
+    }
+  }
+  return n;
+}
+
+/* --------------------------------------------------------------- parse ---- */
+
+async function extract(buf) {
+  const {PDFParse} = require('pdf-parse');
+  const parser = new PDFParse({data: new Uint8Array(buf)});
+  try {
+    const out = await parser.getText();
+    const text = out.text.replace(/\s+/g, ' ').trim();
+    const firstLine = out.text
+      .split('\n')
+      .map(s => s.trim())
+      .find(s => s.length > 8);
+    return {
+      text,
+      pages: out.pages ? out.pages.length : out.total || null,
+      firstLine: firstLine ? firstLine.slice(0, 120) : null,
+    };
+  } finally {
+    await parser.destroy();
+  }
+}
+
+/* ------------------------------------------------------------ manifest ---- */
+
+function loadManifest() {
+  if (!fs.existsSync(MANIFEST)) return {};
+  try {
+    return JSON.parse(fs.readFileSync(MANIFEST, 'utf8'));
+  } catch (e) {
+    console.error(`manifest unreadable (${e.message}); starting empty`);
+    return {};
+  }
+}
+
+function saveJson(file, data) {
+  const tmp = `${file}.tmp`;
+  fs.writeFileSync(tmp, JSON.stringify(data, null, 2) + '\n');
+  fs.renameSync(tmp, file);
+}
+
+const ageDays = iso => (Date.now() - Date.parse(iso)) / 86400000;
+
+function needsFetch(entry, opts) {
+  if (!entry) return true;
+  if (opts.refresh) return true;
+  // `blocked` is not an answer: the WAF refused us, so always probe again.
+  if (entry.absence === 'blocked') return true;
+  if (!entry.source) return !!opts.retryMissing;
+  if (opts.maxAge != null && ageDays(entry.fetchedAt) > opts.maxAge) return true;
+  return !fs.existsSync(path.join(BLOBS, `${entry.codigoProduto}.pdf`));
+}
+
+/* ---------------------------------------------------------------- main ---- */
 
 async function main() {
   const argv = process.argv.slice(2);
-  const arg = n => {
+  const flag = n => argv.includes(n);
+  const val = n => {
     const i = argv.indexOf(n);
     return i === -1 ? undefined : argv[i + 1];
   };
-  const outDir = arg('--out');
-  const ids = arg('--ids');
+  const opts = {
+    refresh: flag('--refresh'),
+    retryMissing: flag('--retry-missing'),
+    maxAge: val('--max-age') != null ? Number(val('--max-age')) : null,
+    concurrency: Number(val('--concurrency') || 4),
+    delay: Number(val('--delay') || 250),
+    fetchOnly: flag('--fetch-only'),
+    parseOnly: flag('--parse-only'),
+    refreshRegistry: flag('--refresh-registry'),
+  };
 
-  let funds = JSON.parse(fs.readFileSync(DATA, 'utf8'));
-  if (ids) {
-    const want = new Set(ids.split(',').map(Number));
-    funds = funds.filter(f => want.has(f.codigoProduto));
-  } else if (!argv.includes('--all')) {
-    const want = new Set(
-      JSON.parse(fs.readFileSync(MISSING, 'utf8')).map(r => r.codigoProduto)
-    );
-    funds = funds.filter(f => want.has(f.codigoProduto));
+  fs.mkdirSync(BLOBS, {recursive: true});
+  const manifest = loadManifest();
+  const backfilled = backfillAbsence(manifest);
+  if (backfilled) {
+    console.log(`backfilled absence classification on ${backfilled} entries`);
   }
-  if (outDir) fs.mkdirSync(outDir, {recursive: true});
 
-  const rows = [];
-  for (const f of funds) {
-    const r = await resolve(f.codigoProduto);
-    rows.push({
-      codigoProduto: f.codigoProduto,
-      nomeComercial: f.nomeComercial,
-      source: r.source,
-      docType: r.docType,
-      bytes: r.bytes,
-      smallEnoughForLamina: r.smallEnoughForLamina,
-      title: r.title,
-    });
-    if (outDir && r.body.length) {
-      fs.writeFileSync(path.join(outDir, `${f.codigoProduto}.pdf`), r.body);
-    }
-    const tag = !r.source ? '      ' : r.smallEnoughForLamina ? 'lamina' : 'OTHER ';
+  const all = JSON.parse(fs.readFileSync(FUNDS, 'utf8'));
+  const ids = val('--ids');
+  const funds = ids
+    ? all.filter(f => new Set(ids.split(',').map(Number)).has(f.codigoProduto))
+    : all;
+
+  /* ---- stage 1: fetch ---- */
+  let fetched = 0;
+  let cached = 0;
+  let blocked = false;
+
+  if (!opts.parseOnly) {
+    const todo = funds.filter(f => needsFetch(manifest[f.codigoProduto], opts));
+    cached = funds.length - todo.length;
     console.log(
-      `  ${f.codigoProduto}  ${(r.source || '--').padEnd(5)} ` +
-        `${(r.docType || '-').padEnd(6)} ${tag} ${String(r.bytes).padStart(9)}b  ` +
-        `${f.nomeComercial.slice(0, 44)}${r.title ? `  [${r.title}]` : ''}`
+      `fetch: ${todo.length} to probe, ${cached} served from cache (${funds.length} funds)`
     );
-    await sleep(400);
+
+    let cursor = 0;
+    let lastControlAt = 0;
+    const worker = async () => {
+      while (cursor < todo.length && !blocked) {
+        const f = todo[cursor++];
+        const id = f.codigoProduto;
+        const r = await resolveOne(id, opts.delay);
+
+        if (!r.source) {
+          const asmxRejected = r.attempts.some(
+            a => a.url.includes('asmx') && a.status === 403
+          );
+          // Check the control on the FIRST rejection, not every tenth: a modulo
+          // gate lets up to N-1 funds be written while the WAF is already
+          // blocking us. Re-checks are rate-limited rather than sampled.
+          if (asmxRejected && Date.now() - lastControlAt > CONTROL_COOLDOWN_MS) {
+            lastControlAt = Date.now();
+            if (await controlIsBlocked()) {
+              blocked = true;
+              console.error(
+                `\nABORT: control ${CONTROL_ID} also rejected — the WAF is blocking this ` +
+                  `client, so these 403s are not fund absences. Nothing recorded as missing.`
+              );
+              return;
+            }
+          }
+        }
+
+        const prev = manifest[id] || {};
+        const entry = {
+          codigoProduto: id,
+          nomeComercial: f.nomeComercial,
+          source: r.source,
+          docType: r.docType,
+          url: r.url,
+          status: r.res ? r.res.status : null,
+          contentType: r.res ? r.res.contentType : null,
+          bytes: r.res ? r.res.body.length : 0,
+          lastModified: r.res ? r.res.lastModified : null,
+          fetchedAt: new Date().toISOString(),
+          attempts: r.source ? undefined : r.attempts,
+          absence: r.source ? undefined : classify(r.attempts),
+          // parse fields survive a refetch; invalidated below when the blob changes
+          sha256: prev.sha256,
+          cnpj: prev.cnpj,
+          cnpjCandidates: prev.cnpjCandidates,
+          cnpjConfidence: prev.cnpjConfidence,
+          pages: prev.pages,
+          textChars: prev.textChars,
+          docFirstLine: prev.docFirstLine,
+          parsedSha256: prev.parsedSha256,
+        };
+
+        if (r.source) {
+          const digest = sha256(r.res.body);
+          fs.writeFileSync(path.join(BLOBS, `${id}.pdf`), r.res.body);
+          entry.sha256 = digest;
+          entry.looksLikeLamina = r.res.body.length < LAMINA_MAX_BYTES;
+          fetched++;
+        }
+        manifest[id] = entry;
+        if (fetched % 25 === 0) saveJson(MANIFEST, manifest);
+        process.stdout.write(
+          `  ${id}  ${(r.source || '--').padEnd(4)} ${(r.docType || '-').padEnd(5)} ` +
+            `${String(entry.bytes).padStart(8)}b  ${f.nomeComercial.slice(0, 48)}\n`
+        );
+        await sleep(opts.delay);
+      }
+    };
+    await Promise.all(
+      Array.from({length: Math.min(opts.concurrency, Math.max(todo.length, 1))}, worker)
+    );
+    saveJson(MANIFEST, manifest);
   }
 
-  const byKey = {};
-  for (const r of rows) {
-    const k = `${r.source}/${r.docType}`;
-    byKey[k] = (byKey[k] || 0) + 1;
+  if (blocked) process.exit(2);
+
+  /* ---- stage 2: parse ---- */
+  let parsed = 0;
+  let parseSkipped = 0;
+  if (!opts.fetchOnly) {
+    const {loadRegistry} = require('./lib/cvm-registry');
+    const registry = await loadRegistry({refresh: opts.refreshRegistry});
+    console.log(
+      `registry: ${registry.size} CNPJs (${registry.classes} classes, ` +
+        `${registry.funds} funds), cache ${registry.ageDays.toFixed(1)}d old`
+    );
+
+    const targets = funds
+      .map(f => manifest[f.codigoProduto])
+      .filter(e => e && e.source && e.sha256);
+    for (const e of targets) {
+      if (e.parsedSha256 === e.sha256 && e.parserVersion === PARSER_VERSION && !opts.refresh) {
+        parseSkipped++;
+        continue;
+      }
+      const file = path.join(BLOBS, `${e.codigoProduto}.pdf`);
+      if (!fs.existsSync(file)) continue;
+      try {
+        const {text, pages, firstLine} = await extract(fs.readFileSync(file));
+        const r = resolveCnpj(text, registry);
+        e.pages = pages;
+        e.textChars = text.length;
+        e.docFirstLine = firstLine;
+        e.cnpj = r.cnpj || null;
+        e.nomeOficial = r.nomeOficial || null;
+        e.situacao = r.situacao || null;
+        e.cnpjConfidence = r.confidence;
+        e.cnpjDistinct = r.distinct;
+        e.cnpjResolving = r.resolving && r.resolving.length > 1 ? r.resolving : undefined;
+        e.parseError = undefined;
+        e.parsedSha256 = e.sha256;
+        e.parserVersion = PARSER_VERSION;
+        parsed++;
+      } catch (err) {
+        e.parseError = err.message;
+        e.parsedSha256 = e.sha256;
+        e.parserVersion = PARSER_VERSION;
+      }
+      if (parsed % 25 === 0) saveJson(MANIFEST, manifest);
+    }
+    saveJson(MANIFEST, manifest);
+    console.log(`parse: ${parsed} parsed, ${parseSkipped} unchanged and skipped`);
   }
-  const resolved = rows.filter(r => r.source);
-  console.log(`\nresolved ${resolved.length} of ${rows.length}`);
-  console.log('by source/type:', byKey);
-  console.log(
-    'small enough to be a lâmina:',
-    resolved.filter(r => r.smallEnoughForLamina).length
-  );
-  const none = rows.filter(r => !r.source).map(r => r.codigoProduto);
-  if (none.length) console.log(`no document at all (${none.length}):`, none.join(', '));
+
+  /* ---- derived output + assertions ---- */
+  const rows = funds
+    .map(f => manifest[f.codigoProduto])
+    .filter(Boolean)
+    .map(e => ({
+      codigoProduto: e.codigoProduto,
+      nomeComercial: e.nomeComercial,
+      cnpj: e.cnpj || null,
+      nomeOficial: e.nomeOficial || null,
+      situacao: e.situacao || null,
+      cnpjConfidence: e.cnpjConfidence || null,
+      cnpjCandidates: e.cnpj ? undefined : e.cnpjDistinct,
+      source: e.source,
+      absence: e.source ? undefined : e.absence || null,
+      docType: e.docType,
+      bytes: e.bytes,
+      pages: e.pages ?? null,
+      docFirstLine: e.docFirstLine || null,
+      lastModified: e.lastModified,
+    }));
+  if (!ids) saveJson(OUT, rows);
+
+  const withDoc = rows.filter(r => r.source);
+  const withCnpj = rows.filter(r => r.cnpj);
+  const dup = {};
+  for (const r of withCnpj) (dup[r.cnpj] = dup[r.cnpj] || []).push(r.codigoProduto);
+  const collisions = Object.entries(dup).filter(([, v]) => v.length > 1);
+
+  console.log(`\nfunds              ${rows.length}`);
+  console.log(`document resolved  ${withDoc.length}`);
+  console.log(`CNPJ extracted     ${withCnpj.length}`);
+  const byConf = {};
+  for (const r of rows) {
+    if (r.cnpjConfidence) byConf[r.cnpjConfidence] = (byConf[r.cnpjConfidence] || 0) + 1;
+  }
+  console.log('by confidence     ', byConf);
+  const bySrc = {};
+  for (const r of withDoc) {
+    const k = `${r.source}/${r.docType}`;
+    bySrc[k] = (bySrc[k] || 0) + 1;
+  }
+  console.log('by source/type    ', bySrc);
+  const notOperating = withCnpj.filter(r => r.situacao && r.situacao !== OPERATING);
+  console.log(`registry status    ${withCnpj.length - notOperating.length} operating`);
+  if (notOperating.length) {
+    console.log(
+      `  NOT operating (${notOperating.length}): ` +
+        notOperating.map(r => `${r.codigoProduto} ${r.situacao}`).join(', ')
+    );
+  }
+  if (collisions.length) {
+    console.log(`\nCNPJ shared by >1 fund id (${collisions.length}):`);
+    for (const [c, v] of collisions) console.log(`  ${c}  ${v.join(', ')}`);
+  }
+  const noDoc = rows.filter(r => !r.source);
+  const absent = noDoc.filter(r => r.absence === 'absent');
+  const blockedRows = noDoc.filter(r => r.absence !== 'absent');
+  if (absent.length) {
+    console.log(
+      `\nno document, established (${absent.length}): ` +
+        absent.map(r => r.codigoProduto).join(', ')
+    );
+  }
+  if (blockedRows.length) {
+    console.log(
+      `\nUNRESOLVED — the WAF refused us, absence NOT established (${blockedRows.length}): ` +
+        blockedRows.map(r => r.codigoProduto).join(', ')
+    );
+    console.log('  re-run later; these are retried automatically.');
+  }
+  const noCnpj = rows.filter(r => r.source && !r.cnpj);
+  if (noCnpj.length) {
+    console.log(`document but no CNPJ (${noCnpj.length}):`);
+    for (const r of noCnpj) {
+      console.log(
+        `  ${r.codigoProduto}  ${r.cnpjConfidence.padEnd(30)} ${r.nomeComercial.slice(0, 40)}`
+      );
+    }
+  }
+
+  if (!ids) {
+    const FLOOR_DOCS = 400;
+    const FLOOR_CNPJ = 380;
+    if (withDoc.length < FLOOR_DOCS || withCnpj.length < FLOOR_CNPJ) {
+      console.error(
+        `\nASSERTION FAILED: ${withDoc.length} documents (floor ${FLOOR_DOCS}), ` +
+          `${withCnpj.length} CNPJs (floor ${FLOOR_CNPJ}). Treat this run as a ` +
+          `collection failure, not as funds losing their documents.`
+      );
+      process.exit(1);
+    }
+  }
+  console.log(`\ncache ${CACHE}\nderived ${OUT}`);
 }
 
 main();

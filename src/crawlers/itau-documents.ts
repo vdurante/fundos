@@ -25,12 +25,10 @@
  *   node src/crawlers/itau-documents.js --refresh        # ignore the cache entirely
  *   node src/crawlers/itau-documents.js --parse-only
  */
-'use strict';
-
-const {isMaster, validCnpj} = require('../lib/cnpj');
-const fs = require('fs');
-const path = require('path');
-const crypto = require('crypto');
+import {isMaster, validCnpj} from '../lib/cnpj';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as crypto from 'crypto';
 
 const S3 = 'https://laminascomerciais-qh9.cloud.itau.com.br';
 const ASMX =
@@ -45,16 +43,17 @@ const LAMINA_MAX_BYTES = 220000;
  */
 const PARSER_VERSION = 5;
 
-const REPO = path.resolve(__dirname, '..', '..');
+import {REPO} from '../lib/paths';
 const FUNDS = path.join(REPO, 'src', 'corretoras', 'itau-rentabilidade.json');
 const CACHE = path.join(REPO, '.cache', 'itau-documents');
 const BLOBS = path.join(CACHE, 'pdf');
 const MANIFEST = path.join(CACHE, 'manifest.json');
 const OUT = path.join(REPO, 'src', 'corretoras', 'itau-documents.json');
-const {OPERATING} = require('../lib/cvm-registry');
+import {OPERATING} from '../lib/cvm-registry';
 
-const sleep = ms => new Promise(r => setTimeout(r, ms));
-const sha256 = buf => crypto.createHash('sha256').update(buf).digest('hex');
+const sleep = (ms: any) => new Promise(r => setTimeout(r, ms));
+const sha256 = (buf: any) =>
+  crypto.createHash('sha256').update(buf).digest('hex');
 
 /* ---------------------------------------------------------------- CNPJ ---- */
 
@@ -68,7 +67,7 @@ const sha256 = buf => crypto.createHash('sha256').update(buf).digest('hex');
  */
 const CNPJ_RE =
   /(\d{2})\s*\.\s*(\d{3})\s*\.\s*(\d{3})\s*\/\s*(\d{4})\s*-\s*(\d{2})/g;
-const canon = m => `${m[1]}.${m[2]}.${m[3]}/${m[4]}-${m[5]}`;
+const canon = (m: any) => `${m[1]}.${m[2]}.${m[3]}/${m[4]}-${m[5]}`;
 /** A regulamento states the investable vehicle under this exact label. */
 const CLASS_LABEL_RE =
   /CNPJ\s+DA\s+CLASSE\s*[:nº°]*\s*(\d{2}\s*\.\s*\d{3}\s*\.\s*\d{3}\s*\/\s*\d{4}\s*-\s*\d{2})/i;
@@ -111,7 +110,7 @@ const BARE_LABEL_RE = /CNPJ\s*[:nº°]*\s*$/i;
  * registry 312 of 314 times, and the two that do not are precisely the two documents whose
  * only CNPJ is the administrator's.
  */
-function resolveCnpj(text, registry) {
+function resolveCnpj(text: any, registry: any): any {
   const raw = [...text.matchAll(CNPJ_RE)];
   // Every occurrence, annotated with what the surrounding prose says it refers to.
   const occurrences = raw
@@ -132,7 +131,7 @@ function resolveCnpj(text, registry) {
   // A master is never investable, so it is not a candidate at all.
   const masters = registered.filter(c => isMaster(registry.lookup(c).name));
   const resolving = registered.filter(c => !masters.includes(c));
-  const note = c => {
+  const note = (c: any) => {
     const r = registry.lookup(c);
     return {
       cnpj: c,
@@ -142,7 +141,8 @@ function resolveCnpj(text, registry) {
     };
   };
   /** Any occurrence of `c` satisfying `pred` — a CNPJ can appear more than once. */
-  const anyOcc = (c, pred) => occurrences.some(o => o.cnpj === c && pred(o));
+  const anyOcc = (c: any, pred: any) =>
+    occurrences.some(o => o.cnpj === c && pred(o));
 
   if (!distinct.length)
     return {cnpj: null, resolution: 'no-cnpj-in-document', distinct};
@@ -178,7 +178,9 @@ function resolveCnpj(text, registry) {
   }
 
   // 1. the beneficiary of the subscription transfer — the fund the money buys
-  const beneficiary = resolving.filter(c => anyOcc(c, o => o.beneficiary));
+  const beneficiary = resolving.filter(c =>
+    anyOcc(c, (o: any) => o.beneficiary),
+  );
   if (beneficiary.length === 1) {
     return {
       ...note(beneficiary[0]),
@@ -212,7 +214,9 @@ function resolveCnpj(text, registry) {
   // 4. drop numbers the prose introduces as a DIFFERENT fund (master, mirrored strategy)
   let pool = resolving;
   const own = pool.filter(
-    c => !anyOcc(c, o => o.otherFund) || anyOcc(c, o => o.beneficiary),
+    c =>
+      !anyOcc(c, (o: any) => o.otherFund) ||
+      anyOcc(c, (o: any) => o.beneficiary),
   );
   if (own.length) pool = own;
   if (pool.length === 1) {
@@ -225,7 +229,7 @@ function resolveCnpj(text, registry) {
   }
 
   // 5. a bare `CNPJ:` label, which the fund's own identification block carries
-  const bare = pool.filter(c => anyOcc(c, o => o.labelled));
+  const bare = pool.filter(c => anyOcc(c, (o: any) => o.labelled));
   if (bare.length === 1) {
     return {...note(bare[0]), resolution: 'cnpj-label', distinct, resolving};
   }
@@ -253,7 +257,7 @@ function resolveCnpj(text, registry) {
 
 /* --------------------------------------------------------------- fetch ---- */
 
-async function get(url) {
+async function get(url: any) {
   try {
     const res = await fetch(url, {redirect: 'follow'});
     const body = Buffer.from(await res.arrayBuffer());
@@ -264,7 +268,7 @@ async function get(url) {
       redirects: res.redirected ? 1 : 0,
       body,
     };
-  } catch (e) {
+  } catch (e: any) {
     return {
       status: 0,
       contentType: `error: ${e.message}`,
@@ -273,13 +277,13 @@ async function get(url) {
   }
 }
 
-const isPdf = r =>
+const isPdf = (r: any) =>
   r.status === 200 &&
   r.contentType === 'application/pdf' &&
   r.body.subarray(0, 5).toString('latin1') === '%PDF-';
 
 /** A rejection of this client, which says nothing about whether the document exists. */
-const isRejection = a =>
+const isRejection = (a: any) =>
   a.status === 403 || a.status === 429 || a.status >= 500;
 
 /** True when the WAF is rejecting this client rather than the fund being absent. */
@@ -288,7 +292,7 @@ async function controlIsBlocked() {
   return !isPdf(r);
 }
 
-async function resolveOne(id, delayMs) {
+async function resolveOne(id: any, delayMs: any) {
   const attempts = [];
 
   const s3Url = `${S3}/${id}_agencia.pdf`;
@@ -311,11 +315,11 @@ async function resolveOne(id, delayMs) {
  * absent  every probe gave a definitive answer and none was a document
  * blocked at least one probe was refused, so absence is NOT established
  */
-const classify = attempts =>
+const classify = (attempts: any) =>
   attempts.some(isRejection) ? 'blocked' : 'absent';
 
 /** Backfill `absence` onto entries written before it was recorded. */
-function backfillAbsence(manifest) {
+function backfillAbsence(manifest: Record<string, any>) {
   let n = 0;
   for (const e of Object.values(manifest)) {
     if (!e.source && !e.absence && Array.isArray(e.attempts)) {
@@ -328,7 +332,7 @@ function backfillAbsence(manifest) {
 
 /* --------------------------------------------------------------- parse ---- */
 
-async function extract(buf) {
+async function extract(buf: any) {
   const {PDFParse} = require('pdf-parse');
   const parser = new PDFParse({data: new Uint8Array(buf)});
   try {
@@ -336,8 +340,8 @@ async function extract(buf) {
     const text = out.text.replace(/\s+/g, ' ').trim();
     const firstLine = out.text
       .split('\n')
-      .map(s => s.trim())
-      .find(s => s.length > 8);
+      .map((s: any) => s.trim())
+      .find((s: any) => s.length > 8);
     return {
       text,
       pages: out.pages ? out.pages.length : out.total || null,
@@ -354,21 +358,21 @@ function loadManifest() {
   if (!fs.existsSync(MANIFEST)) return {};
   try {
     return JSON.parse(fs.readFileSync(MANIFEST, 'utf8'));
-  } catch (e) {
+  } catch (e: any) {
     console.error(`manifest unreadable (${e.message}); starting empty`);
     return {};
   }
 }
 
-function saveJson(file, data) {
+function saveJson(file: any, data: any) {
   const tmp = `${file}.tmp`;
   fs.writeFileSync(tmp, JSON.stringify(data, null, 2) + '\n');
   fs.renameSync(tmp, file);
 }
 
-const ageDays = iso => (Date.now() - Date.parse(iso)) / 86400000;
+const ageDays = (iso: any) => (Date.now() - Date.parse(iso)) / 86400000;
 
-function needsFetch(entry, opts) {
+function needsFetch(entry: any, opts: any) {
   if (!entry) return true;
   if (opts.refresh) return true;
   // `blocked` is not an answer: the WAF refused us, so always probe again.
@@ -383,8 +387,8 @@ function needsFetch(entry, opts) {
 
 async function main() {
   const argv = process.argv.slice(2);
-  const flag = n => argv.includes(n);
-  const val = n => {
+  const flag = (n: any) => argv.includes(n);
+  const val = (n: any) => {
     const i = argv.indexOf(n);
     return i === -1 ? undefined : argv[i + 1];
   };
@@ -409,7 +413,9 @@ async function main() {
   const all = JSON.parse(fs.readFileSync(FUNDS, 'utf8'));
   const ids = val('--ids');
   const funds = ids
-    ? all.filter(f => new Set(ids.split(',').map(Number)).has(f.codigoProduto))
+    ? all.filter((f: any) =>
+        new Set(ids.split(',').map(Number)).has(f.codigoProduto),
+      )
     : all;
 
   /* ---- stage 1: fetch ---- */
@@ -418,7 +424,9 @@ async function main() {
   let blocked = false;
 
   if (!opts.parseOnly) {
-    const todo = funds.filter(f => needsFetch(manifest[f.codigoProduto], opts));
+    const todo = funds.filter((f: any) =>
+      needsFetch(manifest[f.codigoProduto], opts),
+    );
     cached = funds.length - todo.length;
     console.log(
       `fetch: ${todo.length} to probe, ${cached} served from cache (${funds.length} funds)`,
@@ -456,7 +464,7 @@ async function main() {
         }
 
         const prev = manifest[id] || {};
-        const entry = {
+        const entry: Record<string, any> = {
           codigoProduto: id,
           nomeComercial: f.nomeComercial,
           source: r.source,
@@ -520,8 +528,8 @@ async function main() {
     );
 
     const targets = funds
-      .map(f => manifest[f.codigoProduto])
-      .filter(e => e && e.source && e.sha256);
+      .map((f: any) => manifest[f.codigoProduto])
+      .filter((e: any) => e && e.source && e.sha256);
     for (const e of targets) {
       if (
         e.parsedSha256 === e.sha256 &&
@@ -550,7 +558,7 @@ async function main() {
         e.parsedSha256 = e.sha256;
         e.parserVersion = PARSER_VERSION;
         parsed++;
-      } catch (err) {
+      } catch (err: any) {
         e.parseError = err.message;
         e.parsedSha256 = e.sha256;
         e.parserVersion = PARSER_VERSION;
@@ -565,9 +573,9 @@ async function main() {
 
   /* ---- derived output + assertions ---- */
   const rows = funds
-    .map(f => manifest[f.codigoProduto])
+    .map((f: any) => manifest[f.codigoProduto])
     .filter(Boolean)
-    .map(e => ({
+    .map((e: any) => ({
       codigoProduto: e.codigoProduto,
       nomeComercial: e.nomeComercial,
       cnpj: e.cnpj || null,
@@ -583,7 +591,7 @@ async function main() {
       docFirstLine: e.docFirstLine || null,
       lastModified: e.lastModified,
     }));
-  const unlabelled = rows.filter(r => r.cnpj && !r.resolution);
+  const unlabelled = rows.filter((r: any) => r.cnpj && !r.resolution);
   if (unlabelled.length) {
     throw new Error(
       `${unlabelled.length} funds carry a CNPJ with no resolution — the manifest key was ` +
@@ -594,9 +602,9 @@ async function main() {
   }
   if (!ids) saveJson(OUT, rows);
 
-  const withDoc = rows.filter(r => r.source);
-  const withCnpj = rows.filter(r => r.cnpj);
-  const dup = {};
+  const withDoc = rows.filter((r: any) => r.source);
+  const withCnpj = rows.filter((r: any) => r.cnpj);
+  const dup: Record<string, any[]> = {};
   for (const r of withCnpj)
     (dup[r.cnpj] = dup[r.cnpj] || []).push(r.codigoProduto);
   const collisions = Object.entries(dup).filter(([, v]) => v.length > 1);
@@ -604,20 +612,20 @@ async function main() {
   console.log(`\nfunds              ${rows.length}`);
   console.log(`document resolved  ${withDoc.length}`);
   console.log(`CNPJ extracted     ${withCnpj.length}`);
-  const byResolution = {};
+  const byResolution: Record<string, number> = {};
   for (const r of rows) {
     if (r.resolution)
       byResolution[r.resolution] = (byResolution[r.resolution] || 0) + 1;
   }
   console.log('by resolution     ', byResolution);
-  const bySrc = {};
+  const bySrc: Record<string, number> = {};
   for (const r of withDoc) {
     const k = `${r.source}/${r.docType}`;
     bySrc[k] = (bySrc[k] || 0) + 1;
   }
   console.log('by source/type    ', bySrc);
   const notOperating = withCnpj.filter(
-    r => r.situacao && r.situacao !== OPERATING,
+    (r: any) => r.situacao && r.situacao !== OPERATING,
   );
   console.log(
     `registry status    ${withCnpj.length - notOperating.length} operating`,
@@ -625,30 +633,32 @@ async function main() {
   if (notOperating.length) {
     console.log(
       `  NOT operating (${notOperating.length}): ` +
-        notOperating.map(r => `${r.codigoProduto} ${r.situacao}`).join(', '),
+        notOperating
+          .map((r: any) => `${r.codigoProduto} ${r.situacao}`)
+          .join(', '),
     );
   }
   if (collisions.length) {
     console.log(`\nCNPJ shared by >1 fund id (${collisions.length}):`);
     for (const [c, v] of collisions) console.log(`  ${c}  ${v.join(', ')}`);
   }
-  const noDoc = rows.filter(r => !r.source);
-  const absent = noDoc.filter(r => r.absence === 'absent');
-  const blockedRows = noDoc.filter(r => r.absence !== 'absent');
+  const noDoc = rows.filter((r: any) => !r.source);
+  const absent = noDoc.filter((r: any) => r.absence === 'absent');
+  const blockedRows = noDoc.filter((r: any) => r.absence !== 'absent');
   if (absent.length) {
     console.log(
       `\nno document, established (${absent.length}): ` +
-        absent.map(r => r.codigoProduto).join(', '),
+        absent.map((r: any) => r.codigoProduto).join(', '),
     );
   }
   if (blockedRows.length) {
     console.log(
       `\nUNRESOLVED — the WAF refused us, absence NOT established (${blockedRows.length}): ` +
-        blockedRows.map(r => r.codigoProduto).join(', '),
+        blockedRows.map((r: any) => r.codigoProduto).join(', '),
     );
     console.log('  re-run later; these are retried automatically.');
   }
-  const noCnpj = rows.filter(r => r.source && !r.cnpj);
+  const noCnpj = rows.filter((r: any) => r.source && !r.cnpj);
   if (noCnpj.length) {
     console.log(`document but no CNPJ (${noCnpj.length}):`);
     for (const r of noCnpj) {

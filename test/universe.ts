@@ -6,25 +6,21 @@
  * rows), a hand-typed pairing nothing could contradict (QUANTAMENTAL GEMS), and a
  * blocked fetch recorded as an established absence (the 15 Itaú funds).
  */
-const os = require('os');
-const fs = require('fs');
-const path = require('path');
+import * as os from 'os';
+import * as fs from 'fs';
+import * as path from 'path';
 
-const {merge} = require('../build/src/universe/merge');
-const {
-  record,
-  collect,
-  PLATFORMS,
-} = require('../build/src/universe/fund-record');
-const {enrich} = require('../build/src/universe/enrich');
-const overrides = require('../build/src/universe/overrides');
-const {loadRegistry} = require('../build/src/lib/cvm-registry');
-const {validCnpj, isMaster, sharedWords} = require('../build/src/lib/cnpj');
+import {merge} from '../src/universe/merge';
+import {record, collect, PLATFORMS} from '../src/universe/fund-record';
+import {enrich} from '../src/universe/enrich';
+import * as overrides from '../src/universe/overrides';
+import {loadRegistry} from '../src/lib/cvm-registry';
+import {validCnpj, isMaster, sharedWords} from '../src/lib/cnpj';
 
 const OPERATING = 'Em Funcionamento Normal';
 
 let failures = 0;
-function check(label, actual, expected) {
+function check(label: any, actual: any, expected: any) {
   const ok = JSON.stringify(actual) === JSON.stringify(expected);
   if (!ok) failures++;
   console.log(
@@ -35,7 +31,7 @@ function check(label, actual, expected) {
     }`,
   );
 }
-function checkMatch(label, actual, needle) {
+function checkMatch(label: any, actual: any, needle: any) {
   const ok = String(actual).includes(needle);
   if (!ok) failures++;
   console.log(
@@ -43,7 +39,7 @@ function checkMatch(label, actual, needle) {
   );
 }
 
-const fund = over =>
+const fund = (over: any = {}) =>
   record({
     platform: 'ITAU',
     id: '1',
@@ -60,22 +56,22 @@ async function main() {
   check('an operating on-shelf fund enters', merge([fund()]).funds.length, 1);
   check(
     'an off-shelf fund does not enter',
-    merge([fund({onShelf: false})]).byPlatform.ITAU.entered,
+    merge([fund({onShelf: false})]).byPlatform.ITAU!.entered,
     0,
   );
   check(
     'a master does not enter',
-    merge([fund({master: true})]).byPlatform.ITAU.entered,
+    merge([fund({master: true})]).byPlatform.ITAU!.entered,
     0,
   );
   check(
     'a fund the registry does not call operating does not enter',
-    merge([fund({situacao: 'Cancelado'})]).byPlatform.ITAU.entered,
+    merge([fund({situacao: 'Cancelado'})]).byPlatform.ITAU!.entered,
     0,
   );
   check(
     'a fund with no CNPJ is counted, not silently dropped',
-    merge([fund({cnpj: null})]).byPlatform.ITAU.noCnpj,
+    merge([fund({cnpj: null})]).byPlatform.ITAU!.noCnpj,
     1,
   );
   check(
@@ -147,7 +143,7 @@ async function main() {
   const resolved = real.find(r => r.platform === 'ITAU' && r.cnpj);
 
   console.log('\noverrides: every guard refuses');
-  const bad4 = (entry, key = target.key) =>
+  const bad4 = (entry: any, key = target!.key) =>
     overrides.validate(key, entry, byKey, registry);
   checkMatch(
     'unknown key',
@@ -193,17 +189,17 @@ async function main() {
 
     overrides.save({
       ...live,
-      [resolved.key]: {cnpj: resolved.cnpj, why: 'w', sourcedBy: 's'},
-    });
+      [resolved!.key]: {cnpj: resolved!.cnpj, why: 'w', sourcedBy: 's'},
+    } as any);
     const staleRun = await enrich(collect(), registry, {});
     check(
       'an override the crawl now matches is reported stale',
-      staleRun.stale.some(s => s.key === resolved.key),
+      staleRun.stale.some(s => s.key === resolved!.key),
       true,
     );
     check(
       'a stale override applies nothing',
-      staleRun.applied.some(a => a.key === resolved.key),
+      staleRun.applied.some(a => a.key === resolved!.key),
       false,
     );
 
@@ -211,7 +207,7 @@ async function main() {
     const plain = await enrich(collect(), registry, {});
     check(
       'without ask, a hole is reported missing',
-      plain.missing.some(m => m.key === target.key),
+      plain.missing.some(m => m.key === target!.key),
       true,
     );
     check(

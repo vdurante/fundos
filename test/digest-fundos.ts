@@ -14,26 +14,26 @@
  * Instead the monthly aggregation is driven directly over a cached INF_DIARIO zip, so
  * the column resolution and the tracked-universe filter run against real data.
  */
-const crypto = require('crypto');
-const AdmZip = require('adm-zip');
-const Papa = require('papaparse');
-const cacache = require('cacache');
+import * as crypto from 'crypto';
+import AdmZip from 'adm-zip';
+import * as Papa from 'papaparse';
+import * as cacache from 'cacache';
 
-const {cnpjColumnOf} = require('../build/src/fundos/crawler-quotas');
-const {rentMonthKeys, rentYearRange} = require('../build/src/fundos/fundos');
-const {
+import {cnpjColumnOf} from '../src/fundos/crawler-quotas';
+import {rentMonthKeys, rentYearRange} from '../src/fundos/fundos';
+import {
   calcSortino,
   parseMonthCount,
   columnToA1,
   monthKeyOf,
-} = require('../build/src/fundos/sortino');
-const {isTracked} = require('../build/src/tracker');
-const {range} = require('../build/src/shared');
+} from '../src/fundos/sortino';
+import {isTracked} from '../src/tracker';
+import {range} from '../src/shared';
 
 const ZIP =
   'http://dados.cvm.gov.br/dados/FI/DOC/INF_DIARIO/DADOS/inf_diario_fi_202608.zip';
 
-const sha = v =>
+const sha = (v: any) =>
   crypto
     .createHash('sha256')
     .update(JSON.stringify(v))
@@ -49,7 +49,7 @@ function pureDigest() {
     monthly2024:
       'TP_FUNDO_CLASSE;CNPJ_FUNDO_CLASSE;ID_SUBCLASSE;DT_COMPTC;VL_QUOTA',
   };
-  const cnpjColumn = {};
+  const cnpjColumn: Record<string, string> = {};
   for (const [k, v] of Object.entries(headers)) cnpjColumn[k] = cnpjColumnOf(v);
 
   let unknownHeaderThrows = false;
@@ -78,12 +78,12 @@ function pureDigest() {
     ),
     columnToA1: [1, 26, 27, 52, 53, 703].map(n => columnToA1(n)),
     monthKeyOf: [46000, '2026-09-01', '', null].map(v => String(monthKeyOf(v))),
-    calcSortino: String(calcSortino(series, bench, 12)),
+    calcSortino: String(calcSortino(series, bench, true)),
     calcSortinoShort: String(
-      calcSortino(series.slice(0, 3), bench.slice(0, 3), 12),
+      calcSortino(series.slice(0, 3), bench.slice(0, 3), true),
     ),
     calcSortinoNoDownside: String(
-      calcSortino([0.02, 0.03, 0.04], [0.001, 0.001, 0.001], 3),
+      calcSortino([0.02, 0.03, 0.04], [0.001, 0.001, 0.001], false),
     ),
   };
 }
@@ -93,19 +93,19 @@ async function realDataDigest() {
   const {data} = await cacache.get('.cache', ZIP);
   const entries = new AdmZip(data).getEntries();
 
-  const monthly = {};
+  const monthly: Record<string, Record<string, number>> = {};
   let rows = 0;
   let kept = 0;
 
   for (const entry of entries) {
     const text = entry.getData().toString();
     const cnpjColumn = cnpjColumnOf(text.slice(0, text.indexOf('\n')));
-    Papa.parse(text, {
+    Papa.parse<Record<string, string>>(text, {
       header: true,
       delimiter: ';',
       worker: true,
       skipEmptyLines: true,
-      step: results => {
+      step: (results: any) => {
         rows++;
         const cnpj = results.data[cnpjColumn];
         if (!isTracked(cnpj)) return;
@@ -121,7 +121,7 @@ async function realDataDigest() {
   }
 
   const cnpjs = Object.keys(monthly).sort();
-  const sample = {};
+  const sample: Record<string, Record<string, number>> = {};
   for (const c of cnpjs.slice(0, 5)) sample[c] = monthly[c];
 
   return {

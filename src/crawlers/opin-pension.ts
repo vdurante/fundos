@@ -27,23 +27,22 @@
  * recall, 96.4% precision. It is a PROXY, carried as `onShelf` rather than asserted as
  * availability, because the API does not publish the shelf.
  */
-'use strict';
-const fs = require('fs');
-const path = require('path');
-const {loadRegistry, OPERATING} = require('../lib/cvm-registry');
+import * as fs from 'fs';
+import * as path from 'path';
+import {loadRegistry, OPERATING} from '../lib/cvm-registry';
 
-const REPO = path.resolve(__dirname, '..', '..');
+import {REPO} from '../lib/paths';
 const PAGE_SIZE = 100;
 const HEADERS = {'cache-control': 'no-cache', Accept: 'application/json'};
 /** Ships in real payloads as if it were a fund, with companyName "N/A". It is not one. */
 const PLACEHOLDER = '00000000000000';
-const isMaster = n => /\bMASTER\b/i.test(String(n));
+const isMaster = (n: any) => /\bMASTER\b/i.test(String(n));
 
-const digits = s => String(s || '').replace(/\D/g, '');
-const fmt = c =>
+const digits = (s: any) => String(s || '').replace(/\D/g, '');
+const fmt = (c: any) =>
   digits(c).replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5');
 
-async function fetchPage(host, family, page) {
+async function fetchPage(host: any, family: any, page: any) {
   const url =
     `https://${host}/open-insurance/products-services/v2/${family}` +
     `?page=${page}&page-size=${PAGE_SIZE}`;
@@ -53,7 +52,7 @@ async function fetchPage(host, family, page) {
   return res.json();
 }
 
-async function fetchAll(host, family) {
+async function fetchAll(host: any, family: any) {
   const first = await fetchPage(host, family, 1);
   const meta = first.meta || {};
   const totalPages = meta.totalPages || 1;
@@ -67,7 +66,7 @@ async function fetchAll(host, family) {
 }
 
 /** One row per product-fund pair, walking BOTH period blocks. */
-function flatten(payloads) {
+function flatten(payloads: any) {
   const rows = [];
   for (const d of payloads) {
     const brand = (d.data && d.data.brand) || {};
@@ -101,7 +100,7 @@ function flatten(payloads) {
   return rows;
 }
 
-function rollup(rows, registry) {
+function rollup(rows: any, registry: any) {
   const acc = new Map();
   for (const r of rows) {
     let a = acc.get(r.cnpjFundo);
@@ -153,7 +152,8 @@ function rollup(rows, registry) {
 
 async function main() {
   const argv = process.argv.slice(2);
-  const val = n => (argv.includes(n) ? argv[argv.indexOf(n) + 1] : undefined);
+  const val = (n: any) =>
+    argv.includes(n) ? argv[argv.indexOf(n) + 1] : undefined;
   const host = val('--host') || 'api.itau';
   const platform = val('--platform') || 'ITAU_PREV';
   const family = val('--family') || 'life-pension';

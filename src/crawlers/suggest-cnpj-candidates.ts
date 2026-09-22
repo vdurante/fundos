@@ -13,12 +13,11 @@
  *
  * Usage: node src/crawlers/suggest-cnpj-candidates.js [--all] [--top N]
  */
-'use strict';
-const fs = require('fs');
-const path = require('path');
-const {loadRegistry, OPERATING} = require('../lib/cvm-registry');
+import * as fs from 'fs';
+import * as path from 'path';
+import {loadRegistry, OPERATING} from '../lib/cvm-registry';
 
-const REPO = path.resolve(__dirname, '..', '..');
+import {REPO} from '../lib/paths';
 const DOCS = path.join(REPO, 'src', 'corretoras', 'itau-documents.json');
 
 const STOP = new Set([
@@ -97,7 +96,7 @@ const WEAK = new Set([
   'evolution',
 ]);
 
-const norm = s =>
+const norm = (s: any) =>
   String(s)
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
@@ -111,12 +110,12 @@ const norm = s =>
  * feeder's fee. It is still worth PRINTING, separately and labelled, because the feeder
  * sitting above a known master is usually the obvious neighbour in the same name family.
  */
-const isMaster = name => /\bMASTER\b/i.test(String(name));
+const isMaster = (name: any) => /\bMASTER\b/i.test(String(name));
 
-const fmt = c =>
+const fmt = (c: any) =>
   c.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5');
 
-const words = s => {
+const words = (s: any) => {
   const all = norm(s).filter(w => w.length > 1 && !STOP.has(w));
   return {
     strong: new Set(all.filter(w => !WEAK.has(w))),
@@ -131,7 +130,7 @@ async function main() {
     ? process.argv[process.argv.indexOf('--stub') + 1]
     : null;
   const rows = JSON.parse(fs.readFileSync(DOCS, 'utf8'));
-  const targets = rows.filter(r => r.source && !r.cnpj);
+  const targets = rows.filter((r: any) => r.source && !r.cnpj);
   if (!targets.length) {
     console.log('nothing unresolved — every fund with a document has a CNPJ');
     return;
@@ -145,7 +144,7 @@ async function main() {
     `registry: ${pool.length} operating entries | unresolved with a document: ${targets.length}\n`,
   );
 
-  const stub = {};
+  const stub: Record<string, any> = {};
   for (const t of targets) {
     const tw = words(t.nomeComercial);
     const scored = [];

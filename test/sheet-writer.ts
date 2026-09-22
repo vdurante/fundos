@@ -1,21 +1,21 @@
-const fs = require('fs');
-const {google} = require('googleapis');
-const {
+import * as fs from 'fs';
+import {google} from 'googleapis';
+import {
   writeKeyed,
   resolveColumnRuns,
   columnIndexOf,
   columnLetter,
-} = require('../build/src/fundos/sheet-writer');
+} from '../src/fundos/sheet-writer';
 
 const KEY = 'config/fundos-309615-2795009f4d3e.json';
 const DOC_ID = '1Ev0j3XqQJYWCSDftuud7IFAWya7gIiQGvp2ULfjWCi0';
 const TITLE = '__writer_test';
 const HEADERS = ['CNPJ_FUNDO', 'NAME', 'NUM', 'FLAG'];
 
-const cell = v => (v === undefined || v === null ? '' : v);
+const cell = (v: any) => (v === undefined || v === null ? '' : v);
 
 let failures = 0;
-function check(label, actual, expected) {
+function check(label: any, actual: any, expected: any) {
   const ok = JSON.stringify(actual) === JSON.stringify(expected);
   if (!ok) failures++;
   console.log(
@@ -37,7 +37,7 @@ function api() {
   return google.sheets({version: 'v4', auth});
 }
 
-async function readGrid(sheets) {
+async function readGrid(sheets: any) {
   const [vals, meta] = await Promise.all([
     sheets.spreadsheets.values.get({
       spreadsheetId: DOC_ID,
@@ -50,22 +50,24 @@ async function readGrid(sheets) {
     }),
   ]);
   const props = meta.data.sheets.find(
-    s => s.properties.title === TITLE,
+    (s: any) => s.properties!.title === TITLE,
   ).properties;
   return {rows: vals.data.values || [], props};
 }
 
-async function withScratch(sheets, title, columnCount, fn) {
+async function withScratch(sheets: any, title: any, columnCount: any, fn: any) {
   const before = await sheets.spreadsheets.get({
     spreadsheetId: DOC_ID,
     fields: 'sheets(properties(title,sheetId))',
   });
-  const stale = before.data.sheets.find(s => s.properties.title === title);
+  const stale = before.data.sheets!.find(
+    (s: any) => s.properties!.title === title,
+  );
   if (stale) {
     await sheets.spreadsheets.batchUpdate({
       spreadsheetId: DOC_ID,
       requestBody: {
-        requests: [{deleteSheet: {sheetId: stale.properties.sheetId}}],
+        requests: [{deleteSheet: {sheetId: stale.properties!.sheetId}}],
       },
     });
   }
@@ -81,7 +83,7 @@ async function withScratch(sheets, title, columnCount, fn) {
       ],
     },
   });
-  const sheetId = created.data.replies[0].addSheet.properties.sheetId;
+  const sheetId = created.data.replies![0].addSheet!.properties!.sheetId;
   try {
     await fn(sheetId);
   } finally {
@@ -93,7 +95,7 @@ async function withScratch(sheets, title, columnCount, fn) {
   }
 }
 
-async function read(sheets, title, range, render) {
+async function read(sheets: any, title: any, range: any, render?: any) {
   const r = await sheets.spreadsheets.values.get({
     spreadsheetId: DOC_ID,
     range: `'${title}'!${range}`,
@@ -104,7 +106,7 @@ async function read(sheets, title, range, render) {
 
 // Principal's shape: the writer owns A, B, E, G while C and F are live formulas and D is a human
 // annotation. A contiguous write from A would destroy all three.
-async function columnMapTests(sheets) {
+async function columnMapTests(sheets: any) {
   const TITLE = '__writer_test_map';
   const HEADERS = ['CNPJ', 'NAME', 'VOL', 'FLAG'];
   const COLUMNS = {CNPJ: 'A', NAME: 'B', VOL: 'E', FLAG: 'G'};
@@ -181,13 +183,13 @@ async function columnMapTests(sheets) {
     const formulas = await read(sheets, TITLE, 'C2:C4', 'FORMULA');
     check(
       'VOLPCT still a formula on every row',
-      formulas.map(r => String(r[0]).startsWith('=')),
+      formulas.map((r: any) => String(r[0]).startsWith('=')),
       [true, true, true],
     );
     const lens = await read(sheets, TITLE, 'F2:F4', 'FORMULA');
     check(
       'LEN still a formula on every row',
-      lens.map(r => String(r[0]).startsWith('=')),
+      lens.map((r: any) => String(r[0]).startsWith('=')),
       [true, true, true],
     );
 
@@ -259,13 +261,13 @@ async function columnMapTests(sheets) {
   try {
     resolveColumnRuns(['A_H', 'B_H'], {A_H: 'A'});
     check('unmapped header throws', 'no throw', 'throws');
-  } catch (e) {
+  } catch (e: any) {
     check('unmapped header throws', /nao mapeada/.test(e.message), true);
   }
   try {
     resolveColumnRuns(['A_H', 'B_H'], {A_H: 'C', B_H: 'C'});
     check('duplicate column throws', 'no throw', 'throws');
-  } catch (e) {
+  } catch (e: any) {
     check('duplicate column throws', /mesma coluna/.test(e.message), true);
   }
   check(
@@ -287,12 +289,12 @@ async function main() {
     spreadsheetId: DOC_ID,
     fields: 'sheets(properties(title,sheetId))',
   });
-  const stale = before.data.sheets.find(s => s.properties.title === TITLE);
+  const stale = before.data.sheets!.find(s => s.properties!.title === TITLE);
   if (stale) {
     await sheets.spreadsheets.batchUpdate({
       spreadsheetId: DOC_ID,
       requestBody: {
-        requests: [{deleteSheet: {sheetId: stale.properties.sheetId}}],
+        requests: [{deleteSheet: {sheetId: stale.properties!.sheetId}}],
       },
     });
   }
@@ -312,7 +314,7 @@ async function main() {
       ],
     },
   });
-  const sheetId = created.data.replies[0].addSheet.properties.sheetId;
+  const sheetId = created.data.replies![0].addSheet!.properties!.sheetId;
 
   try {
     console.log('run 1 — seed 4 rows');
@@ -344,8 +346,8 @@ async function main() {
       range: `'${TITLE}'!F1:F2`,
       valueRenderOption: 'UNFORMATTED_VALUE',
     });
-    check('k3 empty NUM is ISBLANK', probe.data.values[0][0], true);
-    check('k3 empty NUM not counted as populated', probe.data.values[1][0], 0);
+    check('k3 empty NUM is ISBLANK', probe.data.values![0][0], true);
+    check('k3 empty NUM not counted as populated', probe.data.values![1][0], 0);
 
     console.log('run 2 — update 2, drop k2, add k5');
     s = await writeKeyed(TITLE, HEADERS, [
@@ -366,7 +368,7 @@ async function main() {
     check('k5 appended at row 6', g.rows[5], ['k5', 'five', 5, true]);
     check(
       'row order preserved',
-      g.rows.slice(1).map(r => r[0]),
+      g.rows.slice(1).map((r: any) => r[0]),
       ['k1', 'k2', 'k3', 'k4', 'k5'],
     );
 

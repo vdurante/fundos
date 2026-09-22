@@ -19,18 +19,20 @@
  * and the master exclusion drops the parent. Measured on Absolute Icatu I Prev: 7 CNPJs
  * in the document, 1 survivor.
  */
-'use strict';
+import {isMaster, validCnpj} from '../lib/cnpj';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as crypto from 'crypto';
+import {loadRegistry, OPERATING} from '../lib/cvm-registry';
 
-const {isMaster, validCnpj} = require('../lib/cnpj');
-const fs = require('fs');
-const path = require('path');
-const crypto = require('crypto');
-const {loadRegistry, OPERATING} = require('../lib/cvm-registry');
-
-const REPO = path.resolve(__dirname, '..', '..');
+import {REPO} from '../lib/paths';
 const CACHE = path.join(REPO, '.cache', 'onze-regulations');
 const OUT = path.join(REPO, 'src', 'corretoras', 'onze-funds.json');
-const DEFAULT_INPUT = path.join(process.env.HOME, 'Downloads', 'onze.json');
+const DEFAULT_INPUT = path.join(
+  process.env.HOME || '',
+  'Downloads',
+  'onze.json',
+);
 
 const CNPJ_RE =
   /(\d{2})\s*\.\s*(\d{3})\s*\.\s*(\d{3})\s*\/\s*(\d{4})\s*-\s*(\d{2})/g;
@@ -38,7 +40,7 @@ const CNPJ_RE =
 const OTHER_FUND_RE =
   /MASTER|inscrito\s+no\s+CNPJ\s+sob|em\s+cotas\s+do\s+fundo|aplica\s+seus\s+recursos/i;
 
-function readCatalogue(file) {
+function readCatalogue(file: any) {
   const d = JSON.parse(fs.readFileSync(file, 'utf8'));
   const seen = new Map();
   for (const [key, val] of Object.entries(d)) {
@@ -50,7 +52,7 @@ function readCatalogue(file) {
   return [...seen.values()];
 }
 
-async function blob(fund) {
+async function blob(fund: any) {
   fs.mkdirSync(CACHE, {recursive: true});
   const file = path.join(CACHE, `${fund.slug}.pdf`);
   if (fs.existsSync(file) && !process.argv.includes('--refresh')) {
@@ -68,7 +70,7 @@ async function blob(fund) {
   return {buf, cached: false};
 }
 
-async function extract(buf) {
+async function extract(buf: any) {
   const {PDFParse} = require('pdf-parse');
   const p = new PDFParse({data: new Uint8Array(buf)});
   try {
@@ -79,8 +81,8 @@ async function extract(buf) {
   }
 }
 
-function resolve(text, registry) {
-  const occ = [];
+function resolve(text: any, registry: any): any {
+  const occ: any[] = [];
   let m;
   CNPJ_RE.lastIndex = 0;
   while ((m = CNPJ_RE.exec(text)) !== null) {
@@ -94,7 +96,7 @@ function resolve(text, registry) {
   const masters = registered.filter(c => isMaster(registry.lookup(c).name));
   let pool = registered.filter(c => !masters.includes(c));
 
-  const note = (c, resolution) => {
+  const note = (c: any, resolution: any) => {
     const r = registry.lookup(c);
     return {cnpj: c, nomeOficial: r.name, situacao: r.situacao, resolution};
   };
@@ -142,7 +144,7 @@ async function main() {
 
   const rows = [];
   for (const f of funds) {
-    const row = {
+    const row: Record<string, any> = {
       id: f.value,
       name: f.name,
       slug: f.slug,
@@ -176,7 +178,7 @@ async function main() {
     }
     row.sha256 = crypto
       .createHash('sha256')
-      .update(got.buf)
+      .update(got.buf as Buffer)
       .digest('hex')
       .slice(0, 16);
     const {text, pages} = await extract(got.buf);
@@ -198,13 +200,13 @@ async function main() {
 
   const withCnpj = rows.filter(r => r.cnpj);
   const notOperating = withCnpj.filter(r => r.situacao !== OPERATING);
-  const dup = {};
+  const dup: Record<string, any[]> = {};
   for (const r of withCnpj) (dup[r.cnpj] = dup[r.cnpj] || []).push(r.name);
   const collisions = Object.entries(dup).filter(([, v]) => v.length > 1);
 
   console.log(`\nfunds            ${rows.length}`);
   console.log(`CNPJ resolved    ${withCnpj.length}`);
-  const byResolution = {};
+  const byResolution: Record<string, number> = {};
   for (const r of rows)
     byResolution[r.resolution] = (byResolution[r.resolution] || 0) + 1;
   console.log('by resolution   ', byResolution);

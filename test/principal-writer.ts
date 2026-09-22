@@ -1,12 +1,13 @@
-const fs = require('fs');
-const {google} = require('googleapis');
-const {
+import * as fs from 'fs';
+import {google} from 'googleapis';
+import {
   writePrincipal,
   selectFunds,
   principalRow,
   PRINCIPAL_COLUMNS,
   PRINCIPAL_HEADERS,
-} = require('../build/src/fundos/principal');
+} from '../src/fundos/principal';
+import {CanonicalFund} from '../src/fundos/principal';
 
 const KEY = 'config/fundos-309615-2795009f4d3e.json';
 const DOC_ID = '1Ev0j3XqQJYWCSDftuud7IFAWya7gIiQGvp2ULfjWCi0';
@@ -14,14 +15,14 @@ const TITLE = '__principal_test';
 
 // Principal's real derived columns, copied verbatim so the fixture exercises the production
 // formulas rather than a simplified stand-in.
-const RISCO = r =>
+const RISCO = (r: any) =>
   `=IF(J${r}="";"";IFS(J${r}<=0,05; "00 ~ 05"; J${r}<=0,1; "05 ~ 10"; J${r}<=0,25; "10 ~ 25"; J${r} <= 100; "25~100"))`;
-const DP = r => `=COUNTIF(M${r}:Q${r}; "<>"&"")`;
+const DP = (r: any) => `=COUNTIF(M${r}:Q${r}; "<>"&"")`;
 
-const cell = v => (v === undefined || v === null ? '' : v);
+const cell = (v: any) => (v === undefined || v === null ? '' : v);
 
 let failures = 0;
-function check(label, actual, expected) {
+function check(label: any, actual: any, expected: any) {
   const ok = JSON.stringify(actual) === JSON.stringify(expected);
   if (!ok) failures++;
   console.log(
@@ -43,7 +44,7 @@ function api() {
   return google.sheets({version: 'v4', auth});
 }
 
-async function read(sheets, range, render) {
+async function read(sheets: any, range: any, render?: any) {
   const r = await sheets.spreadsheets.values.get({
     spreadsheetId: DOC_ID,
     range: `'${TITLE}'!${range}`,
@@ -117,12 +118,12 @@ async function main() {
     spreadsheetId: DOC_ID,
     fields: 'sheets(properties(title,sheetId))',
   });
-  const stale = before.data.sheets.find(s => s.properties.title === TITLE);
+  const stale = before.data.sheets!.find(s => s.properties!.title === TITLE);
   if (stale) {
     await sheets.spreadsheets.batchUpdate({
       spreadsheetId: DOC_ID,
       requestBody: {
-        requests: [{deleteSheet: {sheetId: stale.properties.sheetId}}],
+        requests: [{deleteSheet: {sheetId: stale.properties!.sheetId}}],
       },
     });
   }
@@ -141,11 +142,11 @@ async function main() {
       ],
     },
   });
-  const sheetId = created.data.replies[0].addSheet.properties.sheetId;
+  const sheetId = created.data.replies![0].addSheet!.properties!.sheetId;
 
   try {
     console.log('selection — pure, no API');
-    const sel = selectFunds(FIXTURES);
+    const sel = selectFunds(FIXTURES as CanonicalFund[]);
     check('kept 3', sel.kept.length, 3);
     check(
       'excluded FIP and FII (case-insensitive)',
@@ -160,7 +161,7 @@ async function main() {
     check('duplicate dropped, first wins', sel.duplicates, [
       '11.111.111/0001-11',
     ]);
-    check('row projection', principalRow(FIXTURES[1]), {
+    check('row projection', principalRow(FIXTURES[1] as CanonicalFund), {
       CNPJ: '22.222.222/0001-22',
       DENOM_SOCIAL: 'ONZE | BETA PREV FIC RF',
       ITAU: false,
@@ -189,9 +190,11 @@ async function main() {
       },
     });
 
-    let result = await writePrincipal(FIXTURES, {sheetTitle: TITLE});
-    check('wrote the kept funds', result.write.appended, 3);
-    check('column runs', result.write.columnRuns, ['A:B', 'H:J', 'AD:AD']);
+    let result = await writePrincipal(FIXTURES as CanonicalFund[], {
+      sheetTitle: TITLE,
+    });
+    check('wrote the kept funds', result.write!.appended, 3);
+    check('column runs', result.write!.columnRuns, ['A:B', 'H:J', 'AD:AD']);
     check('selection counts', result.selection.kept, 3);
 
     // The derived columns only exist once there are data rows to attach them to.
@@ -269,9 +272,11 @@ async function main() {
             })
           : f,
     );
-    result = await writePrincipal(changed, {sheetTitle: TITLE});
-    check('matched 2', result.write.matched, 2);
-    check('blanked the vanished fund', result.write.blanked, 1);
+    result = await writePrincipal(changed as CanonicalFund[], {
+      sheetTitle: TITLE,
+    });
+    check('matched 2', result.write!.matched, 2);
+    check('blanked the vanished fund', result.write!.blanked, 1);
 
     grid = await read(sheets, 'A1:AD5');
     check(
@@ -304,18 +309,18 @@ async function main() {
     const formulas = await read(sheets, 'C3:C5', 'FORMULA');
     check(
       'Risco still a formula on every row',
-      formulas.map(r => String(r[0]).startsWith('=')),
+      formulas.map((r: any) => String(r[0]).startsWith('=')),
       [true, true, true],
     );
     const dp = await read(sheets, 'K3:K5', 'FORMULA');
     check(
       'DP still a formula on every row',
-      dp.map(r => String(r[0]).startsWith('=')),
+      dp.map((r: any) => String(r[0]).startsWith('=')),
       [true, true, true],
     );
 
     console.log('\ndry run writes nothing');
-    const dry = await writePrincipal(FIXTURES, {
+    const dry = await writePrincipal(FIXTURES as CanonicalFund[], {
       sheetTitle: TITLE,
       dryRun: true,
     });

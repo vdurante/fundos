@@ -22,12 +22,11 @@
  * This stage yields codigoProduto (the lâmina id), names, fees and returns — but NO CNPJ.
  * The CNPJ comes from the documents in stage 2 (fetch-itau-documents.js).
  */
-'use strict';
-const puppeteer = require('puppeteer');
-const fs = require('fs');
-const path = require('path');
+import puppeteer from 'puppeteer';
+import * as fs from 'fs';
+import * as path from 'path';
 
-const REPO = path.resolve(__dirname, '..', '..');
+import {REPO} from '../lib/paths';
 const OUT = path.join(REPO, 'src', 'corretoras', 'itau-rentabilidade.json');
 /**
  * The Chrome profile MUST outlive a single run (see the header note on cold profiles), so
@@ -60,7 +59,7 @@ const SEGMENTS = `(() => {
   return (svc && svc.segments) || null;
 })()`;
 
-const sleep = ms => new Promise(r => setTimeout(r, ms));
+const sleep = (ms: any) => new Promise(r => setTimeout(r, ms));
 
 /**
  * Keep the component's raw record AND hoist the fields consumers actually read.
@@ -72,10 +71,10 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
  * docs already describe; dropping them would be a silent breaking change for a gain of
  * nothing.
  */
-function normalise(f) {
+function normalise(f: any) {
   const cat = f.catalogoProduto || {};
   const r = cat.rentabilidade || {};
-  const name = v => (v && typeof v === 'object' ? v.nome : v) ?? null;
+  const name = (v: any) => (v && typeof v === 'object' ? v.nome : v) ?? null;
   return {
     ...f,
     categoria: name(cat.categoria),
@@ -93,7 +92,7 @@ function normalise(f) {
 }
 
 /** Poll the component instance; null until the shield has served the payload. */
-async function readWhenReady(page) {
+async function readWhenReady(page: any) {
   for (let i = 0; i < POLL_TRIES; i++) {
     const data = await page.evaluate(READ).catch(() => null);
     if (Array.isArray(data) && data.length) return data;
@@ -138,6 +137,7 @@ async function main() {
         waitUntil: 'networkidle2',
         timeout: 90000,
       });
+      if (!res) throw new Error(`load ${attempt}: no response from ${URL_}`);
       console.log(`load ${attempt}: HTTP ${res.status()}`);
       if (res.status() !== 200) {
         console.error(

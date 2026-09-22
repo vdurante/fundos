@@ -166,10 +166,10 @@ async function main() {
       BTG: false,
       XP: false,
       Vol: 0.0549,
-      MANUAL: true,
+      ONZE: true,
     });
     check('headers start with the key', PRINCIPAL_HEADERS[0], 'CNPJ');
-    check('MANUAL maps to AD', PRINCIPAL_COLUMNS.MANUAL, 'AD');
+    check('ONZE maps to AD', PRINCIPAL_COLUMNS.ONZE, 'AD');
 
     console.log('\nrun 1 — seed the block label row, then write');
     // Row 1 is Principal's merged block-label row. It must survive untouched.
@@ -237,7 +237,7 @@ async function main() {
       'Vol',
       'DP',
     ]);
-    check('MANUAL header at AD2', grid[1][29], 'MANUAL');
+    check('ONZE header at AD2', grid[1][29], 'ONZE');
     check('data starts at row 3', grid[2][0], '11.111.111/0001-11');
     check(
       'alpha writer columns',
@@ -245,7 +245,7 @@ async function main() {
       ['ALPHA FIC FIM', true, true, 0.0123456789, false]
     );
     check(
-      'onze fund flags MANUAL only',
+      'onze fund flags ONZE only',
       [grid[3][7], grid[3][8], grid[3][29]],
       [false, false, true]
     );

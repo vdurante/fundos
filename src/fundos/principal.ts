@@ -25,7 +25,7 @@ export const PRINCIPAL_COLUMNS: ColumnMap = {
   BTG: 'H',
   XP: 'I',
   Vol: 'J',
-  MANUAL: 'AD',
+  ONZE: 'AD',
 };
 
 export const PRINCIPAL_HEADERS = Object.keys(PRINCIPAL_COLUMNS);
@@ -86,7 +86,7 @@ export function principalRow(fund: CanonicalFund): {
     BTG: platforms.includes('BTG'),
     XP: platforms.includes('XP'),
     Vol: fund.volatility,
-    MANUAL: platforms.includes('ONZE'),
+    ONZE: platforms.includes('ONZE'),
   };
 }
 

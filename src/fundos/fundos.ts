@@ -5,11 +5,7 @@ import * as parse from 'csv-parse/lib/index';
 import * as cacache from 'cacache';
 import * as Papa from 'papaparse';
 import * as _ from 'lodash';
-import {
-  CNPJ_FUNDOS,
-  isTracked,
-  CNPJ_MANUAL,
-} from '../tracker';
+import {CNPJ_FUNDOS, isTracked} from '../tracker';
 import {
   GoogleSpreadsheet,
   GoogleSpreadsheetWorksheet,
@@ -105,12 +101,6 @@ async function writeToSheetNew(
   );
 
   data = _(data).uniqBy('CNPJ_FUNDO').sortBy('CNPJ_FUNDO').value();
-
-  data.map(p => {
-    if (Object.keys(CNPJ_MANUAL).includes(p['CNPJ_FUNDO'].toString())) {
-      p['DENOM_SOCIAL'] = CNPJ_MANUAL[p['CNPJ_FUNDO'].toString()];
-    }
-  });
 
   const summary = await writeKeyed(sheetName, headers, data);
   console.log(`  ${sheetName}: ${JSON.stringify(summary)}`);

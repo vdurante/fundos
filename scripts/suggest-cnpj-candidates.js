@@ -1,0 +1,110 @@
+#!/usr/bin/env node
+/**
+ * Propose CVM registry candidates for Itaú shelf funds whose document yields no CNPJ.
+ *
+ * This does NOT decide anything and writes nothing. It ranks registry entries by
+ * distinctive-word overlap with the shelf name so a human confirms a value instead of
+ * opening 15 PDFs — the confirmed value then goes into itau-cnpj-overrides.json, where
+ * the same name check runs again as a guard.
+ *
+ * Name matching is deliberately kept OUT of the automatic resolver: "Riza Évora
+ * Debêntures Incentivadas Infra" has several plausible registry neighbours and picking
+ * one silently is how a wrong CNPJ becomes permanent. Proposing is safe; deciding is not.
+ *
+ * Usage: node scripts/suggest-cnpj-candidates.js [--all] [--top N]
+ */
+'use strict';
+const fs = require('fs');
+const path = require('path');
+const {loadRegistry, OPERATING} = require('./lib/cvm-registry');
+
+const REPO = path.dirname(__dirname);
+const DOCS = path.join(REPO, 'src', 'corretoras', 'itau-documents.json');
+
+const STOP = new Set([
+  'fundo', 'fundos', 'de', 'do', 'da', 'dos', 'das', 'em', 'e', 'investimento',
+  'investimentos', 'cotas', 'fi', 'fic', 'fim', 'fif', 'cic', 'rf', 'mm', 'cp',
+  'lp', 'ie', 'rl', 'resp', 'responsabilidade', 'limitada', 'financeiro',
+]);
+/** Words that describe a category rather than identify a fund. */
+const WEAK = new Set([
+  'multimercado', 'multimercados', 'acoes', 'renda', 'fixa', 'credito', 'privado',
+  'longo', 'prazo', 'prev', 'previdenciario', 'subclasse', 'classe', 'infra',
+  'infraestrutura', 'incentivadas', 'debentures', 'direitos', 'creditorios',
+  'selecao', 'hedge', 'total', 'plus', 'long', 'short', 'biased', 'only', 'macro',
+  'i', 'ii', 'iii', 'liquidez', 'corporativo', 'ativo', 'small', 'mid', 'caps',
+  'dolar', 'bdr', 'global', 'equity', 'market', 'evolution',
+]);
+
+const norm = s =>
+  String(s)
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .split(/[^a-z0-9]+/)
+    .filter(Boolean);
+
+const words = s => {
+  const all = norm(s).filter(w => w.length > 1 && !STOP.has(w));
+  return {
+    strong: new Set(all.filter(w => !WEAK.has(w))),
+    all: new Set(all),
+  };
+};
+
+async function main() {
+  const top = Number((process.argv[process.argv.indexOf('--top') + 1] || '') ) || 4;
+  const rows = JSON.parse(fs.readFileSync(DOCS, 'utf8'));
+  const targets = rows.filter(r => r.source && !r.cnpj);
+  if (!targets.length) {
+    console.log('nothing unresolved — every fund with a document has a CNPJ');
+    return;
+  }
+
+  const reg = await loadRegistry({});
+  const pool = [...reg.entries()]
+    .filter(e => e.situacao === OPERATING)
+    .map(e => ({...e, w: words(e.name)}));
+  console.log(
+    `registry: ${pool.length} operating entries | unresolved with a document: ${targets.length}\n`
+  );
+
+  for (const t of targets) {
+    const tw = words(t.nomeComercial);
+    const scored = [];
+    for (const e of pool) {
+      let strong = 0;
+      for (const w of tw.strong) if (e.w.strong.has(w)) strong++;
+      if (!strong) continue;
+      let weak = 0;
+      for (const w of tw.all) if (e.w.all.has(w)) weak++;
+      scored.push({e, strong, weak});
+    }
+    scored.sort((a, b) => b.strong - a.strong || b.weak - a.weak);
+
+    console.log(`${t.codigoProduto}  ${t.nomeComercial}`);
+    console.log(`  distinctive words: ${[...tw.strong].join(', ') || '(none)'}`);
+    if (!scored.length) {
+      console.log('  no registry candidate shares a distinctive word\n');
+      continue;
+    }
+    for (const {e, strong, weak} of scored.slice(0, top)) {
+      const flag = /\bMASTER\b/i.test(e.name) ? ' [MASTER]' : '';
+      console.log(
+        `  ${e.cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5')}` +
+          `  s${strong}/w${weak} ${e.isClass ? 'class' : 'fund '}${flag}  ${e.name}`
+      );
+    }
+    if (scored.length > top) console.log(`  ... ${scored.length - top} more`);
+    console.log('');
+  }
+  console.log(
+    'Confirm a value by adding it to src/corretoras/itau-cnpj-overrides.json with a\n' +
+      '"why" and a "sourcedBy"; the loader re-checks it against the registry.'
+  );
+}
+
+main().catch(e => {
+  console.error(e.message);
+  process.exit(1);
+});

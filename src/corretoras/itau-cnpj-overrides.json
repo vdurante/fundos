@@ -1,0 +1,30 @@
+{
+  "_README": [
+    "Hand-supplied CNPJs for Itaú shelf funds whose document does not yield one in its",
+    "text layer. Keyed by codigoProduto, the stable Itaú fund id from the rentabilidade",
+    "catalogue.",
+    "",
+    "Every entry is VALIDATED on load and the run fails if an override does not:",
+    "  1. resolve to a registered CNPJ in the CVM registry, and",
+    "  2. share a significant word with the fund's nomeComercial on the shelf.",
+    "",
+    "Rule 2 is what an unchecked override lacks. A name typed beside the wrong CNPJ",
+    "pins the pair permanently and no source can correct it -- which is exactly how",
+    "'QUANTAMENTAL GEMS FIA' stayed attached to Itaú Small Cap II's CNPJ for years.",
+    "",
+    "'why' must say where the value came from, so a stale entry can be re-checked",
+    "rather than trusted forever."
+  ],
+  "overrides": {
+    "56966": {
+      "cnpj": "36.015.100/0001-39",
+      "why": "printed on page 2 of the lâmina as pixels; absent from the text layer of both pages",
+      "sourcedBy": "vcd 2026-09-22, read from the rendered PDF"
+    },
+    "56122": {
+      "cnpj": "26.587.503/0001-07",
+      "why": "lâmina never prints a CNPJ in any form",
+      "sourcedBy": "vcd 2026-09-22"
+    }
+  }
+}

@@ -171,6 +171,8 @@ async function loadRegistry({maxAgeDays = 7, refresh = false} = {}) {
     ageDays: ageDays(ZIP),
     lookup: cnpj => byCnpj.get(digits(cnpj)) || null,
     has: cnpj => byCnpj.has(digits(cnpj)),
+    /** Every indexed entry, for name-based search. Read-only by convention. */
+    entries: () => byCnpj.values(),
   };
 }
 

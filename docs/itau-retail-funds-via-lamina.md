@@ -439,7 +439,6 @@ exist on macOS, so install with `npm install --ignore-scripts pdf-parse`.
 - All four `/fundo/<channel>/` paths hit or all four miss — the channel path is NOT an availability signal.
 - No CNPJ anywhere in the HTML or the in-memory payload; the footer CNPJ is the bank's.
 - The lâmina host is public — do not carry cookies into phase 2 or make it depend on the browser.
-- A missing lâmina is a **301/302 to XML**, never a 404 — classify on status plus content-type.
 - The PDFs are rebuilt daily, so key the phase-2 cache by id AND date or you re-report stale returns.
 - Do not enumerate the id space: ~3% density, and `tempData` gives all 467 ids anyway.
 - PDF text needs a CMap-aware extractor; inflate-and-regex silently returns a timestamp.

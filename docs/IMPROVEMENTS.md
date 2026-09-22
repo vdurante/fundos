@@ -1238,6 +1238,26 @@ Vanguarda inflation funds — and must **reject `00000000000000`**, which the AP
 Itau previdência funds and Icatu funds are **disjoint** (overlap 0) — a FIE belongs to one insurer —
 so the two hosts together publish 635 previdência funds, of which only 8 are currently tracked.
 
+### The Itaú retail shelf has its own spec — read it before planning acquisition
+
+`docs/itau-retail-funds-via-lamina.md` (commit `e0ffbec`) is the implementation spec for the
+**retail fund** shelf, and it supersedes anything in this file that treats Itaú as an
+unsolved browser problem. Summary of what it establishes, so the two documents do not drift:
+
+- The performance table at `itau.com.br/investimentos/fundos/rentabilidade` lists **467 funds**
+  over 47 pages, and is 403 to everything except the user's own attached Chrome.
+- **No CNPJ appears in the HTML.** The CNPJ lives inside each fund's *lâmina* PDF, which is
+  linked from the row's detail panel.
+- The PDF host `laminascomerciais-qh9.cloud.itau.com.br` needs **no WAF bypass, no cookie, no
+  session**. So only URL harvesting needs a browser; the 467 downloads and the parsing do not.
+- The PDF carries the **CVM-registered name**, not the commercial one, so it joins to the
+  registry directly — better data than the table.
+- Four channels are published per fund (`agencia`, `private`, `personnalite`, `uniclass`), which
+  is the segment cut OPIN explicitly does not expose.
+
+So Itaú retail is **two sources, not one**: a browser-only id harvest, then a fully open
+tier-1 fetch. The open half is the larger half.
+
 ### DONE 2026-09-21 — `MANUAL` removed, and the two "wrong name" rows resolved the other way
 
 Two author rulings, and they resolve each other.

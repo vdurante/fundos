@@ -179,6 +179,92 @@ that is the signal that the lâmina layout changed.
 
 ---
 
+## Host structure — probed 2026-09-22, after this spec was written
+
+The open host gives up more than the spec above assumed. Four findings, each from live
+requests against `laminascomerciais-qh9.cloud.itau.com.br`.
+
+### `<id>_agencia.pdf` is a legacy alias; the canonical path names a channel
+
+A miss redirects and leaks the real layout:
+
+```
+GET /99999_agencia.pdf   -> 301, location: /fundo/agencia/99999.pdf   (server: AmazonS3)
+GET /fundo/agencia/52678.pdf -> 200 application/pdf
+```
+
+So the flat `<id>_agencia.pdf` form is an S3 routing rule onto `/fundo/<channel>/<id>.pdf`.
+Prefer the canonical path: one fewer round trip, and it makes the channel explicit.
+
+### FOUR distribution channels are published, all unauthenticated
+
+```
+fundo/agencia/52678.pdf        200   146,039 bytes
+fundo/private/52678.pdf        200   134,348
+fundo/personnalite/52678.pdf   200   203,028
+fundo/uniclass/52678.pdf       200   145,997
+fundo/varejo|digital|institucional/52678.pdf   302  (do not exist)
+```
+
+The byte sizes differ, so these are genuinely different documents for the same fund —
+presumably different fee tables per segment, which is exactly what you would expect.
+
+**This is the cut OPIN cannot give you.** `docs/itau-pension-opendata.md` records that the
+open data "does not expose the cut by distribution channel (Uniclass / Personnalité /
+Private)". For *retail* funds the lâmina host does expose it, by path.
+
+**Unverified, and the important caveat:** both sampled funds (52677, 52678) return 200 on
+all four channels, so n=2 cannot distinguish "sold in all four" from "every fund gets all
+four rendered regardless". If some fund 302s on one channel, the path is real availability
+data and `Principal` could carry an Itaú *segment* rather than a boolean. Resolve it by
+checking all four channels for the first ~20 ids phase 1 harvests — it costs 80 requests
+and decides whether the channel dimension is worth modelling.
+
+### Miss and hit are trivially distinguishable
+
+```
+hit   200  application/pdf   + last-modified, etag, x-amz-version-id
+miss  301/302  application/xml  ~300 bytes
+```
+
+No 404 is ever returned, so classify on status plus content-type, not on body size.
+
+### The PDFs are rebuilt daily
+
+`last-modified` on a hit was `Tue, 22 Sep 2026 03:49:07 GMT` — the morning of the probe,
+for a document whose reference month is August. So the phase-2 disk cache is safe to keep
+but must be **keyed by id AND date**, or a re-run silently reports last month's figures.
+The CNPJ and official name are stable; only the return figures move.
+
+### Enumeration is NOT a shortcut — measured, so do not retry it
+
+The spec wonders whether the id space could be walked directly. It is too sparse:
+
+```
+~25 probes across 50,000-65,000  ->  3 hits (52677, 52678, 52700)
+467 funds over a ~15,000-wide id range  ->  roughly 3% density
+```
+
+Finding all 467 by enumeration means on the order of 15,000 requests against someone
+else's host to replace a 47-page crawl. Disproportionate, so **the spec's own advice
+stands: look for the JSON API first.** That remains the only way to collapse phase 1, and
+it needs the attached browser — the table page is still 403 to everything else.
+
+There is no directory listing to fall back on: the bucket root and the obvious manifest
+paths return CloudFront 502 or an S3 redirect, never an index.
+
+### One claim in this spec is still unverified
+
+> The `<id>` is a fund identifier in the same numbering space as the pension area's `id_produto`.
+
+Not confirmed. The saved pension artefacts under
+`/Volumes/workplace/meshclaw-workspace/itau_previdencia/` do not retain `id_produto` — the
+CSVs are the OPIN-derived ones, and OPIN's own `codigo_produto` is a *three*-digit code
+(401, 402, 403 …), a different space entirely. Testing it needs a logged-area `?id=` value,
+so it waits for the browser too.
+
+---
+
 ## Proposed implementation
 
 ### Phase 1 — harvest lâmina URLs (browser, attached Chrome)
@@ -239,6 +325,10 @@ exist on macOS, so install with `npm install --ignore-scripts pdf-parse`.
 - `playwright-cli` sessions are per process — attach and act in the same one; `detach`, don't `close`.
 - No CNPJ anywhere in the HTML; the footer CNPJ is the bank's.
 - The lâmina host is public — do not carry cookies into phase 2 or make it depend on the browser.
+- Use the canonical `/fundo/<channel>/<id>.pdf`; the flat `<id>_agencia.pdf` is a 301 alias.
+- A missing lâmina is a **301/302 to XML**, never a 404 — classify on status plus content-type.
+- The PDFs are rebuilt daily, so key the phase-2 cache by id AND date or you re-report stale returns.
+- Do not enumerate the id space: ~3% density means ~15,000 requests to find 467 funds.
 - PDF text needs a CMap-aware extractor; inflate-and-regex silently returns a timestamp.
 - `pdf-parse` v2 exports the `PDFParse` class, not a callable.
 - Match the CNPJ by format; there is no `CNPJ:` label to anchor on.

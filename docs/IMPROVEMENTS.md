@@ -1238,6 +1238,55 @@ Vanguarda inflation funds — and must **reject `00000000000000`**, which the AP
 Itau previdência funds and Icatu funds are **disjoint** (overlap 0) — a FIE belongs to one insurer —
 so the two hosts together publish 635 previdência funds, of which only 8 are currently tracked.
 
+### DONE 2026-09-21 — `MANUAL` removed, and the two "wrong name" rows resolved the other way
+
+Two author rulings, and they resolve each other.
+
+**The sheet's names were wrong, not CVM's.** Both disputed rows are CVM-correct, confirmed by the
+author: `35.726.581/0001-28` really is an Itaú Small Cap fund, and `46.762.380/0001-00` really is
+`Icatu Vanguarda Absoluto Inflação FIF RF CP Previdenciário RL`. So `Denominacao_Social` is
+authoritative and the registry crawler should overwrite `DENOM_SOCIAL` unconditionally — there is no
+"the sheet knows better" case to protect.
+
+**The first of those came from a hand-typed override**, which is why removing `MANUAL` fixes it for free.
+`tracker.ts` exported `CNPJ_MANUAL` (from `cnpj-manual.json`) and `fundos.ts` applied it as a *name*
+override after the write was assembled, so `35.726.581/0001-28` was force-labelled
+`QUANTAMENTAL GEMS FIA` regardless of what any source said. Deleted: `cnpj.json`, `cnpj-manual.json`,
+`MANUAL_FUNDOS`, `CNPJ_MANUAL`, and the override block. `CNPJ_FUNDOS` is now `XP ∪ BTG`.
+
+**The removal was narrower than it looked, and the near-miss is worth recording.** The sheet's `AD`
+column and the code constant are two different populations that happened to share a name:
+
+```
+sheet AD = TRUE            24     23 ONZE-branded previdência funds + 1 small-cap
+code MANUAL_FUNDOS          8     T3 x2, QUANTAMENTAL x2, FABULA x2, 2 unnamed
+in BOTH                     1     35.726.581/0001-28
+of the 8, present in sheet  1     the other 7 were never there
+```
+
+Deleting the *column* would have destroyed ONZE availability — 0 of those 24 carry a `BTG` or `XP` flag,
+so they exist nowhere else — which is the opposite of what the author wants, since Onze is one of the
+requested sources. So the code constant is gone and the column is **renamed `MANUAL` -> `ONZE`** in
+`PRINCIPAL_COLUMNS` and `principalRow`, matching `Platform`'s existing vocabulary. The header cell `AD2`
+still reads `MANUAL` on the live sheet and will be relabelled by the first real `writePrincipal` run.
+
+**A stale-build defect found while verifying this.** `test-principal-writer.js` requires
+`../build/src/fundos/principal`, and neither `test:principal` nor `test:writer` compiled first. So the
+suite reported `ALL CHECKS PASSED` including `PASS MANUAL maps to AD` **after** the rename — it was
+asserting against a build from before the edit. Both npm scripts now run `npm run compile &&` first.
+Same shape as the other duplications today: an assertion that cannot see the thing it claims to check.
+
+Verified after: both suites green (34 + 49), full Sortino recompute `15390/15390`.
+
+### Answered 2026-09-21 — the 2024 quota data is unexplained and will stay that way
+
+The sheet holds real returns for all twelve months of 2024, which the pre-fix parser provably cannot
+produce (0 of 533,719 rows kept on the post-2024 header). The author's recollection is that the
+March-2025 run used different code that was never pushed. Confirmed there is nowhere left to look:
+`git branch -a` shows only `master` and `origin/master`, no stash, no other ref. So the provenance is
+unrecoverable and the question is closed — which costs nothing, because the fixed parser now reproduces
+those months from source anyway.
+
 ### DONE 2026-09-21 — the openness rule: "listed AND active", and why half of it is missing
 
 The original design intent (recalled by the author, confirmed against the code) was that a fund counts
@@ -1850,8 +1899,13 @@ case needs a pick rule (prefer the live class) before the NAV fetch can be fully
 - [ ] **18. `getFile` masks network errors.**
   `ex.response.status` throws `TypeError` when there is no response (DNS, timeout, reset), hiding the real cause. Guard `ex.response?.status`.
 
-- [ ] **19. Decide about the 87 dropped CNPJs.**
-  The old hand-maintained list (810 distinct, 990 entries with 180 duplicates) contained 87 CNPJs absent from today's scraped universe of 1,139. If any were deliberate picks rather than stale entries, they belong in `cnpj-manual.json`, the only list the scrape cannot overwrite.
+- [x] **19. DECIDED 2026-09-21 — dropped CNPJs are expected, not a loss.** The old hand-maintained list
+  (810 distinct, 990 entries with 180 duplicates) had 87 CNPJs absent from the scraped universe. The
+  author's ruling: the goal is a resilient service fed by fresh data, so a fund leaving `Principal`
+  because it is no longer offered — or because a provider stopped being interesting — is the system
+  working. No preservation list, no `cnpj-manual.json` escape hatch (that file is now deleted). The one
+  cost to keep in mind is that the human columns `D:G` are keyed by row: a fund that drops and later
+  returns comes back without its annotations.
 
 - [ ] **20. Clean up `package.json`.** `prepare`/`pretest` call `npm.cmd` (Windows-only); `test` exits 1. `launch.json` uses `\\src\\index.ts`.
 
@@ -1976,6 +2030,14 @@ case needs a pick rule (prefer the live class) before the NAV fetch can be fully
 ---
 
 ## Deliberately not doing
+
+- **Mercado Pago as a fund source — dropped 2026-09-21 by the author.** There is no fund marketplace to
+  crawl: the investment surface is account yield (up to 105% CDI), Cofrinhos (up to 140%), CDB and
+  Tesouro Direto, and the "rendimento" feature sits behind a *single* money-market fund the customer
+  never selects. No fund CNPJ is published on any public page — the only CNPJ visible is the payment
+  institution's own (`10.573.521/0001-91`). A browser would not help, because there is no list to
+  intercept. Also noted as a probing trap: their site answers arbitrary paths with a **soft 200 and
+  `text/html`**, so two plausible API probes "succeeded" while actually serving the SPA shell.
 
 - The `.xlsx` export is an archive, not a working copy: Google-only functions (`QUERY`, `FILTER`) survive only as `__xludf.DUMMYFUNCTION` stubs with cached values, and `Pow(` is not Excel's `POWER(`. Never edit the export and push it back.
 - `~/Downloads/fundos` is an incomplete pre-scraping ancestor (empty `src/fundos/`, hardcoded CNPJ list, no Puppeteer, `!process.env.CACHE_FILE` inverted-flag bug). Nothing to salvage except the key in `config/`.

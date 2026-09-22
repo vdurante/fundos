@@ -259,29 +259,64 @@ dataBase              17.09 276, 18.09 183, 20.09 8
 **Still no CNPJ** — this spec was right about that. The payload has no CNPJ-shaped string
 anywhere, so phase 2 (the PDF) remains the only source for it.
 
-### Use the FLAT `<id>_agencia.pdf`, not the canonical path
+### Fetch the FLAT `<id>_agencia.pdf` and FOLLOW REDIRECTS — then check the content type
 
-An earlier revision of this section recommended `/fundo/<channel>/<id>.pdf` because a *miss*
-301s to it. **That was wrong** — measured against 43 ids sampled evenly across the shelf:
+This is the whole rule, and two earlier revisions of this section got it wrong before a full
+467-fund sweep settled it (`scripts/probe-lamina-coverage.py`).
 
 ```
-<id>_agencia.pdf            37 / 43 hit   (86%)
-fundo/agencia/<id>.pdf      24 / 43 hit   (56%)
+GET <id>_agencia.pdf, redirects followed
+  200 application/pdf   438 / 467   93.8%   <- has a lâmina
+  200 text/html          29 / 467    6.2%   <- has NONE
 ```
 
-The two forms cover different object sets. `56211_agencia.pdf` returns 200 while
-`fundo/agencia/56211.pdf` returns 302, so the flat form is the real key for the newer files and
-only redirects for the older ones. Use the flat form and treat the canonical path as a fallback.
+**The trap: a missing lâmina answers `200 text/html` after two redirects.** Status alone reports
+every one of the 467 as present. A crawler that checks only the status code writes an HTML error
+page to `<id>.pdf`, then fails to find a CNPJ in it — or worse, records nothing and moves on.
+Require `content-type: application/pdf`.
+
+Why redirect-following matters rather than choosing a path form: without it the flat form hits
+429/467 and the canonical `/fundo/agencia/<id>.pdf` hits 24/43 on the same sample. With it, the
+flat form alone reaches all 438, because the newer objects live under the canonical key and the
+flat form 301s onto them. The page itself always links the flat form (verified on three funds), so
+this matches what Itaú does.
 
 Variants that do NOT work, so do not retry them: `<id>.pdf`, `fundo/<id>.pdf`,
 `lamina/<id>.pdf`, `fundo/varejo/<id>.pdf`, zero-padded `056211`.
 
-### ~14% of the shelf has no lâmina at all
+### The 29 funds without a lâmina — the detail panel does NOT help
 
-The 6 sampled misses are **all ids ≥ 57793**, i.e. the newest funds, and they miss under every
-form and every channel. Extrapolating, roughly 65 of the 467 will yield no CNPJ from this path.
-Decide up front whether those are dropped or chased through the detail panel, which may still
-render a link this spec's URL rule cannot reconstruct.
+Checked directly in the attached browser: filtered the table to a single fund via the
+`text-field-nomefundo_input` search box, clicked **mais info**, and read every link the panel
+renders. For all three tested (59392 `Itaú Ações Dunamis - Subclasse II`, 56067 `ARX Extra FIC FIM`,
+59278 `Capitânia Infra 30 CDI Seleção`) the panel's only document link is
+
+```
+https://laminascomerciais-qh9.cloud.itau.com.br/<id>_agencia.pdf
+```
+
+i.e. exactly the URL this spec constructs — which for those funds resolves to the HTML page, not a
+PDF. **Itaú's own page carries a dead "baixar lâmina" link for these funds.** So there is no
+alternative document path to discover, and no reason to open panels at all: the URL rule is
+complete, the documents simply do not exist yet.
+
+The list is committed at `src/corretoras/itau-lamina-missing.json`. Two patterns in it:
+
+- **RCVM 175 subclasses are systematically missing: 7 of the 8 on the shelf.** Names carrying
+  `Subclasse` are 8/467 overall but 7/29 of the misses. A subclass plausibly has no lâmina of its
+  own because the class does.
+- **The rest skew very recent** — 13 of 29 were created in 2026, and 21 of 29 since 2024. Consistent
+  with a document that has not been published yet rather than one that is withheld.
+
+Two oddities worth knowing: 59392 reports `dataCriacaoProduto: '01.01.0001'` (a null sentinel), and
+59392's own returns are `0,00%` across all three periods, so some of these are funds that have
+barely started trading.
+
+**Recommendation:** carry those 29 with an explicit `lamina: null` rather than dropping them. They
+are real, currently-offered funds (`situacaoProduto: true`) whose CNPJ this path cannot supply, and
+re-running the probe later will pick up the documents as they are published. Sourcing their CNPJ
+today needs a different route — CVM name matching on `nomeComercial` is the obvious candidate, and
+it is exactly the fuzzy join the rest of the pipeline avoids.
 
 ### The four channels are NOT an availability signal
 
@@ -397,9 +432,11 @@ exist on macOS, so install with `npm install --ignore-scripts pdf-parse`.
 - `playwright-cli` sessions are per process for the ENV var, but the session NAME survives: the CLI prints `-s=kc-xxxx`, reuse it. `detach`, don't `close`.
 - There is **no JSON API** — 153 XHR/fetch, zero fund endpoints. Don't go looking again.
 - The dataset is on the Angular Elements component instance (`_ngElementStrategy.componentRef.instance.tempData`), not in the DOM, not in a global, not React, not an iframe.
-- Use the flat `<id>_agencia.pdf`; the canonical `/fundo/<channel>/<id>.pdf` covers 56% vs 86%.
-- All four channels hit or all four miss — the channel path is NOT an availability signal.
-- Roughly 14% of the shelf (the newest ids, ≥ ~57793) has no lâmina under any form, so no CNPJ.
+- Use the flat `<id>_agencia.pdf` and FOLLOW redirects; it then covers all 438 available lâminas.
+- **A missing lâmina answers `200 text/html`** after two redirects — require `application/pdf` or you will save an error page as a PDF.
+- 29 of 467 (6.2%) have no lâmina at all, and the page's own "baixar lâmina" link is dead for them. 7 of the 8 subclasses are in that set.
+- Without redirect-following a miss is a 301/302 to XML, never a 404 — either way, never classify on body size.
+- All four `/fundo/<channel>/` paths hit or all four miss — the channel path is NOT an availability signal.
 - No CNPJ anywhere in the HTML or the in-memory payload; the footer CNPJ is the bank's.
 - The lâmina host is public — do not carry cookies into phase 2 or make it depend on the browser.
 - A missing lâmina is a **301/302 to XML**, never a 404 — classify on status plus content-type.

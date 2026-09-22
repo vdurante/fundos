@@ -1,0 +1,292 @@
+[
+  {
+    "codigoProduto": 56066,
+    "nomeComercial": "Principal Claritas Liquidez",
+    "dataCriacaoProduto": "12.05.2022",
+    "status": 200,
+    "contentType": "text/html",
+    "bytes": 20527,
+    "lastModified": "Wed, 26 Nov 2025 01:39:15 GMT",
+    "hasLamina": false
+  },
+  {
+    "codigoProduto": 56067,
+    "nomeComercial": "ARX Extra FIC FIM",
+    "dataCriacaoProduto": "23.12.2003",
+    "status": 200,
+    "contentType": "text/html",
+    "bytes": 20527,
+    "lastModified": "Wed, 26 Nov 2025 01:39:15 GMT",
+    "hasLamina": false
+  },
+  {
+    "codigoProduto": 56122,
+    "nomeComercial": "NEST FUNDO DE INVESTIMENTOS EM AÇÕES",
+    "dataCriacaoProduto": "01.02.2017",
+    "status": 200,
+    "contentType": "text/html",
+    "bytes": 20527,
+    "lastModified": "Wed, 26 Nov 2025 01:39:15 GMT",
+    "hasLamina": false
+  },
+  {
+    "codigoProduto": 57647,
+    "nomeComercial": "Subclasse A Vox Sustentável IS",
+    "dataCriacaoProduto": "19.05.2022",
+    "status": 200,
+    "contentType": "text/html",
+    "bytes": 20527,
+    "lastModified": "Wed, 26 Nov 2025 01:39:15 GMT",
+    "hasLamina": false
+  },
+  {
+    "codigoProduto": 57754,
+    "nomeComercial": "Hashdex 100 Nasdaq Crypto Index Multimercado",
+    "dataCriacaoProduto": "31.07.2019",
+    "status": 200,
+    "contentType": "text/html",
+    "bytes": 20527,
+    "lastModified": "Wed, 26 Nov 2025 01:39:15 GMT",
+    "hasLamina": false
+  },
+  {
+    "codigoProduto": 57793,
+    "nomeComercial": "Galapagos Evolution Multimercado Crédito Privado",
+    "dataCriacaoProduto": "07.05.2020",
+    "status": 200,
+    "contentType": "text/html",
+    "bytes": 20527,
+    "lastModified": "Wed, 26 Nov 2025 01:39:15 GMT",
+    "hasLamina": false
+  },
+  {
+    "codigoProduto": 58006,
+    "nomeComercial": "Vinland Debêntures de Infra IPCA",
+    "dataCriacaoProduto": "05.09.2024",
+    "status": 200,
+    "contentType": "text/html",
+    "bytes": 20527,
+    "lastModified": "Wed, 26 Nov 2025 01:39:15 GMT",
+    "hasLamina": false
+  },
+  {
+    "codigoProduto": 58186,
+    "nomeComercial": "Occam Renda Fixa Infraestrutura CDI 30",
+    "dataCriacaoProduto": "03.01.2025",
+    "status": 200,
+    "contentType": "text/html",
+    "bytes": 20527,
+    "lastModified": "Wed, 26 Nov 2025 01:39:15 GMT",
+    "hasLamina": false
+  },
+  {
+    "codigoProduto": 58573,
+    "nomeComercial": "Itaú Dual Global Private Markets Multimercado",
+    "dataCriacaoProduto": "29.05.2026",
+    "status": 200,
+    "contentType": "text/html",
+    "bytes": 20527,
+    "lastModified": "Wed, 26 Nov 2025 01:39:15 GMT",
+    "hasLamina": false
+  },
+  {
+    "codigoProduto": 58616,
+    "nomeComercial": "Riza Évora Hedge Debêntures Incentivadas",
+    "dataCriacaoProduto": "28.08.2025",
+    "status": 200,
+    "contentType": "text/html",
+    "bytes": 20527,
+    "lastModified": "Wed, 26 Nov 2025 01:39:15 GMT",
+    "hasLamina": false
+  },
+  {
+    "codigoProduto": 58826,
+    "nomeComercial": "Kadima Long Short Plus FIA",
+    "dataCriacaoProduto": "27.12.2024",
+    "status": 200,
+    "contentType": "text/html",
+    "bytes": 20527,
+    "lastModified": "Wed, 26 Nov 2025 01:39:15 GMT",
+    "hasLamina": false
+  },
+  {
+    "codigoProduto": 58989,
+    "nomeComercial": "Itaú Seleção Ibiuna Renda Fixa Ativo Infra",
+    "dataCriacaoProduto": "31.03.2026",
+    "status": 200,
+    "contentType": "text/html",
+    "bytes": 20527,
+    "lastModified": "Wed, 26 Nov 2025 01:39:15 GMT",
+    "hasLamina": false
+  },
+  {
+    "codigoProduto": 59013,
+    "nomeComercial": "Itaú Seleção Ibiuna Total Return Ações",
+    "dataCriacaoProduto": "09.04.2026",
+    "status": 200,
+    "contentType": "text/html",
+    "bytes": 20527,
+    "lastModified": "Wed, 26 Nov 2025 01:39:15 GMT",
+    "hasLamina": false
+  },
+  {
+    "codigoProduto": 59041,
+    "nomeComercial": "BTG Pactual Hedge Debêntures de Infra Subclasse II",
+    "dataCriacaoProduto": "28.04.2026",
+    "status": 200,
+    "contentType": "text/html",
+    "bytes": 20527,
+    "lastModified": "Wed, 26 Nov 2025 01:39:15 GMT",
+    "hasLamina": false
+  },
+  {
+    "codigoProduto": 59047,
+    "nomeComercial": "Ace Capital Action Seleção SCC Multimercado",
+    "dataCriacaoProduto": "06.05.2026",
+    "status": 200,
+    "contentType": "text/html",
+    "bytes": 20527,
+    "lastModified": "Wed, 26 Nov 2025 01:39:15 GMT",
+    "hasLamina": false
+  },
+  {
+    "codigoProduto": 59050,
+    "nomeComercial": "Neo Vitale I Seleção SCC Multimercado",
+    "dataCriacaoProduto": "01.06.2026",
+    "status": 200,
+    "contentType": "text/html",
+    "bytes": 20527,
+    "lastModified": "Wed, 26 Nov 2025 01:39:15 GMT",
+    "hasLamina": false
+  },
+  {
+    "codigoProduto": 59056,
+    "nomeComercial": "Subclasse II Kadima Master Multimercado",
+    "dataCriacaoProduto": "19.12.2025",
+    "status": 200,
+    "contentType": "text/html",
+    "bytes": 20527,
+    "lastModified": "Wed, 26 Nov 2025 01:39:15 GMT",
+    "hasLamina": false
+  },
+  {
+    "codigoProduto": 59060,
+    "nomeComercial": "Vinland Plus Seleção SCC Multimercado",
+    "dataCriacaoProduto": "04.05.2026",
+    "status": 200,
+    "contentType": "text/html",
+    "bytes": 20527,
+    "lastModified": "Wed, 26 Nov 2025 01:39:15 GMT",
+    "hasLamina": false
+  },
+  {
+    "codigoProduto": 59082,
+    "nomeComercial": "Itaú Seleção Ace Capital Alphasys Multimercado",
+    "dataCriacaoProduto": "20.05.2026",
+    "status": 200,
+    "contentType": "text/html",
+    "bytes": 20527,
+    "lastModified": "Wed, 26 Nov 2025 01:39:15 GMT",
+    "hasLamina": false
+  },
+  {
+    "codigoProduto": 59123,
+    "nomeComercial": "Itaú Seleção Verde AM TAU Multimercado",
+    "dataCriacaoProduto": "02.06.2026",
+    "status": 200,
+    "contentType": "text/html",
+    "bytes": 20527,
+    "lastModified": "Wed, 26 Nov 2025 01:39:15 GMT",
+    "hasLamina": false
+  },
+  {
+    "codigoProduto": 59180,
+    "nomeComercial": "Itaú Index DIVO11 Ações",
+    "dataCriacaoProduto": "30.06.2026",
+    "status": 200,
+    "contentType": "text/html",
+    "bytes": 20527,
+    "lastModified": "Wed, 26 Nov 2025 01:39:15 GMT",
+    "hasLamina": false
+  },
+  {
+    "codigoProduto": 59190,
+    "nomeComercial": "Sulamerica Infra CDI Ativo Selecao Subclasse II",
+    "dataCriacaoProduto": "26.06.2026",
+    "status": 200,
+    "contentType": "text/html",
+    "bytes": 20527,
+    "lastModified": "Wed, 26 Nov 2025 01:39:15 GMT",
+    "hasLamina": false
+  },
+  {
+    "codigoProduto": 59191,
+    "nomeComercial": "Ace Capital Seleção Multicenários Feeder Multimerc",
+    "dataCriacaoProduto": "03.07.2025",
+    "status": 200,
+    "contentType": "text/html",
+    "bytes": 20527,
+    "lastModified": "Wed, 26 Nov 2025 01:39:15 GMT",
+    "hasLamina": false
+  },
+  {
+    "codigoProduto": 59216,
+    "nomeComercial": "Bocaina Infra 60 IPCA Infraestrutura Renda Fixa",
+    "dataCriacaoProduto": "14.06.2024",
+    "status": 200,
+    "contentType": "text/html",
+    "bytes": 20527,
+    "lastModified": "Wed, 26 Nov 2025 01:39:15 GMT",
+    "hasLamina": false
+  },
+  {
+    "codigoProduto": 59228,
+    "nomeComercial": "Bocaina Infra 60 CDI Infraestrutura Renda Fixa",
+    "dataCriacaoProduto": "13.08.2024",
+    "status": 200,
+    "contentType": "text/html",
+    "bytes": 20527,
+    "lastModified": "Wed, 26 Nov 2025 01:39:15 GMT",
+    "hasLamina": false
+  },
+  {
+    "codigoProduto": 59232,
+    "nomeComercial": "Subclasse Kad IMAB Master Renda Fixa Longo Prazo",
+    "dataCriacaoProduto": "13.12.2021",
+    "status": 200,
+    "contentType": "text/html",
+    "bytes": 20527,
+    "lastModified": "Wed, 26 Nov 2025 01:39:15 GMT",
+    "hasLamina": false
+  },
+  {
+    "codigoProduto": 59278,
+    "nomeComercial": "Capitânia Infra 30 CDI Seleção Renda Fixa",
+    "dataCriacaoProduto": "11.09.2026",
+    "status": 200,
+    "contentType": "text/html",
+    "bytes": 20527,
+    "lastModified": "Wed, 26 Nov 2025 01:39:15 GMT",
+    "hasLamina": false
+  },
+  {
+    "codigoProduto": 59286,
+    "nomeComercial": "Essential FIDC Subclasse I",
+    "dataCriacaoProduto": "31.08.2026",
+    "status": 200,
+    "contentType": "text/html",
+    "bytes": 20527,
+    "lastModified": "Wed, 26 Nov 2025 01:39:15 GMT",
+    "hasLamina": false
+  },
+  {
+    "codigoProduto": 59392,
+    "nomeComercial": "Itaú Ações Dunamis - Subclasse II",
+    "dataCriacaoProduto": "01.01.0001",
+    "status": 200,
+    "contentType": "text/html",
+    "bytes": 20527,
+    "lastModified": "Wed, 26 Nov 2025 01:39:15 GMT",
+    "hasLamina": false
+  }
+]

@@ -181,44 +181,123 @@ that is the signal that the lâmina layout changed.
 
 ## Host structure — probed 2026-09-22, after this spec was written
 
-The open host gives up more than the spec above assumed. Four findings, each from live
-requests against `laminascomerciais-qh9.cloud.itau.com.br`.
+### There is NO JSON API. The 467 funds are already in the page.
 
-### `<id>_agencia.pdf` is a legacy alias; the canonical path names a channel
-
-A miss redirects and leaks the real layout:
+Settled in the user's attached Chrome. The page makes **153 XHR/fetch requests** and not one of
+them carries fund data:
 
 ```
-GET /99999_agencia.pdf   -> 301, location: /fundo/agencia/99999.pdf   (server: AmazonS3)
-GET /fundo/agencia/52678.pdf -> 200 application/pdf
+performance.getEntriesByType("resource"), initiatorType xhr|fetch
+  apicd.cloud.itau.com.br        128    charon / iske -- the bot shield
+  cookielaw / onetrust / vwo / evergage / google / linkedin   24    analytics
+  mfegestaocookies.cloud.itau.com.br   1    i18n strings
+  -> fund-data endpoints:          0
 ```
 
-So the flat `<id>_agencia.pdf` form is an S3 routing rule onto `/fundo/<channel>/<id>.pdf`.
-Prefer the canonical path: one fewer round trip, and it makes the channel explicit.
+Clicking **Página 2** produced 215 new requests, all analytics; opening a **mais info** panel
+produced 213, likewise. The only `www.itau.com.br` request in the whole session is the document
+itself. So pagination and panel-open are pure client-side rendering over a dataset that is
+already in memory.
 
-### FOUR distribution channels are published, all unauthenticated
+Where it comes from: `_rentabilityService` holds a `charonService`, and the 128 `apicd` calls are
+that shield. The data request is **tunnelled through charon**, which is why no readable endpoint
+URL exists to copy. Do not try to reproduce it outside a browser.
+
+### The whole dataset in ONE eval — this replaces the 467-click loop
+
+The table is an Angular 14 **Elements** micro-frontend, `<itau-tabela-rentabilidade>`. Its
+component instance is reachable, and `tempData` is the complete shelf:
+
+```js
+const inst = document.querySelector('itau-tabela-rentabilidade')
+  ._ngElementStrategy.componentRef.instance;
+inst.tempData        // 467 records, the full shelf regardless of the visible page
+inst.filteredData    // 467, the current filter result
+inst.categories      // 7
+inst.segment         // "varejo"
+inst._rentabilityService.segments
+// {varejo: "3", uniclass: "L", personnalite: "4", "personnalite-rebranding": "4",
+//  "private-bank": "7", empresas: "EMP"}
+```
+
+Note it is **not React** — a `__reactFiber$` hunt returns nothing, and there are no iframes
+despite every Playwright ref being prefixed `f1e`.
+
+Record shape, which is richer than the rendered table:
+
+```js
+{ codigoProduto: 52678,                       // <- the lâmina id
+  nomeComercial: 'Diferenciado Crédito Privado Renda Fixa',
+  idFamiliaProduto: '01',
+  valorMinimoAplicacao: 1,
+  catalogoProduto: {
+    rentabilidade: {dataBase: '18.09.2026', anual: 9.815765,
+                    dozeMeses: 14.397926, mesAtual: 0.662077},   // UNROUNDED
+    categoria: {nome: 'juros pós-fixados', id: 2},
+    risco: {nome: 'baixo', id: 1},
+    taxas: [ {nomeTaxa: 'Taxa de distribuição', valorTaxa: 0.1}, … ],  // full breakdown
+    taxaAdministracao: 0.04, totalizadorTaxas: 0.45,
+    resgateDescricao: 'crédito em conta em 1 dia útil',
+    situacaoProduto: true, dataCriacaoProduto: '30.12.2014',
+    horaInicialAplicacao: '03:37:24', paraUmaCrianca: false } }
+```
+
+`codigoProduto: 52678` for "Diferenciado Crédito Privado Renda Fixa" is exactly the id in this
+spec's own `52678_agencia.pdf` sample, so the mapping id -> lâmina is confirmed.
+
+Aggregates over the 467 (saved to `src/corretoras/itau-rentabilidade.json`):
 
 ```
-fundo/agencia/52678.pdf        200   146,039 bytes
-fundo/private/52678.pdf        200   134,348
-fundo/personnalite/52678.pdf   200   203,028
-fundo/uniclass/52678.pdf       200   145,997
-fundo/varejo|digital|institucional/52678.pdf   302  (do not exist)
+unique codigoProduto  467      id range 40369 .. 59392   (wider than the 5xxxx guess)
+situacaoProduto       467 true    -- every listed fund is flagged active
+categoria             multimercados 178, ações 139, juros pós-fixados 115,
+                      inflação 29, juros prefixados 5, cambial 1
+risco                 alto 327, médio 132, baixo 8
+dataBase              17.09 276, 18.09 183, 20.09 8
 ```
 
-The byte sizes differ, so these are genuinely different documents for the same fund —
-presumably different fee tables per segment, which is exactly what you would expect.
+**Still no CNPJ** — this spec was right about that. The payload has no CNPJ-shaped string
+anywhere, so phase 2 (the PDF) remains the only source for it.
 
-**This is the cut OPIN cannot give you.** `docs/itau-pension-opendata.md` records that the
-open data "does not expose the cut by distribution channel (Uniclass / Personnalité /
-Private)". For *retail* funds the lâmina host does expose it, by path.
+### Use the FLAT `<id>_agencia.pdf`, not the canonical path
 
-**Unverified, and the important caveat:** both sampled funds (52677, 52678) return 200 on
-all four channels, so n=2 cannot distinguish "sold in all four" from "every fund gets all
-four rendered regardless". If some fund 302s on one channel, the path is real availability
-data and `Principal` could carry an Itaú *segment* rather than a boolean. Resolve it by
-checking all four channels for the first ~20 ids phase 1 harvests — it costs 80 requests
-and decides whether the channel dimension is worth modelling.
+An earlier revision of this section recommended `/fundo/<channel>/<id>.pdf` because a *miss*
+301s to it. **That was wrong** — measured against 43 ids sampled evenly across the shelf:
+
+```
+<id>_agencia.pdf            37 / 43 hit   (86%)
+fundo/agencia/<id>.pdf      24 / 43 hit   (56%)
+```
+
+The two forms cover different object sets. `56211_agencia.pdf` returns 200 while
+`fundo/agencia/56211.pdf` returns 302, so the flat form is the real key for the newer files and
+only redirects for the older ones. Use the flat form and treat the canonical path as a fallback.
+
+Variants that do NOT work, so do not retry them: `<id>.pdf`, `fundo/<id>.pdf`,
+`lamina/<id>.pdf`, `fundo/varejo/<id>.pdf`, zero-padded `056211`.
+
+### ~14% of the shelf has no lâmina at all
+
+The 6 sampled misses are **all ids ≥ 57793**, i.e. the newest funds, and they miss under every
+form and every channel. Extrapolating, roughly 65 of the 467 will yield no CNPJ from this path.
+Decide up front whether those are dropped or chased through the detail panel, which may still
+render a link this spec's URL rule cannot reconstruct.
+
+### The four channels are NOT an availability signal
+
+Both forms aside, a fund has a lâmina in **all four** channels or in **none**:
+
+```
+40369  agencia 200  uniclass 200  personnalite 200  private 200
+52678  agencia 200  uniclass 200  personnalite 200  private 200
+56211  all four 302        59392  all four 302
+```
+
+So `/fundo/<channel>/` is four renderings of the same fund (different fee tables, hence
+different byte sizes), not four different shelves. An earlier revision of this section floated
+modelling an Itaú *segment* column off the path — that is now ruled out. The `segments` map in
+`_rentabilityService` is the real per-segment lever, and reaching another segment means loading
+the page as that segment, not changing the PDF path.
 
 ### Miss and hit are trivially distinguishable
 
@@ -231,68 +310,61 @@ No 404 is ever returned, so classify on status plus content-type, not on body si
 
 ### The PDFs are rebuilt daily
 
-`last-modified` on a hit was `Tue, 22 Sep 2026 03:49:07 GMT` — the morning of the probe,
-for a document whose reference month is August. So the phase-2 disk cache is safe to keep
-but must be **keyed by id AND date**, or a re-run silently reports last month's figures.
-The CNPJ and official name are stable; only the return figures move.
+`last-modified` on a hit was `Tue, 22 Sep 2026 03:49:07 GMT` — the morning of the probe, for a
+document whose reference month is August. So the phase-2 disk cache is safe to keep but must be
+**keyed by id AND date**, or a re-run silently reports last month's figures. The CNPJ and
+official name are stable; only the return figures move.
 
-### Enumeration is NOT a shortcut — measured, so do not retry it
+### Enumeration is NOT a shortcut — and is now unnecessary
 
-The spec wonders whether the id space could be walked directly. It is too sparse:
-
-```
-~25 probes across 50,000-65,000  ->  3 hits (52677, 52678, 52700)
-467 funds over a ~15,000-wide id range  ->  roughly 3% density
-```
-
-Finding all 467 by enumeration means on the order of 15,000 requests against someone
-else's host to replace a 47-page crawl. Disproportionate, so **the spec's own advice
-stands: look for the JSON API first.** That remains the only way to collapse phase 1, and
-it needs the attached browser — the table page is still 403 to everything else.
-
-There is no directory listing to fall back on: the bucket root and the obvious manifest
-paths return CloudFront 502 or an S3 redirect, never an index.
+Measured before the dataset was found: ~25 probes across 50,000-65,000 yielded 3 hits, so the id
+space is roughly 3% dense and finding 467 funds blind would take on the order of 15,000 requests.
+Moot now that `tempData` hands over all 467 ids in one call. There is no directory listing either
+— the bucket root and the obvious manifest paths return CloudFront 502 or an S3 redirect.
 
 ### One claim in this spec is still unverified
 
 > The `<id>` is a fund identifier in the same numbering space as the pension area's `id_produto`.
 
 Not confirmed. The saved pension artefacts under
-`/Volumes/workplace/meshclaw-workspace/itau_previdencia/` do not retain `id_produto` — the
-CSVs are the OPIN-derived ones, and OPIN's own `codigo_produto` is a *three*-digit code
-(401, 402, 403 …), a different space entirely. Testing it needs a logged-area `?id=` value,
-so it waits for the browser too.
+`/Volumes/workplace/meshclaw-workspace/itau_previdencia/` do not retain `id_produto`, and OPIN's
+`codigoProduto` is a *three*-digit code (401, 402, 403 …), a different space. The retail
+`codigoProduto` runs 40369-59392, which is at least consistent with the five-digit claim.
 
 ---
 
 ## Proposed implementation
 
-### Phase 1 — harvest lâmina URLs (browser, attached Chrome)
+### Phase 1 — read the dataset out of the page (browser, attached Chrome, ONE call)
 
-For each of the 47 pages, for each of the 10 rows: click the row's
-`button "mais info <name>"`, read the `href` of `link "baixar lâmina <name>"`, close the
-panel, move on. Emit one record per fund with the commercial name, the lâmina URL and
-the table columns.
+**Superseded by the probe above: there is no click loop, and there is no API to find.** Load the
+page in the user's own Chrome and evaluate
 
-Model it on `scripts/extract-pension-catalog.js`, which already solves the same problems
-against the same bank's SPA: an on-page control panel, progress persisted after every
-item so a throttled or timed-out run resumes instead of restarting, and resume by
-page/item position. 467 sequential interactions will hit rate limiting — the pension
-extractor met `Forbidden` throttling and backs off with `ESPERAS = [20s, 60s, 120s, 240s]`.
-Reuse that.
+```js
+document.querySelector('itau-tabela-rentabilidade')
+  ._ngElementStrategy.componentRef.instance.tempData
+```
 
-Prefer a console script (or the userscript variant) over driving clicks from
-`playwright-cli`: it runs in the user's own tab, survives page re-renders, and does not
-depend on an attached session staying alive for the length of a 467-item crawl.
+which returns all 467 records including `codigoProduto`. Save it and `detach`. No pagination, no
+467 detail-panel opens, and none of the throttling risk this spec originally budgeted for — the
+page issues no data requests at all, so the only traffic is analytics.
 
-**Check for a JSON API before building the click loop.** The `<id>_agencia.pdf` naming
-strongly suggests the page hydrates from an endpoint that already carries those ids for
-all 467 funds. If it does, phase 1 collapses from ~470 interactions to a handful of
-requests. `src/corretoras/corretoras.ts` already does exactly this for XP — it uses
-`page.setRequestInterception(true)` plus a `requestfinished` listener to capture the
-underlying `api.xpi.com.br/investment-funds/yield-portal/...` response instead of
-scraping the DOM. Look for the equivalent with `playwright-cli requests`, the browser
-devtools network tab, or a puppeteer interception run.
+Output committed at `src/corretoras/itau-rentabilidade.json` (467 records, sorted by
+`codigoProduto`).
+
+Two things to carry forward:
+
+- **Guard on `tempData.length`.** A framework change that renames the property or splits the array
+  would otherwise yield a short list that still looks plausible. Cross-check against the page's own
+  `exibindo N de M resultados` text before trusting a run.
+- **This reads `varejo` only.** `_rentabilityService.segments` names five more (`uniclass`,
+  `personnalite`, `private-bank`, `empresas`), so the shelf is per-segment and this is one slice.
+  Reaching another segment means loading the page as that segment — not changing the PDF path,
+  which is ruled out above.
+
+The original plan — modelling a 467-item click loop on `scripts/extract-pension-catalog.js` with
+its `ESPERAS = [20s, 60s, 120s, 240s]` backoff — is no longer needed here. That machinery still
+matters for the *pension logged area*, which has no equivalent in-memory dataset exposed.
 
 ### Phase 2 — download and parse (Node, no browser)
 
@@ -322,13 +394,17 @@ exist on macOS, so install with `npm install --ignore-scripts pdf-parse`.
 ## Gotcha checklist
 
 - Plain HTTP and bundled Chromium get 403; only the user's attached browser loads the page.
-- `playwright-cli` sessions are per process — attach and act in the same one; `detach`, don't `close`.
-- No CNPJ anywhere in the HTML; the footer CNPJ is the bank's.
+- `playwright-cli` sessions are per process for the ENV var, but the session NAME survives: the CLI prints `-s=kc-xxxx`, reuse it. `detach`, don't `close`.
+- There is **no JSON API** — 153 XHR/fetch, zero fund endpoints. Don't go looking again.
+- The dataset is on the Angular Elements component instance (`_ngElementStrategy.componentRef.instance.tempData`), not in the DOM, not in a global, not React, not an iframe.
+- Use the flat `<id>_agencia.pdf`; the canonical `/fundo/<channel>/<id>.pdf` covers 56% vs 86%.
+- All four channels hit or all four miss — the channel path is NOT an availability signal.
+- Roughly 14% of the shelf (the newest ids, ≥ ~57793) has no lâmina under any form, so no CNPJ.
+- No CNPJ anywhere in the HTML or the in-memory payload; the footer CNPJ is the bank's.
 - The lâmina host is public — do not carry cookies into phase 2 or make it depend on the browser.
-- Use the canonical `/fundo/<channel>/<id>.pdf`; the flat `<id>_agencia.pdf` is a 301 alias.
 - A missing lâmina is a **301/302 to XML**, never a 404 — classify on status plus content-type.
 - The PDFs are rebuilt daily, so key the phase-2 cache by id AND date or you re-report stale returns.
-- Do not enumerate the id space: ~3% density means ~15,000 requests to find 467 funds.
+- Do not enumerate the id space: ~3% density, and `tempData` gives all 467 ids anyway.
 - PDF text needs a CMap-aware extractor; inflate-and-regex silently returns a timestamp.
 - `pdf-parse` v2 exports the `PDFParse` class, not a callable.
 - Match the CNPJ by format; there is no `CNPJ:` label to anchor on.

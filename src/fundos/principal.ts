@@ -5,7 +5,9 @@ import {
   writeKeyed,
 } from './sheet-writer';
 
-export type Platform = 'BTG' | 'XP' | 'ONZE';
+// Re-exported from the universe so the platform set has ONE definition.
+export type {Platform} from '../tracker';
+import type {Platform} from '../tracker';
 
 export interface CanonicalFund {
   cnpj: string;
@@ -22,8 +24,8 @@ export const PRINCIPAL_HEADER_ROWS = 2;
 export const PRINCIPAL_COLUMNS: ColumnMap = {
   CNPJ: 'A',
   DENOM_SOCIAL: 'B',
-  BTG: 'H',
-  XP: 'I',
+  ITAU: 'H',
+  ITAU_PREV: 'I',
   Vol: 'J',
   ONZE: 'AD',
 };
@@ -83,8 +85,8 @@ export function principalRow(fund: CanonicalFund): {
   return {
     CNPJ: fund.cnpj,
     DENOM_SOCIAL: fund.name,
-    BTG: platforms.includes('BTG'),
-    XP: platforms.includes('XP'),
+    ITAU: platforms.includes('ITAU'),
+    ITAU_PREV: platforms.includes('ITAU_PREV'),
     Vol: fund.volatility,
     ONZE: platforms.includes('ONZE'),
   };

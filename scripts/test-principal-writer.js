@@ -58,7 +58,7 @@ const FIXTURES = [
     name: 'ALPHA FIC FIM',
     type: 'FI',
     volatility: 0.0123456789,
-    availability: ['BTG', 'XP'],
+    availability: ['ITAU', 'ITAU_PREV'],
     monthsOfHistory: 60,
   },
   {
@@ -73,7 +73,7 @@ const FIXTURES = [
     cnpj: '33.333.333/0001-33',
     name: 'GAMMA SEM VOL FIA',
     type: 'FI',
-    availability: ['BTG'],
+    availability: ['ITAU'],
     monthsOfHistory: 12,
   },
   {
@@ -81,7 +81,7 @@ const FIXTURES = [
     name: 'DELTA FIP',
     type: 'FIP',
     volatility: 0.4,
-    availability: ['BTG'],
+    availability: ['ITAU'],
     monthsOfHistory: 90,
   },
   {
@@ -89,7 +89,7 @@ const FIXTURES = [
     name: 'EPSILON FII',
     type: 'fii',
     volatility: 0.3,
-    availability: ['XP'],
+    availability: ['ITAU_PREV'],
     monthsOfHistory: 90,
   },
   {
@@ -97,7 +97,7 @@ const FIXTURES = [
     name: 'ZETA SEM HISTORICO',
     type: 'FI',
     volatility: 0.2,
-    availability: ['XP'],
+    availability: ['ITAU_PREV'],
     monthsOfHistory: 0,
   },
   {
@@ -105,7 +105,7 @@ const FIXTURES = [
     name: 'ALPHA DUPLICADO',
     type: 'FI',
     volatility: 0.9,
-    availability: ['XP'],
+    availability: ['ITAU_PREV'],
     monthsOfHistory: 60,
   },
 ];
@@ -163,8 +163,8 @@ async function main() {
     check('row projection', principalRow(FIXTURES[1]), {
       CNPJ: '22.222.222/0001-22',
       DENOM_SOCIAL: 'ONZE | BETA PREV FIC RF',
-      BTG: false,
-      XP: false,
+      ITAU: false,
+      ITAU_PREV: false,
       Vol: 0.0549,
       ONZE: true,
     });
@@ -232,8 +232,8 @@ async function main() {
       'Resgate',
       'M',
       'Buy',
-      'BTG',
-      'XP',
+      'ITAU',
+      'ITAU_PREV',
       'Vol',
       'DP',
     ]);
@@ -265,7 +265,7 @@ async function main() {
           ? Object.assign({}, f, {
               name: 'ALPHA v2',
               volatility: 0.26,
-              availability: ['XP'],
+              availability: ['ITAU_PREV'],
             })
           : f
     );

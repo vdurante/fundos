@@ -18,14 +18,23 @@
  *        const reg = await loadRegistry();       // cache-first
  *        reg.lookup('20.335.522/0001-51');       // {cnpj, name, situacao, isClass, isFund}
  */
-'use strict';
-const fs = require('fs');
-const path = require('path');
+import * as fs from 'fs';
+import * as path from 'path';
+import {CACHE as CACHE_ROOT} from './paths';
 
 const URL =
   'https://dados.cvm.gov.br/dados/FI/CAD/DADOS/registro_fundo_classe.zip';
-const CACHE = path.join(path.dirname(path.dirname(__dirname)), '.cache', 'cvm');
+const CACHE = path.join(CACHE_ROOT, 'cvm');
 const ZIP = path.join(CACHE, 'registro_fundo_classe.zip');
+
+export interface RegistryEntry {
+  cnpj: string;
+  name: string;
+  situacao: string;
+  operating: boolean;
+  isClass: boolean;
+  isFund: boolean;
+}
 
 const OPERATING = 'Em Funcionamento Normal';
 const KNOWN_SITUACOES = new Set([
@@ -38,8 +47,9 @@ const KNOWN_SITUACOES = new Set([
   'Em Análise',
 ]);
 
-const digits = s => String(s || '').replace(/\D/g, '');
-const ageDays = file => (Date.now() - fs.statSync(file).mtimeMs) / 86400000;
+const digits = (s: unknown) => String(s || '').replace(/\D/g, '');
+const ageDays = (file: string) =>
+  (Date.now() - fs.statSync(file).mtimeMs) / 86400000;
 
 async function download() {
   fs.mkdirSync(CACHE, {recursive: true});
@@ -56,10 +66,10 @@ async function download() {
 }
 
 /** Semicolon-delimited, latin1, with quoted free-text fields in some CVM files. */
-function parseCsv(text) {
-  const rows = [];
+function parseCsv(text: string) {
+  const rows: string[][] = [];
   let field = '';
-  let row = [];
+  let row: string[] = [];
   let quoted = false;
   for (let i = 0; i < text.length; i++) {
     const c = text[i];
@@ -89,7 +99,13 @@ function parseCsv(text) {
   return rows;
 }
 
-function index(rows, cnpjCol, kind, into, unknownSituacoes) {
+function index(
+  rows: string[][],
+  cnpjCol: string,
+  kind: 'isClass' | 'isFund',
+  into: Map<string, RegistryEntry>,
+  unknownSituacoes: Set<string>,
+) {
   const hdr = rows[0];
   const iCnpj = hdr.indexOf(cnpjCol);
   const iName = hdr.indexOf('Denominacao_Social');
@@ -134,14 +150,14 @@ async function loadRegistry({maxAgeDays = 7, refresh = false} = {}) {
     await download();
   }
   const zip = new AdmZip(ZIP);
-  const read = name => {
+  const read = (name: string) => {
     const e = zip.getEntry(name);
     if (!e) throw new Error(`${name} missing from the registry zip`);
     return e.getData().toString('latin1');
   };
 
   const byCnpj = new Map();
-  const unknown = new Set();
+  const unknown = new Set<string>();
   // classes first: CNPJ_Classe is the investable vehicle and wins the lookup
   const nClass = index(
     parseCsv(read('registro_classe.csv')),
@@ -173,14 +189,14 @@ async function loadRegistry({maxAgeDays = 7, refresh = false} = {}) {
     classes: nClass,
     funds: nFund,
     ageDays: ageDays(ZIP),
-    lookup: cnpj => byCnpj.get(digits(cnpj)) || null,
-    has: cnpj => byCnpj.has(digits(cnpj)),
+    lookup: (cnpj: string) => byCnpj.get(digits(cnpj)) || null,
+    has: (cnpj: string) => byCnpj.has(digits(cnpj)),
     /** Every indexed entry, for name-based search. Read-only by convention. */
     entries: () => byCnpj.values(),
   };
 }
 
-module.exports = {loadRegistry, OPERATING, KNOWN_SITUACOES};
+export {loadRegistry, OPERATING, KNOWN_SITUACOES};
 
 if (require.main === module) {
   loadRegistry({refresh: process.argv.includes('--refresh')}).then(r => {

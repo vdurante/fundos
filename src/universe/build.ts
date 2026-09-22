@@ -12,41 +12,48 @@
  *   node src/universe/build.js --no-prompt   # report holes, never ask (cron/CI)
  *   node src/universe/build.js --dry-run     # report only, write nothing
  */
-'use strict';
+import * as fs from 'fs';
+import * as os from 'os';
+import * as path from 'path';
+import * as readline from 'readline';
+import {dataFile} from '../lib/paths';
 
-const fs = require('fs');
-const os = require('os');
-const path = require('path');
-const readline = require('readline');
+import {collect, PLATFORMS} from './fund-record';
+import {merge} from './merge';
+import {enrich} from './enrich';
+import {loadRegistry} from '../lib/cvm-registry';
+import * as overridesStore from './overrides';
+import {
+  AskFn,
+  FundRecord,
+  OverrideEntry,
+  Platform,
+  PlatformCounts,
+} from './types';
 
-const {collect, PLATFORMS} = require('./fund-record');
-const {merge} = require('./merge');
-const {enrich} = require('./enrich');
-const {loadRegistry} = require('../lib/cvm-registry');
-const overridesStore = require('./overrides');
+const OUT = dataFile('universe.json');
 
-const OUT = path.join(__dirname, '..', 'corretoras', 'universe.json');
-
-const pad = (s, n) => String(s).padEnd(n);
+const pad = (s: unknown, n: number) => String(s).padEnd(n);
 
 function prompter() {
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
   });
-  const question = q => new Promise(res => rl.question(q, a => res(a.trim())));
+  const question = (q: string): Promise<string> =>
+    new Promise(res => rl.question(q, a => res(a.trim())));
   const who = `${os.userInfo().username} ${new Date().toISOString().slice(0, 10)}`;
 
   return {
     close: () => rl.close(),
-    async ask(fund, check) {
+    async ask(fund: FundRecord, check: (e: OverrideEntry) => string | null) {
       console.log(`\n  ${fund.key}  ${fund.name}`);
       console.log(`  reason: ${fund.resolution || 'no document'}`);
       if (fund.hint) console.log(`  hint:   ${fund.hint}`);
       for (let attempt = 0; attempt < 3; attempt++) {
         const answer = await question('  CNPJ (blank to skip): ');
         if (!answer) return null;
-        const entry = {
+        const entry: OverrideEntry = {
           cnpj: answer,
           why: fund.resolution || 'no document from any source',
           sourcedBy: `${who}, entered at the prompt`,
@@ -66,7 +73,7 @@ function prompter() {
 
 async function main() {
   const argv = process.argv.slice(2);
-  const flag = n => argv.includes(n);
+  const flag = (n: string) => argv.includes(n);
   const dryRun = flag('--dry-run');
   const interactive = !flag('--no-prompt') && !dryRun && process.stdin.isTTY;
 
@@ -112,7 +119,7 @@ async function main() {
   console.log(
     pad('platform', 12) +
       ['listed', 'entered', 'no cnpj', 'off shelf', 'master', 'dead']
-        .map(h => h.padStart(10))
+        .map((h: string) => h.padStart(10))
         .join(''),
   );
   for (const p of PLATFORMS) {
@@ -127,7 +134,7 @@ async function main() {
     console.log(
       pad(p, 12) +
         [s.listed, s.entered, s.noCnpj, s.offShelf, s.master, s.notOperating]
-          .map(n => String(n).padStart(10))
+          .map((n: number) => String(n).padStart(10))
           .join(''),
     );
   }

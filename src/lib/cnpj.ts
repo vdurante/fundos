@@ -1,21 +1,19 @@
-'use strict';
-
 const MASTER_RE = /\bMASTER\b/i;
 
-const isMaster = name => MASTER_RE.test(String(name));
+const isMaster = (name: unknown) => MASTER_RE.test(String(name));
 
-const digits = cnpj => String(cnpj).replace(/\D/g, '');
+const digits = (cnpj: unknown) => String(cnpj).replace(/\D/g, '');
 
-const format = cnpj =>
+const format = (cnpj: unknown) =>
   digits(cnpj).replace(
     /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/,
     '$1.$2.$3/$4-$5',
   );
 
-function validCnpj(formatted) {
+function validCnpj(formatted: unknown) {
   const d = digits(formatted);
   if (d.length !== 14 || /^(\d)\1{13}$/.test(d)) return false;
-  const check = len => {
+  const check = (len: number) => {
     let sum = 0;
     let w = len - 7;
     for (let i = 0; i < len; i++) {
@@ -78,7 +76,7 @@ const NAME_STOPWORDS = new Set([
   'financeiro',
 ]);
 
-const nameWords = s =>
+const nameWords = (s: unknown) =>
   new Set(
     String(s)
       .normalize('NFD')
@@ -88,12 +86,12 @@ const nameWords = s =>
       .filter(w => w.length > 2 && !NAME_STOPWORDS.has(w)),
   );
 
-const sharedWords = (a, b) => {
+const sharedWords = (a: unknown, b: unknown) => {
   const wb = nameWords(b);
   return [...nameWords(a)].filter(w => wb.has(w));
 };
 
-module.exports = {
+export {
   isMaster,
   validCnpj,
   digits,

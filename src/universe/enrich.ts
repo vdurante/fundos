@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Stage 3. Given the merged records, fill the holes the crawls left.
  *
@@ -9,20 +7,31 @@
  * CNPJ computes wrong returns that nothing downstream can detect.
  */
 
-const overrides = require('./overrides');
-const {format} = require('../lib/cnpj');
+import * as overrides from './overrides';
+import {
+  AskFn,
+  EnrichResult,
+  FundRecord,
+  OverrideEntry,
+  Registry,
+} from './types';
+import {format} from '../lib/cnpj';
 
 /**
  * @param {object[]} records normalized fund records
  * @param {object} registry loaded CVM registry
  * @param {{ask?: (fund: object) => Promise<object|null>}} opts
  */
-async function enrich(input, registry, opts = {}) {
+async function enrich(
+  input: FundRecord[],
+  registry: Registry,
+  opts: {ask?: AskFn} = {},
+): Promise<EnrichResult> {
   const records = input;
   const byKey = new Map(records.map(r => [r.key, r]));
   const store = overrides.load();
 
-  const problems = [];
+  const problems: string[] = [];
   for (const [key, entry] of Object.entries(store)) {
     const problem = overrides.validate(key, entry, byKey, registry);
     if (problem) problems.push(problem);
@@ -37,11 +46,11 @@ async function enrich(input, registry, opts = {}) {
       records,
     };
 
-  const conflicts = [];
-  const stale = [];
+  const conflicts: EnrichResult['conflicts'] = [];
+  const stale: EnrichResult['stale'] = [];
   for (const [key, entry] of Object.entries(store)) {
     const fund = byKey.get(key);
-    if (!fund.cnpj) continue;
+    if (!fund || !fund.cnpj) continue;
     if (format(fund.cnpj) === format(entry.cnpj)) {
       stale.push({
         key,
@@ -62,9 +71,9 @@ async function enrich(input, registry, opts = {}) {
   if (conflicts.length)
     return {problems: [], applied: [], stale, conflicts, missing: [], records};
 
-  const applied = [];
-  const missing = [];
-  const out = [];
+  const applied: EnrichResult['applied'] = [];
+  const missing: FundRecord[] = [];
+  const out: FundRecord[] = [];
   let added = false;
 
   for (const source of records) {
@@ -74,10 +83,12 @@ async function enrich(input, registry, opts = {}) {
     }
     const fund = {...source};
 
-    let entry = store[fund.key];
+    let entry: OverrideEntry | undefined = store[fund.key];
     if (!entry && opts.ask) {
-      const check = e => overrides.validate(fund.key, e, byKey, registry);
-      entry = await opts.ask(fund, check);
+      const check = (e: OverrideEntry) =>
+        overrides.validate(fund.key, e, byKey, registry);
+      const answered = await opts.ask(fund, check);
+      entry = answered ?? undefined;
       if (entry) {
         const problem = check(entry);
         if (problem) {
@@ -96,6 +107,11 @@ async function enrich(input, registry, opts = {}) {
     }
     const cnpj = format(entry.cnpj);
     const reg = registry.lookup(cnpj);
+    if (!reg) {
+      missing.push({...fund, refused: `${cnpj} vanished from the registry`});
+      out.push(fund);
+      continue;
+    }
     fund.cnpj = cnpj;
     fund.officialName = reg.name;
     fund.situacao = reg.situacao;
@@ -109,4 +125,4 @@ async function enrich(input, registry, opts = {}) {
   return {problems: [], applied, stale, conflicts, missing, records: out};
 }
 
-module.exports = {enrich};
+export {enrich};

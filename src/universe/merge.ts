@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Stage 2. Turn per-platform records into the tracked universe.
  *
@@ -17,14 +15,16 @@
  * A record with no CNPJ cannot enter, and is counted rather than dropped in silence.
  */
 
-const {OPERATING} = require('../lib/cvm-registry');
+import {OPERATING} from '../lib/cvm-registry';
+import {FundRecord, MergeResult, UniverseFund} from './types';
 
-const admissible = r => r.onShelf && !r.master && r.situacao === OPERATING;
+const admissible = (r: FundRecord) =>
+  r.onShelf && !r.master && r.situacao === OPERATING;
 
-function merge(records) {
-  const byPlatform = {};
-  const rejected = [];
-  const universe = new Map();
+function merge(records: FundRecord[]): MergeResult {
+  const byPlatform: MergeResult['byPlatform'] = {};
+  const rejected: MergeResult['rejected'] = [];
+  const universe = new Map<string, UniverseFund>();
 
   for (const r of records) {
     const p = (byPlatform[r.platform] = byPlatform[r.platform] || {
@@ -80,4 +80,4 @@ function merge(records) {
   };
 }
 
-module.exports = {merge, admissible, OPERATING};
+export {merge, admissible, OPERATING};

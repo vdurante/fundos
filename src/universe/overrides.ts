@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Hand-supplied CNPJs, for funds no crawl could identify.
  *
@@ -14,11 +12,13 @@
  * being permanently masked by it.
  */
 
-const fs = require('fs');
-const path = require('path');
-const {validCnpj, isMaster, format, sharedWords} = require('../lib/cnpj');
+import * as fs from 'fs';
+import * as path from 'path';
+import {validCnpj, isMaster, format, sharedWords} from '../lib/cnpj';
+import {dataFile} from '../lib/paths';
+import {FundRecord, OverrideEntry, OverrideStore, Registry} from './types';
 
-const FILE = path.join(__dirname, '..', 'corretoras', 'cnpj-overrides.json');
+const FILE = dataFile('cnpj-overrides.json');
 
 const README = [
   'Hand-supplied CNPJs for funds whose source document does not yield one.',
@@ -40,13 +40,13 @@ const README = [
   'a stale entry can be re-checked rather than trusted forever.',
 ];
 
-function load() {
+function load(): OverrideStore {
   if (!fs.existsSync(FILE)) return {};
   return JSON.parse(fs.readFileSync(FILE, 'utf8')).overrides || {};
 }
 
-function save(overrides) {
-  const ordered = {};
+function save(overrides: OverrideStore) {
+  const ordered: OverrideStore = {};
   for (const k of Object.keys(overrides).sort()) ordered[k] = overrides[k];
   const tmp = `${FILE}.tmp`;
   fs.writeFileSync(
@@ -57,7 +57,12 @@ function save(overrides) {
 }
 
 /** @returns {string|null} the reason to refuse, or null when the entry is sound. */
-function validate(key, entry, byKey, registry) {
+function validate(
+  key: string,
+  entry: OverrideEntry | undefined,
+  byKey: Map<string, FundRecord>,
+  registry: Registry,
+): string | null {
   const fund = byKey.get(key);
   if (!fund) return `${key}: no fund with that key in any platform's catalogue`;
   if (!entry || !entry.cnpj) return `${key}: missing "cnpj"`;
@@ -87,4 +92,4 @@ function validate(key, entry, byKey, registry) {
   return null;
 }
 
-module.exports = {FILE, README, load, save, validate};
+export {FILE, README, load, save, validate};

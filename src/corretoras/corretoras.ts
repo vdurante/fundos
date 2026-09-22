@@ -14,7 +14,7 @@ async function writeCnpjs(corretora: string, fundos: Fundo[]) {
   const cnpjs = JSON.stringify(
     fundos.map(p => p.cnpj),
     null,
-    2
+    2,
   );
 
   fs.writeFileSync(`./src/corretoras/${corretora}.json`, cnpjs);
@@ -25,7 +25,7 @@ async function writeCnpjs(corretora: string, fundos: Fundo[]) {
 
 async function btg() {
   const result = await axios.get<Fundo[]>(
-    'https://www.btgpactualdigital.com/services/api/funds-public/public/B2C'
+    'https://www.btgpactualdigital.com/services/api/funds-public/public/B2C',
   );
 
   await writeCnpjs('btg', result.data);
@@ -53,7 +53,7 @@ async function xp() {
       request
         .url()
         .startsWith(
-          'https://api.xpi.com.br/investment-funds/yield-portal/v2/investment-funds'
+          'https://api.xpi.com.br/investment-funds/yield-portal/v2/investment-funds',
         )
     ) {
       const response = request.response();
@@ -78,7 +78,7 @@ async function xp() {
     'https://www.xpi.com.br/investimentos/fundos-de-investimento/lista/#/',
     {
       waitUntil: 'networkidle0',
-    }
+    },
   );
   await browser.close();
 

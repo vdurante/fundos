@@ -51,7 +51,7 @@ const ADAPTERS = {
         resolution:
           f.resolution ||
           (f.absence === 'blocked' ? 'fetch-blocked' : 'no-document-anywhere'),
-      })
+      }),
     ),
 
   ITAU_PREV: () =>
@@ -66,7 +66,7 @@ const ADAPTERS = {
         resolution: f.cnpj ? 'opin-published' : null,
         onShelf: f.onShelf,
         master: f.master,
-      })
+      }),
     ),
 
   ONZE: () =>
@@ -80,7 +80,7 @@ const ADAPTERS = {
         officialName: f.nomeOficial,
         situacao: f.situacao,
         resolution: f.resolution,
-      })
+      }),
     ),
 };
 

@@ -23,7 +23,7 @@ function check(label, actual, expected) {
       ok
         ? ''
         : `  expected ${JSON.stringify(expected)} got ${JSON.stringify(actual)}`
-    }`
+    }`,
   );
 }
 
@@ -50,7 +50,7 @@ async function readGrid(sheets) {
     }),
   ]);
   const props = meta.data.sheets.find(
-    s => s.properties.title === TITLE
+    s => s.properties.title === TITLE,
   ).properties;
   return {rows: vals.data.values || [], props};
 }
@@ -110,7 +110,7 @@ async function columnMapTests(sheets) {
   const COLUMNS = {CNPJ: 'A', NAME: 'B', VOL: 'E', FLAG: 'G'};
 
   console.log(
-    '\nrun 4 — interleaved columns, formulas and human cells in the gaps'
+    '\nrun 4 — interleaved columns, formulas and human cells in the gaps',
   );
   await withScratch(sheets, TITLE, 8, async () => {
     let s = await writeKeyed(
@@ -121,7 +121,7 @@ async function columnMapTests(sheets) {
         {CNPJ: 'k2', NAME: 'two', VOL: 0.42, FLAG: false},
         {CNPJ: 'k3', NAME: 'three', VOL: 0.03, FLAG: true},
       ],
-      {columns: COLUMNS}
+      {columns: COLUMNS},
     );
     check('column runs are A:B, E, G', s.columnRuns, ['A:B', 'E:E', 'G:G']);
     check('appended 3', s.appended, 3);
@@ -172,7 +172,7 @@ async function columnMapTests(sheets) {
         {CNPJ: 'k3', NAME: 'three', VOL: 0.03, FLAG: true},
         {CNPJ: 'k4', NAME: 'four', VOL: 0.04, FLAG: true},
       ],
-      {columns: COLUMNS}
+      {columns: COLUMNS},
     );
     check('matched 2', s.matched, 2);
     check('appended 1 (k4)', s.appended, 1);
@@ -182,37 +182,37 @@ async function columnMapTests(sheets) {
     check(
       'VOLPCT still a formula on every row',
       formulas.map(r => String(r[0]).startsWith('=')),
-      [true, true, true]
+      [true, true, true],
     );
     const lens = await read(sheets, TITLE, 'F2:F4', 'FORMULA');
     check(
       'LEN still a formula on every row',
       lens.map(r => String(r[0]).startsWith('=')),
-      [true, true, true]
+      [true, true, true],
     );
 
     grid = await read(sheets, TITLE, 'A1:G5');
     check(
       'human column untouched by the update',
       [grid[1][3], grid[2][3], grid[3][3]],
-      ['mine-1', 'mine-2', 'mine-3']
+      ['mine-1', 'mine-2', 'mine-3'],
     );
     check(
       'k1 writer columns updated',
       [grid[1][1], grid[1][4], grid[1][6]],
-      ['ONE-v2', 0.9, false]
+      ['ONE-v2', 0.9, false],
     );
     check('k1 VOLPCT recomputed from the new VOL', grid[1][2], 90);
     check(
       'k2 writer columns blanked, key kept',
       [grid[2][0], cell(grid[2][1]), cell(grid[2][4]), cell(grid[2][6])],
-      ['k2', '', '', '']
+      ['k2', '', '', ''],
     );
     check('k2 HUMAN survived the blanking', grid[2][3], 'mine-2');
     check(
       'k4 appended into the mapped columns',
       [grid[4][0], cell(grid[4][1]), cell(grid[4][4]), cell(grid[4][6])],
-      ['k4', 'four', 0.04, true]
+      ['k4', 'four', 0.04, true],
     );
   });
 
@@ -225,7 +225,7 @@ async function columnMapTests(sheets) {
         {CNPJ: 'x1', NAME: 'first'},
         {CNPJ: 'x2', NAME: 'second'},
       ],
-      {columns: {CNPJ: 'C', NAME: 'A'}}
+      {columns: {CNPJ: 'C', NAME: 'A'}},
     );
     check('runs sorted by column, not by header order', s.columnRuns, [
       'A:A',
@@ -238,7 +238,7 @@ async function columnMapTests(sheets) {
       '__writer_test_offset',
       ['CNPJ', 'NAME'],
       [{CNPJ: 'x2', NAME: 'SECOND-v2'}],
-      {columns: {CNPJ: 'C', NAME: 'A'}}
+      {columns: {CNPJ: 'C', NAME: 'A'}},
     );
     check('matched by the key read from C', again.matched, 1);
     check('blanked the missing key', again.blanked, 1);
@@ -246,12 +246,12 @@ async function columnMapTests(sheets) {
     check(
       'x2 updated in place',
       [after[2][0], after[2][2]],
-      ['SECOND-v2', 'x2']
+      ['SECOND-v2', 'x2'],
     );
     check(
       'x1 value blanked, key kept',
       [cell(after[1][0]), after[1][2]],
-      ['', 'x1']
+      ['', 'x1'],
     );
   });
 
@@ -271,12 +271,12 @@ async function columnMapTests(sheets) {
   check(
     'columnIndexOf round-trips',
     [columnIndexOf('A'), columnIndexOf('Z'), columnIndexOf('AD')],
-    [0, 25, 29]
+    [0, 25, 29],
   );
   check(
     'columnLetter round-trips',
     [columnLetter(0), columnLetter(25), columnLetter(29)],
-    ['A', 'Z', 'AD']
+    ['A', 'Z', 'AD'],
   );
 }
 
@@ -367,7 +367,7 @@ async function main() {
     check(
       'row order preserved',
       g.rows.slice(1).map(r => r[0]),
-      ['k1', 'k2', 'k3', 'k4', 'k5']
+      ['k1', 'k2', 'k3', 'k4', 'k5'],
     );
 
     console.log('run 3 — growth past the grid');
@@ -384,12 +384,12 @@ async function main() {
     check(
       'gridProperties never shrank',
       g.props.gridProperties.rowCount >= 36,
-      true
+      true,
     );
     check(
       'columnCount never shrank',
       g.props.gridProperties.columnCount >= 8,
-      true
+      true,
     );
   } finally {
     await sheets.spreadsheets.batchUpdate({
@@ -402,7 +402,7 @@ async function main() {
   await columnMapTests(sheets);
 
   console.log(
-    failures === 0 ? '\nALL CHECKS PASSED' : `\n${failures} CHECK(S) FAILED`
+    failures === 0 ? '\nALL CHECKS PASSED' : `\n${failures} CHECK(S) FAILED`,
   );
   process.exit(failures === 0 ? 0 : 1);
 }

@@ -55,7 +55,7 @@ function encode(value: CellValue): sheets_v4.Schema$ExtendedValue {
 function chunkRows<T>(rows: T[], columns: number): T[][] {
   const perChunk = Math.max(
     1,
-    Math.floor(MAX_CELLS_PER_REQUEST / Math.max(1, columns))
+    Math.floor(MAX_CELLS_PER_REQUEST / Math.max(1, columns)),
   );
   const chunks: T[][] = [];
   for (let i = 0; i < rows.length; i += perChunk) {
@@ -94,7 +94,7 @@ export interface ColumnRun {
 
 export function resolveColumnRuns(
   headers: string[],
-  columns?: ColumnMap
+  columns?: ColumnMap,
 ): ColumnRun[] {
   if (!columns) {
     return [{startColumnIndex: 0, headers: [...headers]}];
@@ -114,8 +114,8 @@ export function resolveColumnRuns(
     if (clash !== undefined) {
       throw new Error(
         `writeKeyed: "${header}" e "${clash}" mapeiam para a mesma coluna ${columnLetter(
-          index
-        )}`
+          index,
+        )}`,
       );
     }
     byIndex.set(index, header);
@@ -137,7 +137,7 @@ export function resolveColumnRuns(
 
 export async function blankColumnsBeyond(
   sheetTitle: string,
-  keepColumns: number
+  keepColumns: number,
 ): Promise<{cleared: number; columnCount: number}> {
   const api = client();
 
@@ -196,7 +196,7 @@ export async function writeKeyed(
   sheetTitle: string,
   headers: string[],
   rows: {[header: string]: CellValue}[],
-  options: KeyedWriteOptions = {}
+  options: KeyedWriteOptions = {},
 ): Promise<KeyedWriteSummary> {
   if (!headers.length) {
     throw new Error('writeKeyed needs at least one header');
@@ -205,7 +205,7 @@ export async function writeKeyed(
   const headerRowCount = options.headerRowCount ?? HEADER_ROW_COUNT;
   if (!Number.isInteger(headerRowCount) || headerRowCount < 1) {
     throw new Error(
-      `writeKeyed: headerRowCount invalido: ${options.headerRowCount}`
+      `writeKeyed: headerRowCount invalido: ${options.headerRowCount}`,
     );
   }
   const keyHeader = headers[0];
@@ -213,7 +213,7 @@ export async function writeKeyed(
   const keyColumnIndex = columns ? columnIndexOf(columns[keyHeader]) : 0;
   const keyColumnLetter = columnLetter(keyColumnIndex);
   const lastColumnIndex = Math.max(
-    ...columnRuns.map(run => run.startColumnIndex + run.headers.length - 1)
+    ...columnRuns.map(run => run.startColumnIndex + run.headers.length - 1),
   );
 
   const api = client();
@@ -408,8 +408,8 @@ export async function writeKeyed(
     columnRuns: columnRuns.map(
       run =>
         `${columnLetter(run.startColumnIndex)}:${columnLetter(
-          run.startColumnIndex + run.headers.length - 1
-        )}`
+          run.startColumnIndex + run.headers.length - 1,
+        )}`,
     ),
   };
 }

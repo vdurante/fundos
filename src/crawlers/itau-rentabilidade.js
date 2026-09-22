@@ -113,7 +113,7 @@ async function main() {
   if (cold) {
     console.log(
       'profile is COLD — the bot shield typically serves no fund data on the first ' +
-        'load. Reloading until it does.'
+        'load. Reloading until it does.',
     );
   }
 
@@ -134,10 +134,15 @@ async function main() {
     await page.setViewport({width: 1400, height: 900});
 
     for (let attempt = 1; attempt <= RELOADS && !data; attempt++) {
-      const res = await page.goto(URL_, {waitUntil: 'networkidle2', timeout: 90000});
+      const res = await page.goto(URL_, {
+        waitUntil: 'networkidle2',
+        timeout: 90000,
+      });
       console.log(`load ${attempt}: HTTP ${res.status()}`);
       if (res.status() !== 200) {
-        console.error(`  non-200 document — the shield is refusing this client`);
+        console.error(
+          `  non-200 document — the shield is refusing this client`,
+        );
         continue;
       }
       data = await readWhenReady(page);
@@ -151,7 +156,7 @@ async function main() {
   if (!data) {
     console.error(
       `\nFAILED: no fund data after ${RELOADS} loads. This is a COLLECTION failure, ` +
-        `not an empty shelf — ${path.basename(OUT)} is left untouched.`
+        `not an empty shelf — ${path.basename(OUT)} is left untouched.`,
     );
     process.exit(2);
   }
@@ -164,7 +169,7 @@ async function main() {
   if (data.length < FLOOR || ids.size < FLOOR) {
     console.error(
       `\nASSERTION FAILED: ${data.length} records / ${ids.size} ids below the floor of ` +
-        `${FLOOR}. Treat as a partial collection; ${path.basename(OUT)} is left untouched.`
+        `${FLOOR}. Treat as a partial collection; ${path.basename(OUT)} is left untouched.`,
     );
     process.exit(1);
   }
@@ -177,7 +182,9 @@ async function main() {
   fs.writeFileSync(tmp, JSON.stringify(data, null, 2) + '\n');
   fs.renameSync(tmp, OUT);
   console.log(`\nwrote ${OUT}  (was ${prev} records, now ${data.length})`);
-  console.log('next: node src/crawlers/itau-documents.js   # resolves the CNPJs');
+  console.log(
+    'next: node src/crawlers/itau-documents.js   # resolves the CNPJs',
+  );
 }
 
 main().catch(e => {

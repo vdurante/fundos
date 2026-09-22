@@ -32,18 +32,19 @@ const CACHE = path.join(REPO, '.cache', 'onze-regulations');
 const OUT = path.join(REPO, 'src', 'corretoras', 'onze-funds.json');
 const DEFAULT_INPUT = path.join(process.env.HOME, 'Downloads', 'onze.json');
 
-const CNPJ_RE = /(\d{2})\s*\.\s*(\d{3})\s*\.\s*(\d{3})\s*\/\s*(\d{4})\s*-\s*(\d{2})/g;
+const CNPJ_RE =
+  /(\d{2})\s*\.\s*(\d{3})\s*\.\s*(\d{3})\s*\/\s*(\d{4})\s*-\s*(\d{2})/g;
 /** Prose that introduces the master rather than the fund the document is FOR. */
 const OTHER_FUND_RE =
   /MASTER|inscrito\s+no\s+CNPJ\s+sob|em\s+cotas\s+do\s+fundo|aplica\s+seus\s+recursos/i;
-
 
 function readCatalogue(file) {
   const d = JSON.parse(fs.readFileSync(file, 'utf8'));
   const seen = new Map();
   for (const [key, val] of Object.entries(d)) {
     for (const f of Array.isArray(val) ? val : [val]) {
-      if (f && f.value && !seen.has(f.value)) seen.set(f.value, {...f, _bucket: key});
+      if (f && f.value && !seen.has(f.value))
+        seen.set(f.value, {...f, _bucket: key});
     }
   }
   return [...seen.values()];
@@ -97,29 +98,37 @@ function resolve(text, registry) {
     const r = registry.lookup(c);
     return {cnpj: c, nomeOficial: r.name, situacao: r.situacao, resolution};
   };
-  if (!distinct.length) return {resolution: 'no-cnpj-in-document', distinct, masters};
+  if (!distinct.length)
+    return {resolution: 'no-cnpj-in-document', distinct, masters};
   if (!pool.length) {
     return {
-      resolution: masters.length ? 'only-the-master-is-named' : 'no-cnpj-is-a-registered-fund',
+      resolution: masters.length
+        ? 'only-the-master-is-named'
+        : 'no-cnpj-is-a-registered-fund',
       distinct,
       masters,
     };
   }
-  if (pool.length === 1) return {...note(pool[0], 'sole-registered-fund'), distinct, masters};
+  if (pool.length === 1)
+    return {...note(pool[0], 'sole-registered-fund'), distinct, masters};
 
   // The regulamento's own subject is named in the title block, before any counterparty.
   const own = pool.filter(c => !occ.some(o => o.cnpj === c && o.otherFund));
   if (own.length) pool = own;
-  if (pool.length === 1) return {...note(pool[0], 'not-named-as-other-fund'), distinct, masters};
+  if (pool.length === 1)
+    return {...note(pool[0], 'not-named-as-other-fund'), distinct, masters};
 
   const first = occ.find(o => pool.includes(o.cnpj));
-  if (first) return {...note(first.cnpj, 'first-in-title-block'), distinct, masters};
+  if (first)
+    return {...note(first.cnpj, 'first-in-title-block'), distinct, masters};
   return {resolution: 'ambiguous', distinct, masters, narrowed: pool};
 }
 
 async function main() {
   const argv = process.argv.slice(2);
-  const input = argv.includes('--input') ? argv[argv.indexOf('--input') + 1] : DEFAULT_INPUT;
+  const input = argv.includes('--input')
+    ? argv[argv.indexOf('--input') + 1]
+    : DEFAULT_INPUT;
   if (!fs.existsSync(input)) {
     console.error(`input not found: ${input}`);
     process.exit(1);
@@ -128,7 +137,7 @@ async function main() {
   console.log(`catalogue: ${funds.length} funds from ${input}`);
   const registry = await loadRegistry({});
   console.log(
-    `registry: ${registry.size} CNPJs, cache ${registry.ageDays.toFixed(1)}d old\n`
+    `registry: ${registry.size} CNPJs, cache ${registry.ageDays.toFixed(1)}d old\n`,
   );
 
   const rows = [];
@@ -151,17 +160,25 @@ async function main() {
     if (!f.regulation_url) {
       row.resolution = 'no-regulation-url';
       rows.push(row);
-      console.log(`  ${'--'.padEnd(18)} ${row.resolution.padEnd(26)} ${f.name.slice(0, 44)}`);
+      console.log(
+        `  ${'--'.padEnd(18)} ${row.resolution.padEnd(26)} ${f.name.slice(0, 44)}`,
+      );
       continue;
     }
     const got = await blob(f);
     if (got.error) {
       row.resolution = `fetch-failed: ${got.error}`;
       rows.push(row);
-      console.log(`  ${'--'.padEnd(18)} ${row.resolution.padEnd(26)} ${f.name.slice(0, 44)}`);
+      console.log(
+        `  ${'--'.padEnd(18)} ${row.resolution.padEnd(26)} ${f.name.slice(0, 44)}`,
+      );
       continue;
     }
-    row.sha256 = crypto.createHash('sha256').update(got.buf).digest('hex').slice(0, 16);
+    row.sha256 = crypto
+      .createHash('sha256')
+      .update(got.buf)
+      .digest('hex')
+      .slice(0, 16);
     const {text, pages} = await extract(got.buf);
     row.pages = pages;
     const r = resolve(text, registry);
@@ -175,7 +192,7 @@ async function main() {
     });
     rows.push(row);
     console.log(
-      `  ${(row.cnpj || '--').padEnd(18)} ${row.resolution.padEnd(26)} ${f.name.slice(0, 44)}`
+      `  ${(row.cnpj || '--').padEnd(18)} ${row.resolution.padEnd(26)} ${f.name.slice(0, 44)}`,
     );
   }
 
@@ -188,14 +205,18 @@ async function main() {
   console.log(`\nfunds            ${rows.length}`);
   console.log(`CNPJ resolved    ${withCnpj.length}`);
   const byResolution = {};
-  for (const r of rows) byResolution[r.resolution] = (byResolution[r.resolution] || 0) + 1;
+  for (const r of rows)
+    byResolution[r.resolution] = (byResolution[r.resolution] || 0) + 1;
   console.log('by resolution   ', byResolution);
   if (notOperating.length) {
     console.log(`NOT operating (${notOperating.length}):`);
-    for (const r of notOperating) console.log(`  ${r.cnpj} ${r.situacao} ${r.name}`);
+    for (const r of notOperating)
+      console.log(`  ${r.cnpj} ${r.situacao} ${r.name}`);
   }
   if (collisions.length) {
-    console.log(`\nCNPJ shared by >1 fund (${collisions.length}) — investigate:`);
+    console.log(
+      `\nCNPJ shared by >1 fund (${collisions.length}) — investigate:`,
+    );
     for (const [c, v] of collisions) console.log(`  ${c}  ${v.join(' | ')}`);
   }
 

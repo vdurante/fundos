@@ -45,9 +45,16 @@ export async function getFile(url: string) {
 
       await cacache.put('.cache', url, result.data);
     } catch (ex: any) {
-      if (ex.response.status === 404) {
+      if (ex.response?.status === 404) {
         await cacache.put('.cache', url, '404');
         return undefined;
+      }
+
+      // Without a response there was no HTTP exchange at all (DNS, timeout, offline).
+      // Dereferencing ex.response.status here reported that as a TypeError, which hid
+      // the actual cause.
+      if (!ex.response) {
+        throw new Error(`${url}: ${ex.code || ex.message || 'request failed'}`);
       }
 
       throw ex;

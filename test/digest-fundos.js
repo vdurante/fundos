@@ -34,7 +34,11 @@ const ZIP =
   'http://dados.cvm.gov.br/dados/FI/DOC/INF_DIARIO/DADOS/inf_diario_fi_202608.zip';
 
 const sha = v =>
-  crypto.createHash('sha256').update(JSON.stringify(v)).digest('hex').slice(0, 16);
+  crypto
+    .createHash('sha256')
+    .update(JSON.stringify(v))
+    .digest('hex')
+    .slice(0, 16);
 
 const FIXED_NOW = new Date(Date.UTC(2026, 8, 22));
 
@@ -69,12 +73,18 @@ function pureDigest() {
     monthKeyCount: monthKeys.length,
     yearRange: rentYearRange(monthKeys),
     range: [range(1, 5), range(2026, 2023, -1), range(3, 3)],
-    parseMonthCount: ['12M', '3Y', 'T', 'bogus'].map(s => String(parseMonthCount(s))),
+    parseMonthCount: ['12M', '3Y', 'T', 'bogus'].map(s =>
+      String(parseMonthCount(s)),
+    ),
     columnToA1: [1, 26, 27, 52, 53, 703].map(n => columnToA1(n)),
     monthKeyOf: [46000, '2026-09-01', '', null].map(v => String(monthKeyOf(v))),
     calcSortino: String(calcSortino(series, bench, 12)),
-    calcSortinoShort: String(calcSortino(series.slice(0, 3), bench.slice(0, 3), 12)),
-    calcSortinoNoDownside: String(calcSortino([0.02, 0.03, 0.04], [0.001, 0.001, 0.001], 3)),
+    calcSortinoShort: String(
+      calcSortino(series.slice(0, 3), bench.slice(0, 3), 12),
+    ),
+    calcSortinoNoDownside: String(
+      calcSortino([0.02, 0.03, 0.04], [0.001, 0.001, 0.001], 3),
+    ),
   };
 }
 
@@ -135,7 +145,7 @@ async function main() {
 
 main().catch(e => {
   process.stdout.write(
-    JSON.stringify({error: String(e && e.stack)}, null, 2) + '\n'
+    JSON.stringify({error: String(e && e.stack)}, null, 2) + '\n',
   );
   process.exit(1);
 });

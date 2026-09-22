@@ -11,10 +11,7 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "typeRoots": ["./node_modules/@types", "./types"],
-    "paths": {
-      "mathjs": ["./node_modules/mathjs/types/index.d.ts"]
-    }
+    "typeRoots": ["./node_modules/@types", "./types"]
   },
   "include": ["src/**/*.ts", "test/**/*.ts"],
   "exclude": ["node_modules", "build"]

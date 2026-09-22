@@ -22,18 +22,79 @@ const REPO = path.resolve(__dirname, '..', '..');
 const DOCS = path.join(REPO, 'src', 'corretoras', 'itau-documents.json');
 
 const STOP = new Set([
-  'fundo', 'fundos', 'de', 'do', 'da', 'dos', 'das', 'em', 'e', 'investimento',
-  'investimentos', 'cotas', 'fi', 'fic', 'fim', 'fif', 'cic', 'rf', 'mm', 'cp',
-  'lp', 'ie', 'rl', 'resp', 'responsabilidade', 'limitada', 'financeiro',
+  'fundo',
+  'fundos',
+  'de',
+  'do',
+  'da',
+  'dos',
+  'das',
+  'em',
+  'e',
+  'investimento',
+  'investimentos',
+  'cotas',
+  'fi',
+  'fic',
+  'fim',
+  'fif',
+  'cic',
+  'rf',
+  'mm',
+  'cp',
+  'lp',
+  'ie',
+  'rl',
+  'resp',
+  'responsabilidade',
+  'limitada',
+  'financeiro',
 ]);
 /** Words that describe a category rather than identify a fund. */
 const WEAK = new Set([
-  'multimercado', 'multimercados', 'acoes', 'renda', 'fixa', 'credito', 'privado',
-  'longo', 'prazo', 'prev', 'previdenciario', 'subclasse', 'classe', 'infra',
-  'infraestrutura', 'incentivadas', 'debentures', 'direitos', 'creditorios',
-  'selecao', 'hedge', 'total', 'plus', 'long', 'short', 'biased', 'only', 'macro',
-  'i', 'ii', 'iii', 'liquidez', 'corporativo', 'ativo', 'small', 'mid', 'caps',
-  'dolar', 'bdr', 'global', 'equity', 'market', 'evolution',
+  'multimercado',
+  'multimercados',
+  'acoes',
+  'renda',
+  'fixa',
+  'credito',
+  'privado',
+  'longo',
+  'prazo',
+  'prev',
+  'previdenciario',
+  'subclasse',
+  'classe',
+  'infra',
+  'infraestrutura',
+  'incentivadas',
+  'debentures',
+  'direitos',
+  'creditorios',
+  'selecao',
+  'hedge',
+  'total',
+  'plus',
+  'long',
+  'short',
+  'biased',
+  'only',
+  'macro',
+  'i',
+  'ii',
+  'iii',
+  'liquidez',
+  'corporativo',
+  'ativo',
+  'small',
+  'mid',
+  'caps',
+  'dolar',
+  'bdr',
+  'global',
+  'equity',
+  'market',
+  'evolution',
 ]);
 
 const norm = s =>
@@ -52,7 +113,8 @@ const norm = s =>
  */
 const isMaster = name => /\bMASTER\b/i.test(String(name));
 
-const fmt = c => c.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5');
+const fmt = c =>
+  c.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5');
 
 const words = s => {
   const all = norm(s).filter(w => w.length > 1 && !STOP.has(w));
@@ -63,7 +125,8 @@ const words = s => {
 };
 
 async function main() {
-  const top = Number((process.argv[process.argv.indexOf('--top') + 1] || '')) || 4;
+  const top =
+    Number(process.argv[process.argv.indexOf('--top') + 1] || '') || 4;
   const stubPath = process.argv.includes('--stub')
     ? process.argv[process.argv.indexOf('--stub') + 1]
     : null;
@@ -79,7 +142,7 @@ async function main() {
     .filter(e => e.situacao === OPERATING)
     .map(e => ({...e, w: words(e.name), master: isMaster(e.name)}));
   console.log(
-    `registry: ${pool.length} operating entries | unresolved with a document: ${targets.length}\n`
+    `registry: ${pool.length} operating entries | unresolved with a document: ${targets.length}\n`,
   );
 
   const stub = {};
@@ -100,21 +163,30 @@ async function main() {
 
     console.log(`${t.codigoProduto}  ${t.nomeComercial}`);
     console.log(`  reason: ${t.resolution}`);
-    console.log(`  distinctive words: ${[...tw.strong].join(', ') || '(none)'}`);
+    console.log(
+      `  distinctive words: ${[...tw.strong].join(', ') || '(none)'}`,
+    );
     if (t.resolution === 'only-the-master-is-named' && t.cnpjCandidates) {
-      console.log(`  the document names ONLY the master: ${t.cnpjCandidates.join(', ')}`);
+      console.log(
+        `  the document names ONLY the master: ${t.cnpjCandidates.join(', ')}`,
+      );
     }
     if (!candidates.length) {
-      console.log('  no non-master registry candidate shares a distinctive word');
+      console.log(
+        '  no non-master registry candidate shares a distinctive word',
+      );
     }
     for (const {e, strong, weak} of candidates.slice(0, top)) {
       console.log(
-        `  ${fmt(e.cnpj)}  s${strong}/w${weak} ${e.isClass ? 'class' : 'fund '}  ${e.name}`
+        `  ${fmt(e.cnpj)}  s${strong}/w${weak} ${e.isClass ? 'class' : 'fund '}  ${e.name}`,
       );
     }
-    if (candidates.length > top) console.log(`  ... ${candidates.length - top} more`);
+    if (candidates.length > top)
+      console.log(`  ... ${candidates.length - top} more`);
     for (const {e} of masters.slice(0, 2)) {
-      console.log(`  (excluded, master — its feeder is what you want) ${fmt(e.cnpj)}  ${e.name}`);
+      console.log(
+        `  (excluded, master — its feeder is what you want) ${fmt(e.cnpj)}  ${e.name}`,
+      );
     }
     console.log('');
 
@@ -123,24 +195,29 @@ async function main() {
       why: `${t.resolution} — see docs/itau-cnpj-candidates.md`,
       sourcedBy: 'FILL ME',
       _fund: t.nomeComercial,
-      _candidates: candidates.slice(0, top).map(s => `${fmt(s.e.cnpj)}  ${s.e.name}`),
+      _candidates: candidates
+        .slice(0, top)
+        .map(s => `${fmt(s.e.cnpj)}  ${s.e.name}`),
     };
   }
 
   if (stubPath) {
-    fs.writeFileSync(stubPath, JSON.stringify({overrides: stub}, null, 2) + '\n');
+    fs.writeFileSync(
+      stubPath,
+      JSON.stringify({overrides: stub}, null, 2) + '\n',
+    );
     console.log(`stub written: ${stubPath}`);
     console.log(
       'Fill in cnpj + sourcedBy, drop the _fund/_candidates hints, and merge the entries\n' +
         'into src/corretoras/itau-cnpj-overrides.json. Leave any you are unsure about OUT —\n' +
-        'an unresolved fund is honest; a guessed CNPJ silently computes the wrong returns.'
+        'an unresolved fund is honest; a guessed CNPJ silently computes the wrong returns.',
     );
     return;
   }
   console.log(
     'Confirm a value by adding it to src/corretoras/itau-cnpj-overrides.json with a\n' +
       '"why" and a "sourcedBy"; the loader re-checks it against the registry and refuses\n' +
-      'a master. Or re-run with --stub <file> to get a fill-in-the-blanks block.'
+      'a master. Or re-run with --stub <file> to get a fill-in-the-blanks block.',
   );
 }
 

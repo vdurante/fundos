@@ -7,7 +7,10 @@ const isMaster = name => MASTER_RE.test(String(name));
 const digits = cnpj => String(cnpj).replace(/\D/g, '');
 
 const format = cnpj =>
-  digits(cnpj).replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5');
+  digits(cnpj).replace(
+    /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/,
+    '$1.$2.$3/$4-$5',
+  );
 
 function validCnpj(formatted) {
   const d = digits(formatted);
@@ -26,12 +29,53 @@ function validCnpj(formatted) {
 }
 
 const NAME_STOPWORDS = new Set([
-  'fundo', 'fundos', 'de', 'do', 'da', 'dos', 'das', 'em', 'e', 'investimento',
-  'investimentos', 'cotas', 'fi', 'fic', 'fim', 'fif', 'cic', 'rf', 'mm', 'cp',
-  'lp', 'ie', 'rl', 'resp', 'responsabilidade', 'limitada', 'a', 'o', 'the',
-  'multimercado', 'multimercados', 'acoes', 'ações', 'renda', 'fixa', 'credito',
-  'crédito', 'privado', 'longo', 'prazo', 'prev', 'subclasse', 'classe', 'i',
-  'ii', 'iii', 'financeiro',
+  'fundo',
+  'fundos',
+  'de',
+  'do',
+  'da',
+  'dos',
+  'das',
+  'em',
+  'e',
+  'investimento',
+  'investimentos',
+  'cotas',
+  'fi',
+  'fic',
+  'fim',
+  'fif',
+  'cic',
+  'rf',
+  'mm',
+  'cp',
+  'lp',
+  'ie',
+  'rl',
+  'resp',
+  'responsabilidade',
+  'limitada',
+  'a',
+  'o',
+  'the',
+  'multimercado',
+  'multimercados',
+  'acoes',
+  'ações',
+  'renda',
+  'fixa',
+  'credito',
+  'crédito',
+  'privado',
+  'longo',
+  'prazo',
+  'prev',
+  'subclasse',
+  'classe',
+  'i',
+  'ii',
+  'iii',
+  'financeiro',
 ]);
 
 const nameWords = s =>
@@ -41,7 +85,7 @@ const nameWords = s =>
       .replace(/[\u0300-\u036f]/g, '')
       .toLowerCase()
       .split(/[^a-z0-9]+/)
-      .filter(w => w.length > 2 && !NAME_STOPWORDS.has(w))
+      .filter(w => w.length > 2 && !NAME_STOPWORDS.has(w)),
   );
 
 const sharedWords = (a, b) => {

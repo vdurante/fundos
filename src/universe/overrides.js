@@ -18,9 +18,7 @@ const fs = require('fs');
 const path = require('path');
 const {validCnpj, isMaster, format, sharedWords} = require('../lib/cnpj');
 
-const FILE = path.join(
-  __dirname, '..', 'corretoras', 'cnpj-overrides.json'
-);
+const FILE = path.join(__dirname, '..', 'corretoras', 'cnpj-overrides.json');
 
 const README = [
   'Hand-supplied CNPJs for funds whose source document does not yield one.',
@@ -36,7 +34,7 @@ const README = [
   '  1. pass the CNPJ check digits,',
   '  2. resolve to a registered CNPJ in the CVM registry,',
   '  3. name a non-MASTER vehicle, and',
-  '  4. share a significant word with the platform\'s own name for the fund.',
+  "  4. share a significant word with the platform's own name for the fund.",
   '',
   'Rule 4 is what an unchecked override lacks. "why" and "sourcedBy" are required so',
   'a stale entry can be re-checked rather than trusted forever.',
@@ -53,7 +51,7 @@ function save(overrides) {
   const tmp = `${FILE}.tmp`;
   fs.writeFileSync(
     tmp,
-    JSON.stringify({_README: README, overrides: ordered}, null, 2) + '\n'
+    JSON.stringify({_README: README, overrides: ordered}, null, 2) + '\n',
   );
   fs.renameSync(tmp, FILE);
 }
@@ -68,7 +66,8 @@ function validate(key, entry, byKey, registry) {
   }
   const cnpj = format(entry.cnpj);
   const reg = registry.lookup(cnpj);
-  if (!reg) return `${key}: ${cnpj} is not a registered CNPJ in the CVM registry`;
+  if (!reg)
+    return `${key}: ${cnpj} is not a registered CNPJ in the CVM registry`;
   if (isMaster(reg.name)) {
     return (
       `${key}: ${cnpj} is "${reg.name}" — a MASTER, which no shelf sells. Several ` +

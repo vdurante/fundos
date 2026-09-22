@@ -41,7 +41,8 @@ export function monthKeyOf(value: Cell): string | null {
     return `${date.getUTCFullYear()}-${month}`;
   }
 
-  const text = value === null || value === undefined ? '' : String(value).trim();
+  const text =
+    value === null || value === undefined ? '' : String(value).trim();
   return /^\d{4}-\d{2}/.test(text) ? text.slice(0, 7) : null;
 }
 
@@ -58,7 +59,10 @@ export function rentMonthColumns(headerRow: Cell[]): string[] {
 }
 
 export function parseMonthCount(periodName: Cell): number | undefined {
-  const text = periodName === null || periodName === undefined ? '' : String(periodName).trim();
+  const text =
+    periodName === null || periodName === undefined
+      ? ''
+      : String(periodName).trim();
 
   const years = text.match(/^(\d+)\s*[Yy]$/);
   if (years) {
@@ -77,12 +81,13 @@ export function parseMonthCount(periodName: Cell): number | undefined {
   return undefined;
 }
 
-const average = (values: number[]) => values.reduce((a, b) => a + b, 0) / values.length;
+const average = (values: number[]) =>
+  values.reduce((a, b) => a + b, 0) / values.length;
 
 export function calcSortino(
   expectedReturns: Cell[],
   riskFreeReturns: number[],
-  allowNonEmpty = false
+  allowNonEmpty = false,
 ): number | '' {
   if (!expectedReturns.length || !riskFreeReturns.length) {
     return '';
@@ -110,7 +115,9 @@ export function calcSortino(
 
   const excess = expected.map((v, i) => (v as number) - riskFree[i]);
   const numerador = average(excess);
-  const denominador = Math.sqrt(average(excess.map(d => Math.pow(Math.min(d, 0), 2))));
+  const denominador = Math.sqrt(
+    average(excess.map(d => Math.pow(Math.min(d, 0), 2))),
+  );
 
   return denominador === 0 ? SENTINEL : numerador / denominador;
 }
@@ -127,13 +134,15 @@ function client(scopes: string[]): sheets_v4.Sheets {
 
 async function readBlocks(
   api: sheets_v4.Sheets,
-  header: Grid
+  header: Grid,
 ): Promise<{sheetId: number; blocks: Block[]}> {
   const meta = await api.spreadsheets.get({
     spreadsheetId: DOC_ID,
     fields: 'sheets(properties(sheetId,title),merges)',
   });
-  const tracker = meta.data.sheets?.find(s => s.properties?.title === TRACKER_NAME);
+  const tracker = meta.data.sheets?.find(
+    s => s.properties?.title === TRACKER_NAME,
+  );
   if (!tracker) {
     throw new Error(`Aba ${TRACKER_NAME} nao encontrada`);
   }
@@ -161,7 +170,7 @@ async function readBlocks(
       block =>
         !!block.label &&
         block.periods.length > 0 &&
-        block.periods.every(period => period !== undefined)
+        block.periods.every(period => period !== undefined),
     );
 
   return {sheetId: tracker.properties!.sheetId!, blocks};
@@ -170,13 +179,13 @@ async function readBlocks(
 function benchmarkSeries(
   label: string,
   indices: Grid,
-  rentMonths: (string | null)[]
+  rentMonths: (string | null)[],
 ): number[] {
   const header = indices[0].map(h => String(h ?? '').trim());
   const column = header.indexOf(label);
   if (column === -1) {
     throw new Error(
-      `Aba ${BENCH_NAME} nao tem a coluna "${label}" (colunas: ${header.join(', ')})`
+      `Aba ${BENCH_NAME} nao tem a coluna "${label}" (colunas: ${header.join(', ')})`,
     );
   }
 
@@ -190,7 +199,9 @@ function benchmarkSeries(
 
   return rentMonths.map((key, position) => {
     if (!key) {
-      throw new Error(`${RENT_NAME} coluna ${position + 2} nao tem um mes valido no cabecalho`);
+      throw new Error(
+        `${RENT_NAME} coluna ${position + 2} nao tem um mes valido no cabecalho`,
+      );
     }
     const value = byMonth[key];
     if (value === '' || value === null || value === undefined) {
@@ -209,11 +220,16 @@ export async function runSortino(dryRun = false) {
 
   const read = await api.spreadsheets.values.batchGet({
     spreadsheetId: DOC_ID,
-    ranges: [`${TRACKER_NAME}!1:2`, `${TRACKER_NAME}!A${FIRST_DATA_ROW}:A`, RENT_NAME, BENCH_NAME],
+    ranges: [
+      `${TRACKER_NAME}!1:2`,
+      `${TRACKER_NAME}!A${FIRST_DATA_ROW}:A`,
+      RENT_NAME,
+      BENCH_NAME,
+    ],
     valueRenderOption: 'UNFORMATTED_VALUE',
   });
   const [header, trackerColumnA, rent, indices] = read.data.valueRanges!.map(
-    v => (v.values ?? []) as Grid
+    v => (v.values ?? []) as Grid,
   );
 
   const {sheetId, blocks} = await readBlocks(api, header);
@@ -246,7 +262,7 @@ export async function runSortino(dryRun = false) {
 
   for (const block of blocks) {
     const widestPeriod = Math.max(
-      ...block.periods.filter((p): p is number => p !== undefined)
+      ...block.periods.filter((p): p is number => p !== undefined),
     );
 
     const values: (number | null)[][] = trackerCnpjs.map(cnpj => {
@@ -261,7 +277,7 @@ export async function runSortino(dryRun = false) {
         const value = calcSortino(
           rents.slice(0, months),
           series[block.label].slice(0, months),
-          months === widestPeriod
+          months === widestPeriod,
         );
         return value === '' ? null : value;
       });
@@ -297,7 +313,9 @@ export async function runSortino(dryRun = false) {
   }
 
   const summary = {
-    blocks: blocks.map(b => `${b.label} ${columnToA1(b.startColumn)}:${columnToA1(b.endColumn)}`),
+    blocks: blocks.map(
+      b => `${b.label} ${columnToA1(b.startColumn)}:${columnToA1(b.endColumn)}`,
+    ),
     trackerRows: trackerCnpjs.length,
     funds: written,
     clearedRows: cleared,

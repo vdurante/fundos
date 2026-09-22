@@ -4,6 +4,7 @@ import AdmZip from 'adm-zip';
 import * as cacache from 'cacache';
 import * as Papa from 'papaparse';
 import _ from 'lodash';
+import {JWT} from 'google-auth-library';
 import {CNPJ_FUNDOS, isTracked} from '../tracker';
 import {
   GoogleSpreadsheet,
@@ -63,7 +64,7 @@ async function writeToSheet(
   doc: GoogleSpreadsheet,
   sheetName: string,
   monthIndexes: string[],
-  data: {[key: string]: string | number}[]
+  data: {[key: string]: string | number}[],
 ) {
   const sheet = doc.sheetsByTitle[sheetName];
 
@@ -86,17 +87,17 @@ async function writeToSheetNew(
   doc: GoogleSpreadsheet,
   sheetName: string,
   headers: string[],
-  data: {[key: string]: string | number}[]
+  data: {[key: string]: string | number}[],
 ) {
   const missing = _.difference(
     CNPJ_FUNDOS,
-    data.map(p => p['CNPJ_FUNDO'].toString())
+    data.map(p => p['CNPJ_FUNDO'].toString()),
   );
 
   data.push(
     ...missing.map(p => {
       return {CNPJ_FUNDO: p};
-    })
+    }),
   );
 
   data = _(data).uniqBy('CNPJ_FUNDO').sortBy('CNPJ_FUNDO').value();
@@ -125,7 +126,7 @@ function computeVolatilidades(quotas: CsvType[]) {
         })
         .value();
 
-      return m.std(fq) * m.sqrt(252);
+      return Number(m.std(fq)) * Number(m.sqrt(252));
     })
     .map((volatilidade, cnpj) => {
       return {
@@ -177,13 +178,15 @@ async function writeBenchmarks(doc: GoogleSpreadsheet, benchmarks: Benchmarks) {
 
 async function formatBenchmarkPercentages(
   sheet: GoogleSpreadsheetWorksheet,
-  dataRowCount: number
+  dataRowCount: number,
 ) {
   if (dataRowCount === 0) {
     return;
   }
 
-  const lastColumn = String.fromCharCode('A'.charCodeAt(0) + BENCHMARK_COLUMNS.length);
+  const lastColumn = String.fromCharCode(
+    'A'.charCodeAt(0) + BENCHMARK_COLUMNS.length,
+  );
   const lastRow = dataRowCount + 1;
   await sheet.loadCells(`B2:${lastColumn}${lastRow}`);
 
@@ -210,17 +213,20 @@ async function dropLegacyBenchmarksSheet(doc: GoogleSpreadsheet) {
   console.log(`dropped legacy sheet ${LEGACY_BENCHMARKS_SHEET}`);
 }
 
-
-
 async function getDoc() {
   const fs = require('fs');
   const creds = JSON.parse(
-    fs.readFileSync('config/fundos-309615-2795009f4d3e.json', 'utf8')
+    fs.readFileSync('config/fundos-309615-2795009f4d3e.json', 'utf8'),
   );
+  const auth = new JWT({
+    email: creds.client_email,
+    key: creds.private_key,
+    scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+  });
   const doc = new GoogleSpreadsheet(
-    '1Ev0j3XqQJYWCSDftuud7IFAWya7gIiQGvp2ULfjWCi0'
+    '1Ev0j3XqQJYWCSDftuud7IFAWya7gIiQGvp2ULfjWCi0',
+    auth,
   );
-  await doc.useServiceAccountAuth(creds);
 
   await doc.loadInfo(); // loads document properties and worksheets
 
@@ -271,7 +277,7 @@ async function writeRentabilidades(doc: GoogleSpreadsheet, quotas: CsvType[]) {
   if (stale.cleared > 0) {
     console.log(
       `  Rentabilidade: cleared ${stale.cleared} month columns past the ${HISTORY_MONTHS}-month window ` +
-        `(grid has ${stale.columnCount} columns)`
+        `(grid has ${stale.columnCount} columns)`,
     );
   }
 }
@@ -282,7 +288,7 @@ export async function runRentabilidades(dryRun = false) {
 
   console.log(
     `window: ${HISTORY_MONTHS} months ${monthKeys[monthKeys.length - 1]} .. ${monthKeys[0]} ` +
-      `(download ${startYear}..${endYear})`
+      `(download ${startYear}..${endYear})`,
   );
 
   const rawQuotas = await getQuotas(endYear, startYear - 1);
@@ -290,10 +296,14 @@ export async function runRentabilidades(dryRun = false) {
 
   if (dryRun) {
     const months = new Set(
-      rawQuotas.map(q => String(q['DT_COMPTC'] ?? '').substring(0, 7)).filter(m => m !== '')
+      rawQuotas
+        .map(q => String(q['DT_COMPTC'] ?? '').substring(0, 7))
+        .filter(m => m !== ''),
     );
     const covered = monthKeys.filter(k => months.has(k));
-    console.log(`months in the window with quota data: ${covered.length}/${HISTORY_MONTHS}`);
+    console.log(
+      `months in the window with quota data: ${covered.length}/${HISTORY_MONTHS}`,
+    );
     const gaps = monthKeys.filter(k => !months.has(k));
     if (gaps.length) {
       console.log(`months with NO data: ${gaps.join(', ')}`);
@@ -317,7 +327,7 @@ export async function runBenchmarks(startYear = BENCHMARK_START_YEAR) {
 
   console.log(
     `writeBenchmarks done (${benchmarks.months.length} months, ` +
-      `${benchmarks.months[benchmarks.months.length - 1]} .. ${benchmarks.months[0]})`
+      `${benchmarks.months[benchmarks.months.length - 1]} .. ${benchmarks.months[0]})`,
   );
 }
 

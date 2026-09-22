@@ -27,7 +27,15 @@ async function enrich(input, registry, opts = {}) {
     const problem = overrides.validate(key, entry, byKey, registry);
     if (problem) problems.push(problem);
   }
-  if (problems.length) return {problems, applied: [], stale: [], conflicts: [], missing: [], records};
+  if (problems.length)
+    return {
+      problems,
+      applied: [],
+      stale: [],
+      conflicts: [],
+      missing: [],
+      records,
+    };
 
   const conflicts = [];
   const stale = [];
@@ -35,7 +43,12 @@ async function enrich(input, registry, opts = {}) {
     const fund = byKey.get(key);
     if (!fund.cnpj) continue;
     if (format(fund.cnpj) === format(entry.cnpj)) {
-      stale.push({key, name: fund.name, cnpj: fund.cnpj, resolution: fund.resolution});
+      stale.push({
+        key,
+        name: fund.name,
+        cnpj: fund.cnpj,
+        resolution: fund.resolution,
+      });
     } else {
       conflicts.push({
         key,
@@ -46,7 +59,8 @@ async function enrich(input, registry, opts = {}) {
       });
     }
   }
-  if (conflicts.length) return {problems: [], applied: [], stale, conflicts, missing: [], records};
+  if (conflicts.length)
+    return {problems: [], applied: [], stale, conflicts, missing: [], records};
 
   const applied = [];
   const missing = [];

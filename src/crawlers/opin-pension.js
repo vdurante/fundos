@@ -48,7 +48,8 @@ async function fetchPage(host, family, page) {
     `https://${host}/open-insurance/products-services/v2/${family}` +
     `?page=${page}&page-size=${PAGE_SIZE}`;
   const res = await fetch(url, {headers: HEADERS});
-  if (!res.ok) throw new Error(`HTTP ${res.status} on page ${page} of ${family}`);
+  if (!res.ok)
+    throw new Error(`HTTP ${res.status} on page ${page} of ${family}`);
   return res.json();
 }
 
@@ -145,7 +146,9 @@ function rollup(rows, registry) {
       onShelf: qtd >= 4 && qtd % 2 === 0,
     });
   }
-  return out.sort((x, y) => (x.nomeFundo || '').localeCompare(y.nomeFundo || ''));
+  return out.sort((x, y) =>
+    (x.nomeFundo || '').localeCompare(y.nomeFundo || ''),
+  );
 }
 
 async function main() {
@@ -156,15 +159,24 @@ async function main() {
   const family = val('--family') || 'life-pension';
   const out =
     val('--out') ||
-    path.join(REPO, 'src', 'corretoras', `${platform.toLowerCase().replace(/_/g, "-")}-funds.json`);
+    path.join(
+      REPO,
+      'src',
+      'corretoras',
+      `${platform.toLowerCase().replace(/_/g, '-')}-funds.json`,
+    );
 
   console.log(`host ${host}  family ${family}  platform ${platform}`);
   const {payloads, totalPages, totalRecords} = await fetchAll(host, family);
   const rows = flatten(payloads);
-  console.log(`pages ${totalPages}  products ${totalRecords}  product-fund pairs ${rows.length}`);
+  console.log(
+    `pages ${totalPages}  products ${totalRecords}  product-fund pairs ${rows.length}`,
+  );
 
   const registry = await loadRegistry({});
-  console.log(`registry: ${registry.size} CNPJs, cache ${registry.ageDays.toFixed(1)}d old`);
+  console.log(
+    `registry: ${registry.size} CNPJs, cache ${registry.ageDays.toFixed(1)}d old`,
+  );
 
   const funds = rollup(rows, registry);
   const registered = funds.filter(f => f.registered);
@@ -180,7 +192,9 @@ async function main() {
 
   const unregistered = funds.filter(f => !f.registered);
   if (unregistered.length) {
-    console.log(`\nNOT in the registry (${unregistered.length}) — check before trusting:`);
+    console.log(
+      `\nNOT in the registry (${unregistered.length}) — check before trusting:`,
+    );
     for (const f of unregistered.slice(0, 10)) {
       console.log(`  ${f.cnpj}  ${(f.nomeFundo || '').slice(0, 60)}`);
     }
@@ -191,7 +205,7 @@ async function main() {
   if (funds.length < FLOOR) {
     console.error(
       `\nASSERTION FAILED: ${funds.length} funds below the floor of ${FLOOR}. ` +
-        `Treat as a partial collection; ${path.basename(out)} left untouched.`
+        `Treat as a partial collection; ${path.basename(out)} left untouched.`,
     );
     process.exit(1);
   }

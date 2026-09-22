@@ -28,7 +28,12 @@ function merge(records) {
 
   for (const r of records) {
     const p = (byPlatform[r.platform] = byPlatform[r.platform] || {
-      listed: 0, entered: 0, noCnpj: 0, offShelf: 0, master: 0, notOperating: 0,
+      listed: 0,
+      entered: 0,
+      noCnpj: 0,
+      offShelf: 0,
+      master: 0,
+      notOperating: 0,
     });
     p.listed++;
 

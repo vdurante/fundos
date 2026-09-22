@@ -105,7 +105,9 @@ async function fetchIbov(startYear: number): Promise<MonthlySeries> {
 }
 
 async function resolveTesouroRateCsvUrl() {
-  const result = await axios.get(TESOURO_CKAN_SEARCH, {headers: BROWSER_HEADERS});
+  const result = await axios.get(TESOURO_CKAN_SEARCH, {
+    headers: BROWSER_HEADERS,
+  });
   const packages = result.data?.result?.results || [];
 
   for (const pkg of packages) {
@@ -143,7 +145,9 @@ async function fetchRiskFreeBond(): Promise<MonthlySeries> {
         return;
       }
 
-      const rate = parseFloat((row['Taxa Compra Manha'] || '').replace(',', '.'));
+      const rate = parseFloat(
+        (row['Taxa Compra Manha'] || '').replace(',', '.'),
+      );
       const base = parseBrDate(row['Data Base']);
       const maturity = parseBrDate(row['Data Vencimento']);
       if (!isFinite(rate) || !base || !maturity) {
@@ -176,7 +180,9 @@ async function fetchRiskFreeBond(): Promise<MonthlySeries> {
       continue;
     }
 
-    const shortest = eligible.reduce((a, b) => (a.maturity <= b.maturity ? a : b));
+    const shortest = eligible.reduce((a, b) =>
+      a.maturity <= b.maturity ? a : b,
+    );
     series[key] = toMonthly(shortest.rate);
   }
 
@@ -198,7 +204,7 @@ export async function getBenchmarks(startYear: number): Promise<Benchmarks> {
       ...Object.keys(cdi),
       ...Object.keys(ibov),
       ...Object.keys(riskFreeBond),
-    ])
+    ]),
   )
     .filter(m => parseInt(m.substring(0, 4), 10) >= startYear)
     .sort()

@@ -47,7 +47,9 @@ async function download() {
   if (!res.ok) throw new Error(`registry download failed: HTTP ${res.status}`);
   const buf = Buffer.from(await res.arrayBuffer());
   if (buf.length < 1_000_000) {
-    throw new Error(`registry download too small (${buf.length}b) — refusing to cache`);
+    throw new Error(
+      `registry download too small (${buf.length}b) — refusing to cache`,
+    );
   }
   fs.writeFileSync(ZIP, buf);
   return buf.length;
@@ -95,7 +97,7 @@ function index(rows, cnpjCol, kind, into, unknownSituacoes) {
   if (iCnpj < 0 || iName < 0 || iSit < 0) {
     throw new Error(
       `registry schema moved: ${cnpjCol}/Denominacao_Social/Situacao not all present in ` +
-        `[${hdr.slice(0, 12).join(', ')}...]`
+        `[${hdr.slice(0, 12).join(', ')}...]`,
     );
   }
   let n = 0;
@@ -126,7 +128,9 @@ async function loadRegistry({maxAgeDays = 7, refresh = false} = {}) {
   const AdmZip = require('adm-zip');
   const stale = !fs.existsSync(ZIP) || ageDays(ZIP) > maxAgeDays;
   if (refresh || stale) {
-    process.stderr.write(`cvm registry: downloading (${refresh ? 'forced' : 'stale'})\n`);
+    process.stderr.write(
+      `cvm registry: downloading (${refresh ? 'forced' : 'stale'})\n`,
+    );
     await download();
   }
   const zip = new AdmZip(ZIP);
@@ -144,24 +148,24 @@ async function loadRegistry({maxAgeDays = 7, refresh = false} = {}) {
     'CNPJ_Classe',
     'isClass',
     byCnpj,
-    unknown
+    unknown,
   );
   const nFund = index(
     parseCsv(read('registro_fundo.csv')),
     'CNPJ_Fundo',
     'isFund',
     byCnpj,
-    unknown
+    unknown,
   );
   if (nClass < 20000 || nFund < 40000) {
     throw new Error(
-      `registry below floor: ${nClass} classes / ${nFund} funds — treat as a bad download`
+      `registry below floor: ${nClass} classes / ${nFund} funds — treat as a bad download`,
     );
   }
   if (unknown.size) {
     process.stderr.write(
       `cvm registry: unrecognised Situacao values ${[...unknown].join(', ')} — ` +
-        `these are counted as NOT operating\n`
+        `these are counted as NOT operating\n`,
     );
   }
   return {
@@ -182,7 +186,7 @@ if (require.main === module) {
   loadRegistry({refresh: process.argv.includes('--refresh')}).then(r => {
     console.log(
       `registry: ${r.size} CNPJs (${r.classes} classes, ${r.funds} funds), ` +
-        `cache ${r.ageDays.toFixed(1)}d old`
+        `cache ${r.ageDays.toFixed(1)}d old`,
     );
     for (const c of process.argv.slice(2).filter(a => /\d/.test(a))) {
       console.log(' ', c, JSON.stringify(r.lookup(c)));

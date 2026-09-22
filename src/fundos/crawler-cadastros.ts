@@ -5,7 +5,6 @@ import * as cacache from 'cacache';
 import * as Papa from 'papaparse';
 import _ from 'lodash';
 import {isTracked} from '../tracker';
-import {GoogleSpreadsheet} from 'google-spreadsheet';
 import {off} from 'node:process';
 import {CsvType, getFile, range} from '../shared';
 
@@ -56,7 +55,7 @@ export async function getCadastros(): Promise<CsvType[]> {
     await cacache.put('.cache', 'cadastros', JSON.stringify(temp));
   }
   const cadastros = JSON.parse(
-    await (await cacache.get('.cache', 'cadastros')).data.toString()
+    await (await cacache.get('.cache', 'cadastros')).data.toString(),
   ) as CsvType[];
 
   const replacers = [

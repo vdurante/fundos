@@ -107,7 +107,7 @@ export interface WritePrincipalResult {
 
 export async function writePrincipal(
   funds: CanonicalFund[],
-  options: {sheetTitle?: string; dryRun?: boolean} = {}
+  options: {sheetTitle?: string; dryRun?: boolean} = {},
 ): Promise<WritePrincipalResult> {
   const sheetTitle = options.sheetTitle ?? PRINCIPAL_SHEET;
   const dryRun = options.dryRun ?? false;
@@ -131,7 +131,7 @@ export async function writePrincipal(
     {
       columns: PRINCIPAL_COLUMNS,
       headerRowCount: PRINCIPAL_HEADER_ROWS,
-    }
+    },
   );
 
   return {selection: counts, write, dryRun: false};

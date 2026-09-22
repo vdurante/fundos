@@ -29,7 +29,7 @@ function check(label, actual, expected) {
       ok
         ? ''
         : `  expected ${JSON.stringify(expected)} got ${JSON.stringify(actual)}`
-    }`
+    }`,
   );
 }
 
@@ -150,12 +150,12 @@ async function main() {
     check(
       'excluded FIP and FII (case-insensitive)',
       sel.excludedByType.map(f => f.name),
-      ['DELTA FIP', 'EPSILON FII']
+      ['DELTA FIP', 'EPSILON FII'],
     );
     check(
       'excluded no-history',
       sel.excludedNoHistory.map(f => f.name),
-      ['ZETA SEM HISTORICO']
+      ['ZETA SEM HISTORICO'],
     );
     check('duplicate dropped, first wins', sel.duplicates, [
       '11.111.111/0001-11',
@@ -221,7 +221,7 @@ async function main() {
     check(
       'block label row untouched',
       [grid[0][8], grid[0][11]],
-      ['SORTINO >>>', 'CDI']
+      ['SORTINO >>>', 'CDI'],
     );
     check('headers landed in row 2, not row 1', cell(grid[0][0]), '');
     check('row 2 header set', grid[1].slice(0, 11), [
@@ -242,12 +242,12 @@ async function main() {
     check(
       'alpha writer columns',
       [grid[2][1], grid[2][7], grid[2][8], grid[2][9], grid[2][29]],
-      ['ALPHA FIC FIM', true, true, 0.0123456789, false]
+      ['ALPHA FIC FIM', true, true, 0.0123456789, false],
     );
     check(
       'onze fund flags ONZE only',
       [grid[3][7], grid[3][8], grid[3][29]],
-      [false, false, true]
+      [false, false, true],
     );
     check('missing volatility left blank', cell(grid[4][9]), '');
 
@@ -267,7 +267,7 @@ async function main() {
               volatility: 0.26,
               availability: ['ITAU_PREV'],
             })
-          : f
+          : f,
     );
     result = await writePrincipal(changed, {sheetTitle: TITLE});
     check('matched 2', result.write.matched, 2);
@@ -277,7 +277,7 @@ async function main() {
     check(
       'alpha updated in place',
       [grid[2][1], grid[2][7], grid[2][8], grid[2][9]],
-      ['ALPHA v2', false, true, 0.26]
+      ['ALPHA v2', false, true, 0.26],
     );
     check('alpha Risco recomputed to 25~100', grid[2][2], '25~100');
     check(
@@ -287,12 +287,12 @@ async function main() {
         ['IE', 'D+1', 'B', 'B'],
         ['VIP', 'D+30', '', 'B'],
         ['', 'D+0', 'B', ''],
-      ]
+      ],
     );
     check(
       'vanished fund keeps CNPJ, loses writer columns',
       [grid[3][0], cell(grid[3][1]), cell(grid[3][9]), cell(grid[3][29])],
-      ['22.222.222/0001-22', '', '', '']
+      ['22.222.222/0001-22', '', '', ''],
     );
     check('vanished fund keeps its human annotations', grid[3].slice(3, 7), [
       'VIP',
@@ -305,13 +305,13 @@ async function main() {
     check(
       'Risco still a formula on every row',
       formulas.map(r => String(r[0]).startsWith('=')),
-      [true, true, true]
+      [true, true, true],
     );
     const dp = await read(sheets, 'K3:K5', 'FORMULA');
     check(
       'DP still a formula on every row',
       dp.map(r => String(r[0]).startsWith('=')),
-      [true, true, true]
+      [true, true, true],
     );
 
     console.log('\ndry run writes nothing');
@@ -335,7 +335,7 @@ async function main() {
   }
 
   console.log(
-    failures === 0 ? '\nALL CHECKS PASSED' : `\n${failures} CHECK(S) FAILED`
+    failures === 0 ? '\nALL CHECKS PASSED' : `\n${failures} CHECK(S) FAILED`,
   );
   process.exit(failures === 0 ? 0 : 1);
 }

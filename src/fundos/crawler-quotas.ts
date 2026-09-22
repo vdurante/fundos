@@ -3,7 +3,6 @@ import * as cacache from 'cacache';
 import * as Papa from 'papaparse';
 import _ from 'lodash';
 import {isTracked} from '../tracker';
-import {GoogleSpreadsheet} from 'google-spreadsheet';
 import {off} from 'node:process';
 import {CsvType, getFile, range} from '../shared';
 
@@ -21,7 +20,7 @@ async function getYear(year: number): Promise<CsvType[]> {
     await cacache.put('.cache', year.toString(), JSON.stringify(temp));
   }
   return JSON.parse(
-    (await cacache.get('.cache', year.toString())).data.toString()
+    (await cacache.get('.cache', year.toString())).data.toString(),
   );
 }
 
@@ -34,8 +33,8 @@ export function cnpjColumnOf(headerLine: string): string {
   if (!found) {
     throw new Error(
       `INF_DIARIO sem coluna de CNPJ conhecida. Esperado ${CNPJ_COLUMNS.join(
-        ' ou '
-      )}, recebido: ${columns.join(', ')}`
+        ' ou ',
+      )}, recebido: ${columns.join(', ')}`,
     );
   }
 

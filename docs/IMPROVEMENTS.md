@@ -1148,8 +1148,14 @@ a defect in the sheet rather than a gap in the source.
 ONZE-flagged in the sheet:            24
 present in Icatu's published set:      8
 absent:                               16
-  of which MASTER or FIFE in CVM:     10       <- 0 of the 8 present are
+  FIFE  (exclusive vehicle)            7       <- 47540020, 40456260, 47543238, 44603005,
+  MASTER (in the registered name)      3          52080688, 34626088, 34659785 / 28036851,
+  neither                              6          25036699, 37368165
+                                              0 of the 8 PRESENT rows are FIFE or MASTER
 ```
+
+The split is clean: every FIFE/MASTER row is absent from Icatu, and no present row is one. That is the
+signature of a layer mismatch rather than a coverage gap.
 
 An insurer never lists a master: it is the wholesale vehicle, not the thing a customer buys. The
 sheet's own names say `FIC` while the CNPJ beside them is the master's, so name and key disagree on
@@ -1168,6 +1174,21 @@ those rows. Measured pairs, sheet CNPJ -> CVM `Denominacao_Social`, against what
 FUND registrations, not two classes of one fund, so `ID_Registro_Fundo` never overlaps — verified 0
 shared ids across all pairs. Looking for a sibling `CNPJ_Classe` under the same fund could therefore
 only ever return nothing, which made a real remap look impossible.
+
+**The registry-ID-adjacency shortcut does NOT work — tested and dead.** The ONZE-branded rows look like
+it should: the sheet's `47543238000127` (id 75040) and Icatu's `47543315000149` (id 75042) are two
+FUND registrations created two ids apart, both `Em Funcionamento Normal`, both single-class, and the
+names differ by exactly one layer token:
+
+```
+75040  ONZE ICATU PREV FIFE FI FINANCEIRO - CI  RF CRED PRIV - RESP LIMITADA   sheet
+75042  ONZE ICATU PREV      FI FINANCEIRO - CIC RF CRED PRIV - RESP LIMITADA   Icatu
+```
+
+Generalised to all 16 absent rows, though, only **1 of 16** has any Icatu-published fund within 5
+registry ids. Adjacency is a coincidence of two vehicles registered in the same batch, not a link.
+So the remap needs a real portfolio edge — CVM's CDA (carteira) files, where a feeder's holdings name
+its master's CNPJ — not a naming or numbering heuristic.
 
 The remaining 6 absences are not master/feeder:
 
@@ -1196,12 +1217,23 @@ optimistic relative to what an Onze investor actually receives. Tracked as item 
 are published, unauthenticated, at tier 1. What is needed is a one-time remap from master to feeder
 (item 37), after which the flag can be derived like any other.
 
-One count discrepancy left open: the first fetch extracted **415** distinct funds and the research
-agent's extraction **418**. The likely cause is that this file's field-mapping table above lists only
-`defferalPeriod.investmentFunds[]`, while the agent also walked
-`grantPeriodBenefit.investmentFunds[]`. Unconfirmed — the 3-fund gap has not been identified
-individually, so treat 418 as the fuller figure and add the grant-period path when building the
-crawler.
+**The 415-vs-418 discrepancy is resolved, and the real figure is 417.** Re-parsed all 32 saved pages
+walking both fund arrays, which identifies the 3 individually:
+
+```
+defferalPeriod.investmentFunds[]      415
+grantPeriodBenefit.investmentFunds[]    3
+union                                 418   <- the research agent's figure
+  10513168000154  IPCA FIC RENDA ICATU VANGUARDA RENDA IPCA SOBERANO FI RF   grant-period only
+  10513151000105  ICATU VANGUARDA RENDA IGPM SOBERANO FI RF                  grant-period only
+  00000000000000  "N/A"                                                      PLACEHOLDER, not a fund
+real distinct funds                   417
+```
+
+So the crawler must walk **both** arrays — reading `defferalPeriod` alone silently drops two live Icatu
+Vanguarda inflation funds — and must **reject `00000000000000`**, which the API publishes as a real
+`investmentFunds[]` entry with `companyName: "N/A"`. All 417 real CNPJs resolve in
+`registro_fundo_classe`, so a registry join is a usable validity check on the extraction.
 
 Itau previdência funds and Icatu funds are **disjoint** (overlap 0) — a FIE belongs to one insurer —
 so the two hosts together publish 635 previdência funds, of which only 8 are currently tracked.

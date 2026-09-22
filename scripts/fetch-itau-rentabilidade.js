@@ -62,6 +62,36 @@ const SEGMENTS = `(() => {
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
+/**
+ * Keep the component's raw record AND hoist the fields consumers actually read.
+ *
+ * The raw shape nests everything interesting under `catalogoProduto` (with `categoria` and
+ * `risco` as objects), and it is the only place the full `taxas` breakdown exists — so it
+ * is kept verbatim as the source of truth. The hoisted scalars exist because the first
+ * version of this file was hand-extracted in a flattened shape that downstream code and
+ * docs already describe; dropping them would be a silent breaking change for a gain of
+ * nothing.
+ */
+function normalise(f) {
+  const cat = f.catalogoProduto || {};
+  const r = cat.rentabilidade || {};
+  const name = v => (v && typeof v === 'object' ? v.nome : v) ?? null;
+  return {
+    ...f,
+    categoria: name(cat.categoria),
+    risco: name(cat.risco),
+    situacaoProduto: cat.situacaoProduto ?? null,
+    dataCriacaoProduto: cat.dataCriacaoProduto ?? null,
+    taxaAdministracao: cat.taxaAdministracao ?? null,
+    totalizadorTaxas: cat.totalizadorTaxas ?? null,
+    resgateDescricao: cat.resgateDescricao ?? null,
+    dataBase: r.dataBase ?? null,
+    rentAnual: r.anual ?? null,
+    rentDozeMeses: r.dozeMeses ?? null,
+    rentMesAtual: r.mesAtual ?? null,
+  };
+}
+
 /** Poll the component instance; null until the shield has served the payload. */
 async function readWhenReady(page) {
   for (let i = 0; i < POLL_TRIES; i++) {
@@ -126,6 +156,7 @@ async function main() {
     process.exit(2);
   }
 
+  data = data.map(normalise);
   const ids = new Set(data.map(f => f.codigoProduto));
   console.log(`\nrecords ${data.length}   distinct codigoProduto ${ids.size}`);
   if (segments) console.log(`segments exposed: ${JSON.stringify(segments)}`);

@@ -16,10 +16,10 @@
 
 const fs = require('fs');
 const path = require('path');
-const {validCnpj, isMaster, format, sharedWords} = require('./cnpj');
+const {validCnpj, isMaster, format, sharedWords} = require('../lib/cnpj');
 
 const FILE = path.join(
-  __dirname, '..', '..', 'src', 'corretoras', 'cnpj-overrides.json'
+  __dirname, '..', 'corretoras', 'cnpj-overrides.json'
 );
 
 const README = [

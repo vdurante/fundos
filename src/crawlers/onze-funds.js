@@ -2,7 +2,7 @@
 /**
  * Onze plan funds: resolve each fund's CNPJ from its own regulamento PDF.
  *
- *   node scripts/fetch-onze-funds.js [--input ~/Downloads/onze.json] [--refresh]
+ *   node src/crawlers/onze-funds.js [--input ~/Downloads/onze.json] [--refresh]
  *
  * Onze's catalogue (hand-exported from the platform, since the shelf of a CORPORATE
  * pension plan is published nowhere public) carries name, fee, yield and a
@@ -21,13 +21,13 @@
  */
 'use strict';
 
-const {isMaster, validCnpj} = require('./lib/cnpj');
+const {isMaster, validCnpj} = require('../lib/cnpj');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
-const {loadRegistry, OPERATING} = require('./lib/cvm-registry');
+const {loadRegistry, OPERATING} = require('../lib/cvm-registry');
 
-const REPO = path.dirname(__dirname);
+const REPO = path.resolve(__dirname, '..', '..');
 const CACHE = path.join(REPO, '.cache', 'onze-regulations');
 const OUT = path.join(REPO, 'src', 'corretoras', 'onze-funds.json');
 const DEFAULT_INPUT = path.join(process.env.HOME, 'Downloads', 'onze.json');

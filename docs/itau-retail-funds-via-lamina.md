@@ -404,7 +404,7 @@ an independent second route to the same field, and a fallback when a lâmina par
 
 ### It rescues 15 of the 29 funds with no S3 lâmina
 
-`node scripts/fetch-itau-documents.js` runs the cascade S3 -> COMAG -> REGUL -> PROSP:
+`node src/crawlers/itau-documents.js` runs the cascade S3 -> COMAG -> REGUL -> PROSP:
 
 ```
 resolved 15 of 29      asmx/COMAG 12,  asmx/REGUL 3
@@ -553,7 +553,7 @@ guesses. The split:
 | | |
 |---|---|
 | certain | the document yields a registry-corroborated, non-master CNPJ -> used automatically |
-| uncertain | recorded unresolved, and `scripts/suggest-cnpj-candidates.js` proposes ranked registry candidates for a human to confirm into the overrides file |
+| uncertain | recorded unresolved, and `src/crawlers/suggest-cnpj-candidates.js` proposes ranked registry candidates for a human to confirm into the overrides file |
 
 `--stub <file>` emits a fill-in-the-blanks override block with the top candidates inline, so
 confirming is a paste rather than a PDF hunt. Nothing is auto-filled: a guessed CNPJ
@@ -608,7 +608,7 @@ Python urllib, every header combination tried  403      <- gzip, curl-like AE, A
 ```
 
 Since headers alone cannot fix Python, the discriminator is below HTTP — the TLS handshake. Hence
-`scripts/fetch-itau-documents.js` is Node rather than Python, which is also where
+`src/crawlers/itau-documents.js` is Node rather than Python, which is also where
 `src/corretoras/corretoras.ts` lives. The S3 host has no such filter, so
 `scripts/probe-lamina-coverage.py` stays Python.
 

@@ -1,7 +1,7 @@
 # Itaú funds whose CNPJ is still unrecovered (17 of 467)
 
 Cached PDFs: `.cache/itau-documents/pdf/<id>.pdf`. Regenerate with
-`node scripts/fetch-itau-documents.js --parse-only`.
+`node src/crawlers/itau-documents.js --parse-only`.
 
 Recovered separately by the whitespace-tolerant pattern and the `Favorecido:` rule: 12 funds.
 Blocked by the ASMX WAF and therefore unknown rather than absent: 15 funds (see the main spec).

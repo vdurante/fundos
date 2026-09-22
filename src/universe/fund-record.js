@@ -18,9 +18,9 @@
  */
 
 const path = require('path');
-const {format} = require('./cnpj');
+const {format} = require('../lib/cnpj');
 
-const DATA = path.join(__dirname, '..', '..', 'src', 'corretoras');
+const DATA = path.join(__dirname, '..', 'corretoras');
 
 const read = file => require(path.join(DATA, file));
 

@@ -11,14 +11,14 @@
  * Debêntures Incentivadas Infra" has several plausible registry neighbours and picking
  * one silently is how a wrong CNPJ becomes permanent. Proposing is safe; deciding is not.
  *
- * Usage: node scripts/suggest-cnpj-candidates.js [--all] [--top N]
+ * Usage: node src/crawlers/suggest-cnpj-candidates.js [--all] [--top N]
  */
 'use strict';
 const fs = require('fs');
 const path = require('path');
-const {loadRegistry, OPERATING} = require('./lib/cvm-registry');
+const {loadRegistry, OPERATING} = require('../lib/cvm-registry');
 
-const REPO = path.dirname(__dirname);
+const REPO = path.resolve(__dirname, '..', '..');
 const DOCS = path.join(REPO, 'src', 'corretoras', 'itau-documents.json');
 
 const STOP = new Set([

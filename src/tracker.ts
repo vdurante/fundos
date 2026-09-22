@@ -1,16 +1,16 @@
 /**
  * The tracked universe: which funds the pipeline collects data for.
  *
- * This file READS ONLY. The universe is built by `node scripts/build-universe.js`,
+ * This file READS ONLY. The universe is built by `node src/universe/build.js`,
  * which merges the platform crawls, applies the admission rules, fills the holes from
  * the override store, and writes `universe.json`. Nothing here knows a platform's
  * field names, so adding a platform never edits this file.
  *
- *   node scripts/fetch-itau-rentabilidade.js    crawl  Itaú retail catalogue
- *   node scripts/fetch-itau-documents.js        crawl  Itaú lâmina -> CNPJ
- *   node scripts/fetch-opin-pension.js          crawl  Itaú previdência via OPIN
- *   node scripts/fetch-onze-funds.js            crawl  Onze plan via regulamento
- *   node scripts/build-universe.js              merge + enrich + write
+ *   node src/crawlers/itau-rentabilidade.js    crawl  Itaú retail catalogue
+ *   node src/crawlers/itau-documents.js        crawl  Itaú lâmina -> CNPJ
+ *   node src/crawlers/opin-pension.js          crawl  Itaú previdência via OPIN
+ *   node src/crawlers/onze-funds.js            crawl  Onze plan via regulamento
+ *   node src/universe/build.js              merge + enrich + write
  */
 import * as universe from './corretoras/universe.json';
 

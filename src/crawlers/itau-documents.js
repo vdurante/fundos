@@ -18,16 +18,16 @@
  *     than assuming a blob stays current.
  *
  * Usage:
- *   node scripts/fetch-itau-documents.js                  # all 467, cache-first
- *   node scripts/fetch-itau-documents.js --ids 52678
- *   node scripts/fetch-itau-documents.js --retry-missing  # re-probe only the unresolved
- *   node scripts/fetch-itau-documents.js --max-age 30     # refetch blobs older than N days
- *   node scripts/fetch-itau-documents.js --refresh        # ignore the cache entirely
- *   node scripts/fetch-itau-documents.js --parse-only
+ *   node src/crawlers/itau-documents.js                  # all 467, cache-first
+ *   node src/crawlers/itau-documents.js --ids 52678
+ *   node src/crawlers/itau-documents.js --retry-missing  # re-probe only the unresolved
+ *   node src/crawlers/itau-documents.js --max-age 30     # refetch blobs older than N days
+ *   node src/crawlers/itau-documents.js --refresh        # ignore the cache entirely
+ *   node src/crawlers/itau-documents.js --parse-only
  */
 'use strict';
 
-const {isMaster, validCnpj} = require('./lib/cnpj');
+const {isMaster, validCnpj} = require('../lib/cnpj');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
@@ -45,13 +45,13 @@ const LAMINA_MAX_BYTES = 220000;
  */
 const PARSER_VERSION = 5;
 
-const REPO = path.dirname(__dirname);
+const REPO = path.resolve(__dirname, '..', '..');
 const FUNDS = path.join(REPO, 'src', 'corretoras', 'itau-rentabilidade.json');
 const CACHE = path.join(REPO, '.cache', 'itau-documents');
 const BLOBS = path.join(CACHE, 'pdf');
 const MANIFEST = path.join(CACHE, 'manifest.json');
 const OUT = path.join(REPO, 'src', 'corretoras', 'itau-documents.json');
-const {OPERATING} = require('./lib/cvm-registry');
+const {OPERATING} = require('../lib/cvm-registry');
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const sha256 = buf => crypto.createHash('sha256').update(buf).digest('hex');
@@ -450,7 +450,7 @@ async function main() {
   let parseSkipped = 0;
   let registry = null;
   if (!opts.fetchOnly) {
-    const {loadRegistry} = require('./lib/cvm-registry');
+    const {loadRegistry} = require('../lib/cvm-registry');
     registry = await loadRegistry({refresh: opts.refreshRegistry});
     console.log(
       `registry: ${registry.size} CNPJs (${registry.classes} classes, ` +

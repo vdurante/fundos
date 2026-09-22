@@ -10,7 +10,7 @@
  */
 
 const overrides = require('./overrides');
-const {format} = require('./cnpj');
+const {format} = require('../lib/cnpj');
 
 /**
  * @param {object[]} records normalized fund records

@@ -438,7 +438,7 @@ Everything below is about the rows around that data, not the maths.
 | `scripts/verify-indices.js` | `Indices` month sequence, gaps, empty cells, percent formatting |
 | `scripts/read-range.js <A1>` | ad-hoc range dump |
 | `scripts/gs-deploy.js` | pushes Apps Script and **verifies** it landed (see clasp#507 above) |
-| `scripts/test-sheet-writer.js` | 24 live-API checks on the keyed writer, on a throwaway sheet (`npm run test:writer`) |
+| `test/sheet-writer.js` | 24 live-API checks on the keyed writer, on a throwaway sheet (`npm run test:writer`) |
 | `scripts/find-sheet-references.js <Sheet>` | formulas + named ranges + conditional formats naming a sheet, before deleting it |
 | `scripts/dry-run-fundos.js` | measures what a `writeFundos` run WOULD change, read-only |
 | `scripts/probe-cvm-registry.js` | CNPJ coverage of `registro_fundo` / `registro_classe` against the live sheet |

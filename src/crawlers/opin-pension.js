@@ -2,8 +2,8 @@
 /**
  * Previdência funds from Open Insurance (OPIN) products-services open data.
  *
- *   node scripts/fetch-opin-pension.js --host api.itau --platform ITAU_PREV
- *   node scripts/fetch-opin-pension.js --host opin.icatuseguros.com.br --platform ICATU
+ *   node src/crawlers/opin-pension.js --host api.itau --platform ITAU_PREV
+ *   node src/crawlers/opin-pension.js --host opin.icatuseguros.com.br --platform ICATU
  *
  * Unauthenticated: no consent, no client certificate, no browser. Every OPIN participant
  * self-hosts the same standardized path, so the host is required — discover hosts at
@@ -30,9 +30,9 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
-const {loadRegistry, OPERATING} = require('./lib/cvm-registry');
+const {loadRegistry, OPERATING} = require('../lib/cvm-registry');
 
-const REPO = path.dirname(__dirname);
+const REPO = path.resolve(__dirname, '..', '..');
 const PAGE_SIZE = 100;
 const HEADERS = {'cache-control': 'no-cache', Accept: 'application/json'};
 /** Ships in real payloads as if it were a fund, with companyName "N/A". It is not one. */

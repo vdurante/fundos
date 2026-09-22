@@ -3,7 +3,7 @@
  * Stage 1 of the Itaú retail shelf: drive real Chrome to the rentabilidade page and
  * read the fund catalogue out of the Angular component instance.
  *
- *   node scripts/fetch-itau-rentabilidade.js [--profile <dir>]
+ *   node src/crawlers/itau-rentabilidade.js [--profile <dir>]
  *
  * Why a browser at all: there is NO fund JSON API. 153 XHR/fetch requests on this page
  * carry no fund data — the payload arrives tunnelled through the apicd.cloud.itau.com.br
@@ -27,7 +27,7 @@ const puppeteer = require('puppeteer');
 const fs = require('fs');
 const path = require('path');
 
-const REPO = path.dirname(__dirname);
+const REPO = path.resolve(__dirname, '..', '..');
 const OUT = path.join(REPO, 'src', 'corretoras', 'itau-rentabilidade.json');
 /**
  * The Chrome profile MUST outlive a single run (see the header note on cold profiles), so
@@ -177,7 +177,7 @@ async function main() {
   fs.writeFileSync(tmp, JSON.stringify(data, null, 2) + '\n');
   fs.renameSync(tmp, OUT);
   console.log(`\nwrote ${OUT}  (was ${prev} records, now ${data.length})`);
-  console.log('next: node scripts/fetch-itau-documents.js   # resolves the CNPJs');
+  console.log('next: node src/crawlers/itau-documents.js   # resolves the CNPJs');
 }
 
 main().catch(e => {

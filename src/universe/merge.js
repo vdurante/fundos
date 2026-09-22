@@ -17,7 +17,7 @@
  * A record with no CNPJ cannot enter, and is counted rather than dropped in silence.
  */
 
-const {OPERATING} = require('./cvm-registry');
+const {OPERATING} = require('../lib/cvm-registry');
 
 const admissible = r => r.onShelf && !r.master && r.situacao === OPERATING;
 

@@ -8,9 +8,9 @@
  *   write      src/corretoras/universe.json, consumed by tracker.ts
  *
  * Usage:
- *   node scripts/build-universe.js               # prompts for missing CNPJs on a tty
- *   node scripts/build-universe.js --no-prompt   # report holes, never ask (cron/CI)
- *   node scripts/build-universe.js --dry-run     # report only, write nothing
+ *   node src/universe/build.js               # prompts for missing CNPJs on a tty
+ *   node src/universe/build.js --no-prompt   # report holes, never ask (cron/CI)
+ *   node src/universe/build.js --dry-run     # report only, write nothing
  */
 'use strict';
 
@@ -19,14 +19,14 @@ const os = require('os');
 const path = require('path');
 const readline = require('readline');
 
-const {collect, PLATFORMS} = require('./lib/fund-record');
-const {merge} = require('./lib/merge');
-const {enrich} = require('./lib/enrich');
-const {loadRegistry} = require('./lib/cvm-registry');
-const overridesStore = require('./lib/overrides');
+const {collect, PLATFORMS} = require('./fund-record');
+const {merge} = require('./merge');
+const {enrich} = require('./enrich');
+const {loadRegistry} = require('../lib/cvm-registry');
+const overridesStore = require('./overrides');
 
 const OUT = path.join(
-  __dirname, '..', 'src', 'corretoras', 'universe.json'
+  __dirname, '..', 'corretoras', 'universe.json'
 );
 
 const pad = (s, n) => String(s).padEnd(n);

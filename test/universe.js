@@ -10,12 +10,12 @@ const os = require('os');
 const fs = require('fs');
 const path = require('path');
 
-const {merge} = require('../scripts/lib/merge');
-const {record, collect, PLATFORMS} = require('../scripts/lib/fund-record');
-const {enrich} = require('../scripts/lib/enrich');
-const overrides = require('../scripts/lib/overrides');
-const {loadRegistry} = require('../scripts/lib/cvm-registry');
-const {validCnpj, isMaster, sharedWords} = require('../scripts/lib/cnpj');
+const {merge} = require('../src/universe/merge');
+const {record, collect, PLATFORMS} = require('../src/universe/fund-record');
+const {enrich} = require('../src/universe/enrich');
+const overrides = require('../src/universe/overrides');
+const {loadRegistry} = require('../src/lib/cvm-registry');
+const {validCnpj, isMaster, sharedWords} = require('../src/lib/cnpj');
 
 const OPERATING = 'Em Funcionamento Normal';
 

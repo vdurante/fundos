@@ -1,10 +1,9 @@
 /* eslint-disable no-debugger */
 import axios from 'axios';
-import * as AdmZip from 'adm-zip';
-import * as parse from 'csv-parse/lib/index';
+import AdmZip from 'adm-zip';
 import * as cacache from 'cacache';
 import * as Papa from 'papaparse';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import {isTracked} from '../tracker';
 import {GoogleSpreadsheet} from 'google-spreadsheet';
 import {off} from 'node:process';

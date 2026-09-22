@@ -1,10 +1,9 @@
 /* eslint-disable no-debugger */
 import axios from 'axios';
-import * as AdmZip from 'adm-zip';
-import * as parse from 'csv-parse/lib/index';
+import AdmZip from 'adm-zip';
 import * as cacache from 'cacache';
 import * as Papa from 'papaparse';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import {CNPJ_FUNDOS, isTracked} from '../tracker';
 import {
   GoogleSpreadsheet,
@@ -240,7 +239,7 @@ async function writeRentabilidades(doc: GoogleSpreadsheet, quotas: CsvType[]) {
         .values()
         .map((curr, i, arr) => {
           const currMonth = curr['DT_COMPTC'].substring(0, 7);
-          const r = {};
+          const r: {[month: string]: number} = {};
 
           if (i + 1 === arr.length) {
             r[currMonth] = 0;

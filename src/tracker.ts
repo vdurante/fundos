@@ -8,7 +8,7 @@
  * Sources, each produced by its own collector:
  *   ITAU       scripts/fetch-itau-rentabilidade.js -> scripts/fetch-itau-documents.js
  *   ONZE       scripts/fetch-onze-funds.js
- *   ITAU_PREV  not yet collected (OPIN products-services v2/life-pension)
+ *   ITAU_PREV  scripts/fetch-opin-pension.js --host api.itau --platform ITAU_PREV
  *
  * A fund enters the universe when a platform lists it AND the CVM registry says it is
  * operating. That conjunction is the openness rule: "listed" only proves availability as
@@ -16,6 +16,7 @@
  * dead fund is purchasable.
  */
 import * as itauDocs from './corretoras/itau-documents.json';
+import * as itauPrevFunds from './corretoras/itau-prev-funds.json';
 import * as onzeFunds from './corretoras/onze-funds.json';
 
 export type Platform = 'ITAU' | 'ITAU_PREV' | 'ONZE';
@@ -29,6 +30,10 @@ interface CollectedFund {
   nomeOficial?: string | null;
   name?: string | null;
   nomeComercial?: string | null;
+  /** OPIN only: the deferral-product-count heuristic for "purchasable on the shelf". */
+  onShelf?: boolean;
+  /** OPIN only: the CVM name says MASTER — a wholesale vehicle, never an identity. */
+  master?: boolean;
 }
 
 const format = (cnpj: string) =>
@@ -49,7 +54,12 @@ function operating(rows: CollectedFund[]): {cnpj: string; name: string}[] {
 const BY_PLATFORM: Record<Platform, {cnpj: string; name: string}[]> = {
   ITAU: operating(itauDocs as unknown as CollectedFund[]),
   ONZE: operating(onzeFunds as unknown as CollectedFund[]),
-  ITAU_PREV: [],
+  // OPIN publishes the insurer's whole fund list, not its purchasable shelf, so the
+  // deferral-product heuristic (>=4 and even) narrows 268 -> 165. Masters are dropped
+  // separately: one of the 166 the heuristic accepts is ITAÚ VERDE MASTER PREV 60.
+  ITAU_PREV: operating(
+    (itauPrevFunds as unknown as CollectedFund[]).filter(f => f.onShelf && !f.master)
+  ),
 };
 
 export const ITAU_FUNDOS = BY_PLATFORM.ITAU.map(f => f.cnpj);

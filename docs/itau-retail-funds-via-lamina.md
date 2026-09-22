@@ -409,14 +409,52 @@ an independent second route to the same field, and a fallback when a lâmina par
 ```
 resolved 15 of 29      asmx/COMAG 12,  asmx/REGUL 3
 small enough to be a lâmina (<220 KB): 8
-no document under ANY source or type: 14
 ```
 
-So overall document coverage is **453 / 467 (97.0%)**, up from 438, with **14** funds carrying no
-commercial document at all: 58186, 58616, 58826, 59041, 59047, 59050, 59056, 59060, 59123, 59216,
-59228, 59232, 59286, 59392.
+That was measured on a targeted run of the 29. The subsequent **full 467 run hit the WAF partway
+through**, so its ledger reads:
+
+```
+document resolved   452 / 467
+CNPJ extracted      423 / 467
+UNRESOLVED          15        the WAF refused us; absence is NOT established
+```
+
+Those 15 (58186, 58616, 58826, 58872, 59041, 59047, 59050, 59056, 59060, 59123, 59216, 59228, 59232,
+59286, 59392) each show `s3 200 text/html` followed by three `asmx 403`. A re-run once the block
+lifts should recover a few of them, so **97.0% is the floor, not the ceiling**.
+
+### `blocked` and `absent` are different states, and conflating them silently invents absences
+
+The script classified them correctly and then **never stored the verdict**: `classify()` was defined
+but uncalled, so a WAF rejection was written to the manifest indistinguishably from a fund that
+genuinely has no document. The abort guard made it worse by only checking the known-good control on
+*every tenth* 403 — a modulo gate lets up to nine funds be recorded while the WAF is already
+blocking. Fixed in three places, and the shape generalises to any crawler with a rejection path:
+
+- store `absence: 'blocked' | 'absent'` on every entry that resolved no document;
+- check the control on the **first** rejection, rate-limited (30 s) rather than sampled;
+- treat `blocked` as *not an answer* in `needsFetch`, so it is retried automatically on the next run
+  with no flag — unlike `absent`, which needs `--retry-missing`.
+
+The report now prints the two separately, so `no document, established` can never be misread as the
+count of funds Itaú has no document for.
 
 ### A 200 application/pdf is NOT proof of a lâmina
+
+Of the 15 rescued, 7 are plainly a different document that `COMAG` falls back to. The PDF metadata
+gives them away:
+
+```
+56122  1,132,630b  title "Relatorio Mensal Nest FIA.xlsm"     a monthly report exported from Excel
+57754  1,623,699b  title "Page 1",  3 pages
+57793  2,741,000b  1 page                                      a scan or a graphic sheet
+58006    269,827b  title "Apresentação do …"                   a presentation
+```
+
+Real lâminas are 2 pages and 68-146 KB. So size is a usable *hint* (`smallEnoughForLamina`), but the
+only real test is the one this spec already specifies: exactly one CNPJ-shaped string in the
+extracted text. Treat zero or many as a failure to report.
 
 Of the 15 rescued, 7 are plainly a different document that `COMAG` falls back to. The PDF metadata
 gives them away:
@@ -525,6 +563,7 @@ exist on macOS, so install with `npm install --ignore-scripts pdf-parse`.
 - There is **no JSON API** — 153 XHR/fetch, zero fund endpoints. Don't go looking again.
 - The dataset is on the Angular Elements component instance (`_ngElementStrategy.componentRef.instance.tempData`), not in the DOM, not in a global, not React, not an iframe.
 - Use the flat `<id>_agencia.pdf` and FOLLOW redirects; it then covers all 438 available lâminas.
+- A WAF `403` is a verdict on the **client**, never on the fund. Record it as `blocked`, not as an absence, and re-probe it on the next run.
 - **A missing lâmina answers `200 text/html`** after two redirects — require `application/pdf` or you will save an error page as a PDF.
 - Fall back to the ASMX service (`DOCFDO=COMAG` -> `REGUL` -> `PROSP`); that lifts coverage 438 -> 453 of 467.
 - **The ASMX host 403s Python whatever headers you send** (TLS fingerprint). Node passes bare; curl needs User-Agent AND Accept-Encoding.

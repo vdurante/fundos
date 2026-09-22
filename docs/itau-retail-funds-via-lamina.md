@@ -296,9 +296,12 @@ https://laminascomerciais-qh9.cloud.itau.com.br/<id>_agencia.pdf
 ```
 
 i.e. exactly the URL this spec constructs — which for those funds resolves to the HTML page, not a
-PDF. **Itaú's own page carries a dead "baixar lâmina" link for these funds.** So there is no
-alternative document path to discover, and no reason to open panels at all: the URL rule is
-complete, the documents simply do not exist yet.
+PDF. **Itaú's own page carries a dead "baixar lâmina" link for these funds.** So the panel offers no
+alternative document path, and there is no reason to open panels at all: the URL rule is complete.
+
+That conclusion holds for the *panel*, but **not** for the bank: the ASMX service documented above
+reaches 15 of these 29 anyway, 12 through `COMAG` and 3 through `REGUL`. The page simply does not
+link to it.
 
 The list is committed at `src/corretoras/itau-lamina-missing.json`. Two patterns in it:
 
@@ -368,6 +371,95 @@ Not confirmed. The saved pension artefacts under
 
 ---
 
+## A SECOND source: the `consultalaminageral` ASMX service — found 2026-09-22
+
+```
+https://ww16.itau.com.br/ws/consultalaminageral.asmx/ConsultaDocumentosFundo
+  ?canal=01&CDFDO=<codigoProduto>&DOCFDO=<docType>
+```
+
+A classic .NET document service, unauthenticated, keyed on the **same `codigoProduto`** the page
+hands over. It serves documents the S3 host does not, and it serves document *types* the S3 host
+has no concept of.
+
+### `DOCFDO` carries both the channel and the document type; `canal` is ignored
+
+Measured on 52678:
+
+```
+COMAG   200  146,039b   lâmina, agência        <- matches S3 fundo/agencia/52678.pdf exactly
+COMPE   200  202,773b   lâmina, personnalité   (S3 personnalite: 203,028 — regenerated, not identical)
+COMPR   200  135,356b   lâmina, private        (S3 private: 134,348)
+REGUL   200  115,750b   REGULAMENTO            <- no S3 equivalent
+PROSP   200  166,779b   PROSPECTO              <- no S3 equivalent
+COMUC / COM / REG / FIC / LAM / LAMINA / FIN / RELMEN / MENSAL   403
+```
+
+`canal` makes no difference at all — `01`, `02`, `03`, `04`, `05`, `07`, `0L` all return the same
+146,039-byte agência document. So the segment lives in `DOCFDO`, not in `canal`. The uniclass code
+is still unknown: `COMUC` is rejected, though S3 does publish a uniclass lâmina.
+
+**`REGUL` and `PROSP` matter beyond coverage** — a regulamento states the fund's CNPJ, so they are
+an independent second route to the same field, and a fallback when a lâmina parse fails.
+
+### It rescues 15 of the 29 funds with no S3 lâmina
+
+`node scripts/fetch-itau-documents.js` runs the cascade S3 -> COMAG -> REGUL -> PROSP:
+
+```
+resolved 15 of 29      asmx/COMAG 12,  asmx/REGUL 3
+small enough to be a lâmina (<220 KB): 8
+no document under ANY source or type: 14
+```
+
+So overall document coverage is **453 / 467 (97.0%)**, up from 438, with **14** funds carrying no
+commercial document at all: 58186, 58616, 58826, 59041, 59047, 59050, 59056, 59060, 59123, 59216,
+59228, 59232, 59286, 59392.
+
+### A 200 application/pdf is NOT proof of a lâmina
+
+Of the 15 rescued, 7 are plainly a different document that `COMAG` falls back to. The PDF metadata
+gives them away:
+
+```
+56122  1,132,630b  title "Relatorio Mensal Nest FIA.xlsm"     a monthly report exported from Excel
+57754  1,623,699b  title "Page 1",  3 pages
+57793  2,741,000b  1 page                                      a scan or a graphic sheet
+58006    269,827b  title "Apresentação do …"                   a presentation
+```
+
+Real lâminas are 2 pages and 68-146 KB. So size is a usable *hint* (`smallEnoughForLamina`), but the
+only real test is the one this spec already specifies: exactly one CNPJ-shaped string in the
+extracted text. Treat zero or many as a failure to report.
+
+Do not trust a page count as the classifier either — PDFs written with compressed object streams do
+not expose `/Type /Page` in plaintext, so the same regex reports 2 pages for one generator and 0 for
+another.
+
+### The WAF rejects Python's TLS fingerprint, whatever headers you send
+
+This host sits behind an F5 ASM that answers `403 text/html` with `Your support ID is: …`. That is a
+**client verdict, not "document not found"** — and mistaking the two produced a completely wrong
+measurement (all 29 reported absent) before a curl control caught it.
+
+```
+Node   fetch(), NO headers at all              200      <- the crawler's language works
+curl   User-Agent AND Accept-Encoding          200      <- both required, neither alone
+curl   bare / UA only / UA+Accept / UA+Referer 403
+Python urllib, every header combination tried  403      <- gzip, curl-like AE, Accept, keep-alive
+```
+
+Since headers alone cannot fix Python, the discriminator is below HTTP — the TLS handshake. Hence
+`scripts/fetch-itau-documents.js` is Node rather than Python, which is also where
+`src/corretoras/corretoras.ts` lives. The S3 host has no such filter, so
+`scripts/probe-lamina-coverage.py` stays Python.
+
+**Distinguishing a real absence from a WAF block:** interleave a known-good id. 52678 returned 200
+between rejected ids, and the rejected ids stayed rejected across retries 4 and 10 seconds apart, so
+those 403s are per-fund. Without that control the two are indistinguishable.
+
+---
+
 ## Proposed implementation
 
 ### Phase 1 — read the dataset out of the page (browser, attached Chrome, ONE call)
@@ -434,8 +526,13 @@ exist on macOS, so install with `npm install --ignore-scripts pdf-parse`.
 - The dataset is on the Angular Elements component instance (`_ngElementStrategy.componentRef.instance.tempData`), not in the DOM, not in a global, not React, not an iframe.
 - Use the flat `<id>_agencia.pdf` and FOLLOW redirects; it then covers all 438 available lâminas.
 - **A missing lâmina answers `200 text/html`** after two redirects — require `application/pdf` or you will save an error page as a PDF.
-- 29 of 467 (6.2%) have no lâmina at all, and the page's own "baixar lâmina" link is dead for them. 7 of the 8 subclasses are in that set.
-- Without redirect-following a miss is a 301/302 to XML, never a 404 — either way, never classify on body size.
+- Fall back to the ASMX service (`DOCFDO=COMAG` -> `REGUL` -> `PROSP`); that lifts coverage 438 -> 453 of 467.
+- **The ASMX host 403s Python whatever headers you send** (TLS fingerprint). Node passes bare; curl needs User-Agent AND Accept-Encoding.
+- An ASMX 403 is a CLIENT verdict, not "no document" — interleave a known-good id (52678) before believing an absence.
+- `canal` is ignored by the ASMX service; the channel is encoded in `DOCFDO` (`COMAG`/`COMPE`/`COMPR`).
+- A 200 application/pdf may be a monthly report or a presentation, not a lâmina — only the CNPJ parse decides.
+- 14 of 467 have no commercial document under any source or type.
+- Without redirect-following an S3 miss is a 301/302 to XML, never a 404 — either way, never classify on body size.
 - All four `/fundo/<channel>/` paths hit or all four miss — the channel path is NOT an availability signal.
 - No CNPJ anywhere in the HTML or the in-memory payload; the footer CNPJ is the bank's.
 - The lâmina host is public — do not carry cookies into phase 2 or make it depend on the browser.

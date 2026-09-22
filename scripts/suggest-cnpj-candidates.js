@@ -99,9 +99,9 @@ async function main() {
     const masters = scored.filter(s => s.e.master);
 
     console.log(`${t.codigoProduto}  ${t.nomeComercial}`);
-    console.log(`  reason: ${t.cnpjConfidence}`);
+    console.log(`  reason: ${t.resolution}`);
     console.log(`  distinctive words: ${[...tw.strong].join(', ') || '(none)'}`);
-    if (t.cnpjConfidence === 'only-the-master-is-named' && t.cnpjCandidates) {
+    if (t.resolution === 'only-the-master-is-named' && t.cnpjCandidates) {
       console.log(`  the document names ONLY the master: ${t.cnpjCandidates.join(', ')}`);
     }
     if (!candidates.length) {
@@ -120,7 +120,7 @@ async function main() {
 
     stub[t.codigoProduto] = {
       cnpj: 'FILL ME',
-      why: `${t.cnpjConfidence} — see docs/itau-cnpj-candidates.md`,
+      why: `${t.resolution} — see docs/itau-cnpj-candidates.md`,
       sourcedBy: 'FILL ME',
       _fund: t.nomeComercial,
       _candidates: candidates.slice(0, top).map(s => `${fmt(s.e.cnpj)}  ${s.e.name}`),

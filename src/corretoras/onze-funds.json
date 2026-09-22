@@ -12,7 +12,7 @@
     "cnpj": "46.685.502/0001-02",
     "nomeOficial": "ICATU VANGUARDA ABSOLUTO II FIF RENDA FIXA CRED PRIV PREVIDENCIÁRIO - RESP LIMITADA",
     "situacao": "Em Funcionamento Normal",
-    "confidence": "sole-registered-fund",
+    "resolution": "sole-registered-fund",
     "sha256": "ac4e20a266e46b2d",
     "pages": 38
   },
@@ -29,7 +29,7 @@
     "cnpj": "11.098.129/0001-09",
     "nomeOficial": "LEBLON ICATU PREVIDÊNCIA FUNDO DE INVESTIMENTO FINANCEIRO",
     "situacao": "Em Funcionamento Normal",
-    "confidence": "sole-registered-fund",
+    "resolution": "sole-registered-fund",
     "sha256": "523e02cc49699fb7",
     "pages": 23
   },
@@ -46,7 +46,7 @@
     "cnpj": "30.178.912/0001-19",
     "nomeOficial": "CONSTELLATION ICATU 70 PREVIDÊNCIA FUNDO DE INVESTIMENTO FINANCEIRO MULTIMERCADO",
     "situacao": "Em Funcionamento Normal",
-    "confidence": "sole-registered-fund",
+    "resolution": "sole-registered-fund",
     "sha256": "3c2d2c3fa171190b",
     "pages": 27
   },
@@ -63,7 +63,7 @@
     "cnpj": "33.499.634/0001-90",
     "nomeOficial": "ICATU SEG FUNDO DE INVESTIMENTO EM COTAS FIF CORPORATE RF - RESP LIMITADA",
     "situacao": "Em Funcionamento Normal",
-    "confidence": "sole-registered-fund",
+    "resolution": "sole-registered-fund",
     "sha256": "0435ffeac338476b",
     "pages": 12
   },
@@ -80,7 +80,7 @@
     "cnpj": "29.242.441/0001-81",
     "nomeOficial": "ABSOLUTE ICATU I PREV FIC DE FIF MULTIMERCADO - RESPONSABILIDADE LIMITADA",
     "situacao": "Em Funcionamento Normal",
-    "confidence": "sole-registered-fund",
+    "resolution": "sole-registered-fund",
     "sha256": "a9691d55d4f22328",
     "pages": 25,
     "masterNamed": [
@@ -100,7 +100,7 @@
     "cnpj": "38.015.773/0001-14",
     "nomeOficial": "JGP PREVIDENCIÁRIO MULTIMERCADO ICATU SEGUROS FIC DE FI FINANCEIRO - RESPONSABILIDADE LIMITADA",
     "situacao": "Em Funcionamento Normal",
-    "confidence": "not-named-as-other-fund",
+    "resolution": "not-named-as-other-fund",
     "sha256": "7604e9514dfa6f29",
     "pages": 25
   },
@@ -117,7 +117,7 @@
     "cnpj": "34.143.959/0001-06",
     "nomeOficial": "KINEA PREV XTR II PLANOS ICATU FIF CIC MULTIMERCADO RESP LIMITADA",
     "situacao": "Em Funcionamento Normal",
-    "confidence": "not-named-as-other-fund",
+    "resolution": "not-named-as-other-fund",
     "sha256": "011aa8ec88f5d02e",
     "pages": 14
   },
@@ -134,7 +134,7 @@
     "cnpj": "23.339.936/0001-47",
     "nomeOficial": "VERDE AM ICATU PREVIDÊNCIA FIF CIC MULTIMERCADO RESPONSABILIDADE LIMITADA",
     "situacao": "Em Funcionamento Normal",
-    "confidence": "sole-registered-fund",
+    "resolution": "sole-registered-fund",
     "sha256": "3d6b542f7bd1861b",
     "pages": 9,
     "masterNamed": [
@@ -154,7 +154,7 @@
     "cnpj": "41.163.524/0001-80",
     "nomeOficial": "VALORA ICATU PREV FI EM COTAS DE FUNDOS DE INVESTIMENTO RENDA FIXA CRÉDITO RESPONSABILIDADE LIMITADA",
     "situacao": "Em Funcionamento Normal",
-    "confidence": "sole-registered-fund",
+    "resolution": "sole-registered-fund",
     "sha256": "e77b49933698d1ba",
     "pages": 32,
     "masterNamed": [
@@ -174,7 +174,7 @@
     "cnpj": "07.190.746/0001-54",
     "nomeOficial": "ICATU VANGUARDA MINHA APOSENTADORIA 2030 FIF - CI MULTIMERCADO PREVIDENCIÁRIO - RESP LIMITADA",
     "situacao": "Em Funcionamento Normal",
-    "confidence": "sole-registered-fund",
+    "resolution": "sole-registered-fund",
     "sha256": "c4e7e35aef5e730c",
     "pages": 27
   },
@@ -191,7 +191,7 @@
     "cnpj": "28.653.832/0001-26",
     "nomeOficial": "SPX LANCER ICATU PREVIDÊNCIA FIF CIC MULTIMERCADO RESPONSABILIDADE LIMITADA",
     "situacao": "Em Funcionamento Normal",
-    "confidence": "not-named-as-other-fund",
+    "resolution": "not-named-as-other-fund",
     "sha256": "0ab6dd5de1d02be6",
     "pages": 13
   },
@@ -208,7 +208,7 @@
     "cnpj": "12.053.727/0001-16",
     "nomeOficial": "ICATU SEG BRASIL TOTAL FUNDO DE INVESTIMENTO EM COTAS FIF MULT - RESP LIMITADA",
     "situacao": "Em Funcionamento Normal",
-    "confidence": "sole-registered-fund",
+    "resolution": "sole-registered-fund",
     "sha256": "4a783b8b3ec3e2b6",
     "pages": 20
   },
@@ -225,7 +225,7 @@
     "cnpj": "12.823.627/0001-21",
     "nomeOficial": "ICATU VANGUARDA FC FIF RENDA FIXA INFLAÇÃO CURTA PREVIDENCIÁRIO - RESPONSABILIDADE LIMITADA",
     "situacao": "Em Funcionamento Normal",
-    "confidence": "sole-registered-fund",
+    "resolution": "sole-registered-fund",
     "sha256": "bfd8173b92ff037d",
     "pages": 22
   },
@@ -242,7 +242,7 @@
     "cnpj": "45.444.101/0001-90",
     "nomeOficial": "ICATU VANGUARDA ABSOLUTO PLUS QUALIFICADO FIF RENDA FIXA CRED PRIV PREVIDENCIÁRIO - RESP LIMITADA",
     "situacao": "Em Funcionamento Normal",
-    "confidence": "sole-registered-fund",
+    "resolution": "sole-registered-fund",
     "sha256": "04f560eabe3e624b",
     "pages": 33
   },
@@ -259,7 +259,7 @@
     "cnpj": "37.367.841/0001-41",
     "nomeOficial": "LEGACY CAPITAL PREVIDENCIÁRIO ICATU FI FINANCEIRO EM COTAS DE FI MULTIMERCADO",
     "situacao": "Em Funcionamento Normal",
-    "confidence": "sole-registered-fund",
+    "resolution": "sole-registered-fund",
     "sha256": "d2fd58b70b3b7883",
     "pages": 26,
     "masterNamed": [
@@ -279,7 +279,7 @@
     "cnpj": "25.681.955/0001-82",
     "nomeOficial": "ADAM ICATU PREVIDENCIÁRIO FIF DA CLASSE DE INVESTIMENTO EM COTAS MULTIMERCADO RESP LIMITADA",
     "situacao": "Em Funcionamento Normal",
-    "confidence": "sole-registered-fund",
+    "resolution": "sole-registered-fund",
     "sha256": "f5ce8e84c898f2d0",
     "pages": 12,
     "masterNamed": [
@@ -299,7 +299,7 @@
     "cnpj": "45.511.041/0001-80",
     "nomeOficial": "IBIUNA ST PREV ICATU FIF - CI MULTIMERCADO CRÉDITO PRIVADO - RESP LIMITADA",
     "situacao": "Em Funcionamento Normal",
-    "confidence": "sole-registered-fund",
+    "resolution": "sole-registered-fund",
     "sha256": "830d9d74d4eaf396",
     "pages": 27
   },
@@ -316,7 +316,7 @@
     "cnpj": "07.190.735/0001-74",
     "nomeOficial": "ICATU VANGUARDA MINHA APOSENTADORIA 2040 FIF - CI MULTIMERCADO PREVIDENCIÁRIO - RESP LIMITADA",
     "situacao": "Em Funcionamento Normal",
-    "confidence": "sole-registered-fund",
+    "resolution": "sole-registered-fund",
     "sha256": "9ff1f11ca0d7595f",
     "pages": 23
   },
@@ -333,7 +333,7 @@
     "cnpj": "35.636.610/0001-60",
     "nomeOficial": "ICATU VANGUARDA MINHA APOSENTADORIA 2050 FIF - CIC MULTIMERCADO PREVIDENCIÁRIO - RESP LIMITADA",
     "situacao": "Em Funcionamento Normal",
-    "confidence": "sole-registered-fund",
+    "resolution": "sole-registered-fund",
     "sha256": "4020e6615e921a3f",
     "pages": 25
   },
@@ -350,7 +350,7 @@
     "cnpj": "46.762.380/0001-00",
     "nomeOficial": "ICATU VANGUARDA ABSOLUTO INFLAÇÃO FIF RF CRED PRIV PREVIDENCIÁRIO - RESP LIMITADA",
     "situacao": "Em Funcionamento Normal",
-    "confidence": "sole-registered-fund",
+    "resolution": "sole-registered-fund",
     "sha256": "aeee9733c599eed6",
     "pages": 35
   },
@@ -367,7 +367,7 @@
     "cnpj": "04.228.716/0001-00",
     "nomeOficial": "ICATU VANGUARDA FUNDO DE INVESTIMENTO EM COTAS FIF RF INFLAÇÃO LONGA PREVIDENCIÁRIO - RESP LIMITADA",
     "situacao": "Em Funcionamento Normal",
-    "confidence": "sole-registered-fund",
+    "resolution": "sole-registered-fund",
     "sha256": "4b86680d60a200e1",
     "pages": 25
   },
@@ -384,7 +384,7 @@
     "cnpj": "46.192.463/0001-01",
     "nomeOficial": "ICATU VANGUARDA IGARATÉ FC DE FIF MULTIMERCADO PREVIDENCIÁRIO - RESPONSABILIDADE LIMITADA",
     "situacao": "Em Funcionamento Normal",
-    "confidence": "sole-registered-fund",
+    "resolution": "sole-registered-fund",
     "sha256": "c4e875e08dba8091",
     "pages": 1
   },
@@ -401,7 +401,7 @@
     "cnpj": null,
     "nomeOficial": null,
     "situacao": null,
-    "confidence": "no-regulation-url"
+    "resolution": "no-regulation-url"
   },
   {
     "id": "6b389559-f6bf-40cf-a769-71907a963965",
@@ -416,6 +416,6 @@
     "cnpj": null,
     "nomeOficial": null,
     "situacao": null,
-    "confidence": "no-regulation-url"
+    "resolution": "no-regulation-url"
   }
 ]

@@ -512,7 +512,7 @@ fund's CNPJ in body text. Treating "document found but no CNPJ" as a reason to k
 cascading is the fix; it was untestable at time of writing because the ASMX WAF was
 refusing this client, control included.
 
-### A master is never the answer, at any confidence
+### A master is never the answer, whichever rule picked it
 
 A master (mestre) is the wholesale vehicle several feeders invest into. Two consequences,
 and the second is why excluding it is not cosmetic:

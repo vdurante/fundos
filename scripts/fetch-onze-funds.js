@@ -107,14 +107,14 @@ function resolve(text, registry) {
   const masters = registered.filter(c => isMaster(registry.lookup(c).name));
   let pool = registered.filter(c => !masters.includes(c));
 
-  const note = (c, confidence) => {
+  const note = (c, resolution) => {
     const r = registry.lookup(c);
-    return {cnpj: c, nomeOficial: r.name, situacao: r.situacao, confidence};
+    return {cnpj: c, nomeOficial: r.name, situacao: r.situacao, resolution};
   };
-  if (!distinct.length) return {confidence: 'no-cnpj-in-document', distinct, masters};
+  if (!distinct.length) return {resolution: 'no-cnpj-in-document', distinct, masters};
   if (!pool.length) {
     return {
-      confidence: masters.length ? 'only-the-master-is-named' : 'no-cnpj-is-a-registered-fund',
+      resolution: masters.length ? 'only-the-master-is-named' : 'no-cnpj-is-a-registered-fund',
       distinct,
       masters,
     };
@@ -128,7 +128,7 @@ function resolve(text, registry) {
 
   const first = occ.find(o => pool.includes(o.cnpj));
   if (first) return {...note(first.cnpj, 'first-in-title-block'), distinct, masters};
-  return {confidence: 'ambiguous', distinct, masters, narrowed: pool};
+  return {resolution: 'ambiguous', distinct, masters, narrowed: pool};
 }
 
 async function main() {
@@ -160,19 +160,19 @@ async function main() {
       cnpj: null,
       nomeOficial: null,
       situacao: null,
-      confidence: null,
+      resolution: null,
     };
     if (!f.regulation_url) {
-      row.confidence = 'no-regulation-url';
+      row.resolution = 'no-regulation-url';
       rows.push(row);
-      console.log(`  ${'--'.padEnd(18)} ${row.confidence.padEnd(26)} ${f.name.slice(0, 44)}`);
+      console.log(`  ${'--'.padEnd(18)} ${row.resolution.padEnd(26)} ${f.name.slice(0, 44)}`);
       continue;
     }
     const got = await blob(f);
     if (got.error) {
-      row.confidence = `fetch-failed: ${got.error}`;
+      row.resolution = `fetch-failed: ${got.error}`;
       rows.push(row);
-      console.log(`  ${'--'.padEnd(18)} ${row.confidence.padEnd(26)} ${f.name.slice(0, 44)}`);
+      console.log(`  ${'--'.padEnd(18)} ${row.resolution.padEnd(26)} ${f.name.slice(0, 44)}`);
       continue;
     }
     row.sha256 = crypto.createHash('sha256').update(got.buf).digest('hex').slice(0, 16);
@@ -183,13 +183,13 @@ async function main() {
       cnpj: r.cnpj || null,
       nomeOficial: r.nomeOficial || null,
       situacao: r.situacao || null,
-      confidence: r.confidence,
+      resolution: r.resolution,
       candidates: r.cnpj ? undefined : r.distinct,
       masterNamed: r.masters && r.masters.length ? r.masters : undefined,
     });
     rows.push(row);
     console.log(
-      `  ${(row.cnpj || '--').padEnd(18)} ${row.confidence.padEnd(26)} ${f.name.slice(0, 44)}`
+      `  ${(row.cnpj || '--').padEnd(18)} ${row.resolution.padEnd(26)} ${f.name.slice(0, 44)}`
     );
   }
 
@@ -201,9 +201,9 @@ async function main() {
 
   console.log(`\nfunds            ${rows.length}`);
   console.log(`CNPJ resolved    ${withCnpj.length}`);
-  const byConf = {};
-  for (const r of rows) byConf[r.confidence] = (byConf[r.confidence] || 0) + 1;
-  console.log('by confidence   ', byConf);
+  const byResolution = {};
+  for (const r of rows) byResolution[r.resolution] = (byResolution[r.resolution] || 0) + 1;
+  console.log('by resolution   ', byResolution);
   if (notOperating.length) {
     console.log(`NOT operating (${notOperating.length}):`);
     for (const r of notOperating) console.log(`  ${r.cnpj} ${r.situacao} ${r.name}`);

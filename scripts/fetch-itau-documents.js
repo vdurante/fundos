@@ -153,44 +153,44 @@ function resolveCnpj(text, registry) {
   /** Any occurrence of `c` satisfying `pred` — a CNPJ can appear more than once. */
   const anyOcc = (c, pred) => occurrences.some(o => o.cnpj === c && pred(o));
 
-  if (!distinct.length) return {cnpj: null, confidence: 'no-cnpj-in-document', distinct};
+  if (!distinct.length) return {cnpj: null, resolution: 'no-cnpj-in-document', distinct};
   if (!resolving.length) {
     // Distinguish "only counterparties" from "only the master": the second is a LEAD,
     // because the feeder sitting above a known master is findable in the registry.
     if (masters.length) {
       return {
         cnpj: null,
-        confidence: 'only-the-master-is-named',
+        resolution: 'only-the-master-is-named',
         distinct,
         masters,
         masterNames: masters.map(c => registry.lookup(c).name),
       };
     }
-    return {cnpj: null, confidence: 'no-cnpj-is-a-registered-fund', distinct};
+    return {cnpj: null, resolution: 'no-cnpj-is-a-registered-fund', distinct};
   }
 
   // 0. a regulamento labels the investable class explicitly
   const labelled = CLASS_LABEL_RE.exec(text);
   const labelledCanon = labelled ? labelled[1].replace(/\s+/g, '') : null;
   if (labelledCanon && registry.has(labelledCanon) && !isMaster(registry.lookup(labelledCanon).name)) {
-    return {...note(labelledCanon), confidence: 'class-label', distinct, resolving};
+    return {...note(labelledCanon), resolution: 'class-label', distinct, resolving};
   }
 
   // 1. the beneficiary of the subscription transfer — the fund the money buys
   const beneficiary = resolving.filter(c => anyOcc(c, o => o.beneficiary));
   if (beneficiary.length === 1) {
-    return {...note(beneficiary[0]), confidence: 'wire-beneficiary', distinct, resolving};
+    return {...note(beneficiary[0]), resolution: 'wire-beneficiary', distinct, resolving};
   }
 
   // 2. the repeated page header, which sits beside the fund's own name
   const header = occurrences.find(o => o.index < HEADER_WINDOW);
   if (header && resolving.includes(header.cnpj)) {
-    return {...note(header.cnpj), confidence: 'page-header', distinct, resolving};
+    return {...note(header.cnpj), resolution: 'page-header', distinct, resolving};
   }
 
   // 3. only one of the document's CNPJs is a registered fund at all
   if (resolving.length === 1) {
-    return {...note(resolving[0]), confidence: 'sole-registered-fund', distinct, resolving};
+    return {...note(resolving[0]), resolution: 'sole-registered-fund', distinct, resolving};
   }
 
   // 4. drop numbers the prose introduces as a DIFFERENT fund (master, mirrored strategy)
@@ -198,23 +198,23 @@ function resolveCnpj(text, registry) {
   const own = pool.filter(c => !anyOcc(c, o => o.otherFund) || anyOcc(c, o => o.beneficiary));
   if (own.length) pool = own;
   if (pool.length === 1) {
-    return {...note(pool[0]), confidence: 'not-named-as-other-fund', distinct, resolving};
+    return {...note(pool[0]), resolution: 'not-named-as-other-fund', distinct, resolving};
   }
 
   // 5. a bare `CNPJ:` label, which the fund's own identification block carries
   const bare = pool.filter(c => anyOcc(c, o => o.labelled));
   if (bare.length === 1) {
-    return {...note(bare[0]), confidence: 'cnpj-label', distinct, resolving};
+    return {...note(bare[0]), resolution: 'cnpj-label', distinct, resolving};
   }
 
   // 6. narrow to the investable vehicle: a class rather than the fund registration
   const classes = pool.filter(c => registry.lookup(c).isClass);
   if (classes.length) pool = classes;
   if (pool.length === 1) {
-    return {...note(pool[0]), confidence: 'class-not-fund', distinct, resolving};
+    return {...note(pool[0]), resolution: 'class-not-fund', distinct, resolving};
   }
 
-  return {cnpj: null, confidence: 'ambiguous', distinct, resolving, narrowed: pool};
+  return {cnpj: null, resolution: 'ambiguous', distinct, resolving, narrowed: pool};
 }
 
 /* ----------------------------------------------------------- overrides ---- */
@@ -508,7 +508,7 @@ async function main() {
           sha256: prev.sha256,
           cnpj: prev.cnpj,
           cnpjCandidates: prev.cnpjCandidates,
-          cnpjConfidence: prev.cnpjConfidence,
+          resolution: prev.resolution,
           pages: prev.pages,
           textChars: prev.textChars,
           docFirstLine: prev.docFirstLine,
@@ -570,7 +570,7 @@ async function main() {
         e.cnpj = r.cnpj || null;
         e.nomeOficial = r.nomeOficial || null;
         e.situacao = r.situacao || null;
-        e.cnpjConfidence = r.confidence;
+        e.resolution = r.resolution;
         e.cnpjDistinct = r.distinct;
         e.cnpjResolving = r.resolving && r.resolving.length > 1 ? r.resolving : undefined;
         e.parseError = undefined;
@@ -607,7 +607,7 @@ async function main() {
       if (e.cnpj && e.cnpj !== o.cnpj) {
         console.error(
           `\nOVERRIDE CONFLICT ${id}: document yielded ${e.cnpj} ` +
-            `(${e.cnpjConfidence}) but the override says ${o.cnpj}. ` +
+            `(${e.resolution}) but the override says ${o.cnpj}. ` +
             `Resolve it deliberately; the override is not applied.`
         );
         process.exit(1);
@@ -616,7 +616,7 @@ async function main() {
       e.cnpj = o.cnpj;
       e.nomeOficial = reg.name;
       e.situacao = reg.situacao;
-      e.cnpjConfidence = 'override';
+      e.resolution = 'override';
       e.cnpjOverride = {why: o.why, sourcedBy: o.sourcedBy};
       overrideCount++;
     }
@@ -636,7 +636,7 @@ async function main() {
       cnpj: e.cnpj || null,
       nomeOficial: e.nomeOficial || null,
       situacao: e.situacao || null,
-      cnpjConfidence: e.cnpjConfidence || null,
+      resolution: e.resolution || null,
       cnpjCandidates: e.cnpj ? undefined : e.cnpjDistinct,
       source: e.source,
       absence: e.source ? undefined : e.absence || null,
@@ -646,6 +646,15 @@ async function main() {
       docFirstLine: e.docFirstLine || null,
       lastModified: e.lastModified,
     }));
+  const unlabelled = rows.filter(r => r.cnpj && !r.resolution);
+  if (unlabelled.length) {
+    throw new Error(
+      `${unlabelled.length} funds carry a CNPJ with no resolution — the manifest key was ` +
+        `renamed without migrating the cache, so the label was read as undefined. ` +
+        `Migrate .cache/itau-documents/manifest.json or delete it to re-parse. ` +
+        `First: ${unlabelled[0].codigoProduto}`
+    );
+  }
   if (!ids) saveJson(OUT, rows);
 
   const withDoc = rows.filter(r => r.source);
@@ -657,11 +666,11 @@ async function main() {
   console.log(`\nfunds              ${rows.length}`);
   console.log(`document resolved  ${withDoc.length}`);
   console.log(`CNPJ extracted     ${withCnpj.length}`);
-  const byConf = {};
+  const byResolution = {};
   for (const r of rows) {
-    if (r.cnpjConfidence) byConf[r.cnpjConfidence] = (byConf[r.cnpjConfidence] || 0) + 1;
+    if (r.resolution) byResolution[r.resolution] = (byResolution[r.resolution] || 0) + 1;
   }
-  console.log('by confidence     ', byConf);
+  console.log('by resolution     ', byResolution);
   const bySrc = {};
   for (const r of withDoc) {
     const k = `${r.source}/${r.docType}`;
@@ -701,7 +710,7 @@ async function main() {
     console.log(`document but no CNPJ (${noCnpj.length}):`);
     for (const r of noCnpj) {
       console.log(
-        `  ${r.codigoProduto}  ${r.cnpjConfidence.padEnd(30)} ${r.nomeComercial.slice(0, 40)}`
+        `  ${r.codigoProduto}  ${r.resolution.padEnd(30)} ${r.nomeComercial.slice(0, 40)}`
       );
     }
   }
